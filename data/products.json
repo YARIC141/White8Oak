@@ -2,29 +2,165 @@
   "products": [
     {
       "id": 1,
-      "title": "Стеллаж модульный",
-      "price": 12000,
-      "oldPrice": 16000,
+      "title": "Обеденный стол Эко-Дуб",
+      "price": 68000,
+      "oldPrice": 85000,
+      "category": "tables",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
+      "description": "Идеальная геометрия и живая текстура натурального дуба. Массив дерева, точность соединений.",
+      "inStock": true,
+      "featured": true,
+      "model3d": "",
+      "size": "75×180×90 см",
+      "weight": "45 кг",
+      "material": "Массив дуба",
+      "colors": [
+        "Природный дуб",
+        "Белёный дуб",
+        "Темный орех"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Журнальный столик Пень",
+      "price": 35000,
+      "oldPrice": null,
+      "category": "tables",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1532372576444-dda954194ad0?w=800",
+      "description": "Невероятный столик из цельного спила дерева. Каждый экземпляр уникален.",
+      "inStock": true,
+      "featured": true,
+      "model3d": "",
+      "size": "45×60×60 см",
+      "weight": "25 кг",
+      "material": "Массив ореха",
+      "colors": [
+        "Темный орех",
+        "Ясень"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Кресло Уют",
+      "price": 45000,
+      "oldPrice": null,
+      "category": "chairs",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=800",
+      "description": "Эргономичное кресло с мягкими подлокотниками. Идеально для отдыха.",
+      "inStock": true,
+      "featured": true,
+      "model3d": "",
+      "size": "85×70×80 см",
+      "weight": "18 кг",
+      "material": "Дерево, ткань",
+      "colors": [
+        "Темный орех",
+        "Серый велюр",
+        "Изумрудный велюр"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Стул Скандинавия",
+      "price": 14400,
+      "oldPrice": 18000,
+      "category": "chairs",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=800",
+      "description": "Легкий, изящный и очень прочный стул из массива ясеня.",
+      "inStock": true,
+      "featured": true,
+      "model3d": "",
+      "size": "82×45×52 см",
+      "weight": "5 кг",
+      "material": "Массив ясеня",
+      "colors": [
+        "Ясень",
+        "Береза"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Комод Лофт",
+      "price": 96000,
+      "oldPrice": 120000,
+      "category": "chests",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1558997519-83ea9252edf8?w=800",
+      "description": "Просторный комод на металлическом каркасе. Ясень и сталь.",
+      "inStock": true,
+      "featured": false,
+      "model3d": "",
+      "size": "90×150×50 см",
+      "weight": "65 кг",
+      "material": "Ясень, сталь",
+      "colors": [
+        "Дымчатый ясень",
+        "Дуб копченый"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Шкаф Минимал",
+      "price": 180000,
+      "oldPrice": null,
       "category": "shelves",
-      "image": "photo_2026-04-09_13-49-50.jpg",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800",
+      "description": "Встроенная LED-подсветка, скрытые петли. Минималистичный дизайн.",
+      "inStock": true,
+      "featured": true,
+      "model3d": "",
+      "size": "210×120×60 см",
+      "weight": "95 кг",
+      "material": "Массив дуба",
+      "colors": [
+        "Беленный дуб",
+        "Орех"
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Светильник Лампа",
+      "price": 12000,
+      "oldPrice": null,
+      "category": "tables",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800",
+      "description": "Настольный светильник ручной работы. Дерево и латунь.",
+      "inStock": true,
+      "featured": false,
+      "model3d": "data/models/светильник-лампа.glb",
+      "size": "35×20×20 см",
+      "weight": "2 кг",
+      "material": "Дерево, латунь",
+      "colors": [
+        "Природный дуб",
+        "Темный орех"
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Стеллаж модульный",
+      "price": 32000,
+      "oldPrice": 55000,
+      "category": "shelves",
+      "image": "1775750645178-photo_2026-04-09_13-49-50.jpg",
       "images": [],
       "description": "Стеллаж",
       "inStock": true,
       "featured": true,
-      "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
-    },
-    {
-      "id": 2,
-      "title": "Стол",
-      "price": 1200,
-      "oldPrice": null,
-      "category": "tables",
-      "image": "1775750004722-photo_2026-04-09_13-49-50.jpg",
-      "images": [],
-      "description": "Стол",
-      "inStock": true,
-      "featured": false,
-      "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
+      "model3d": "data/models/1775750645198-Стеллаж-модульный-для-glb.glb"
     }
   ],
   "categories": [
@@ -35,12 +171,12 @@
     },
     {
       "id": "chairs",
-      "name": "Стулья",
+      "name": "Кресла и стулья",
       "icon": "fa-chair"
     },
     {
       "id": "beds",
-      "name": "Кровати¸",
+      "name": "Кровати",
       "icon": "fa-bed"
     },
     {
