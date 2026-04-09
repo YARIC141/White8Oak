@@ -127,19 +127,6 @@
         "Беленный дуб",
         "Орех"
       ]
-    },
-    {
-      "id": 8,
-      "title": "Стеллаж модульный",
-      "price": 32000,
-      "oldPrice": 55000,
-      "category": "shelves",
-      "image": "1775750645178-photo_2026-04-09_13-49-50.jpg",
-      "images": [],
-      "description": "Стеллаж",
-      "inStock": true,
-      "featured": true,
-      "model3d": "data/models/1775750645198-Стеллаж-модульный-для-glb.glb"
     }
   ],
   "categories": [
