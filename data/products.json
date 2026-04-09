@@ -129,27 +129,6 @@
       ]
     },
     {
-      "id": 7,
-      "title": "Светильник Лампа",
-      "price": 12000,
-      "oldPrice": null,
-      "category": "tables",
-      "image": "",
-      "images": [],
-      "imageUrl": "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800",
-      "description": "Настольный светильник ручной работы. Дерево и латунь.",
-      "inStock": true,
-      "featured": false,
-      "model3d": "data/models/светильник-лампа.glb",
-      "size": "35×20×20 см",
-      "weight": "2 кг",
-      "material": "Дерево, латунь",
-      "colors": [
-        "Природный дуб",
-        "Темный орех"
-      ]
-    },
-    {
       "id": 8,
       "title": "Стеллаж модульный",
       "price": 32000,
