@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>White & Oak — Мебель ручной работы из массива дерева</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* === HOME PAGE STYLES === */
+        .hero {
+            padding: 72px 56px;
+            gap: 56px;
+        }
+        .hero-text h1 {
+            font-size: 52px;
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+        .hero-text h1 span {
+            color: var(--accent-wood);
+        }
+        .hero-text p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-width: 480px;
+            margin-bottom: 32px;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .hero-visual {
+            flex: 1 1 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 320px;
+        }
+        .hero-visual img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+            object-fit: cover;
+            max-height: 400px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: rgba(59, 77, 59, 0.1);
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            border: 1px solid rgba(59, 77, 59, 0.15);
+        }
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .hero-stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+        .hero-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* === FEATURED SECTION === */
+        .featured-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* === FEATURES === */
+        .feature {
+            padding: 32px 24px;
+        }
+        .feature i {
+            font-size: 40px;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+        }
+        .feature h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .feature p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* === ABOUT SECTION === */
+        .about-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        .about-preview-img {
+            width: 100%;
+            height: 360px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        .about-preview-text h2 {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        .about-preview-text p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        .about-values {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .about-value-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .about-value-item i {
+            color: var(--accent-green);
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* === CONTACT === */
+        .contact-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+        .contact-info h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .contact-item i {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(59, 77, 59, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-green);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .contact-item span {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .contact-item a {
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+        .contact-cta {
+            margin-top: 28px;
+            padding: 20px 28px;
+            background: rgba(59, 77, 59, 0.06);
+            border-radius: 16px;
+            border: 1px solid rgba(59, 77, 59, 0.1);
+        }
+        .contact-cta h4 {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+        .contact-cta p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 800px) {
+            .hero {
+                padding: 32px;
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-text h1 {
+                font-size: 32px;
+            }
+            .hero-text p {
+                max-width: none;
+            }
+            .hero-actions {
+                justify-content: center;
+            }
+            .hero-stats {
+                justify-content: center;
+            }
+            .hero-visual {
+                min-height: 200px;
+            }
+            .about-preview {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .about-preview-img {
+                height: 240px;
+            }
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 26px;
+            }
+            .hero-stats {
+                gap: 20px;
+            }
+            .hero-stat-value {
+                font-size: 22px;
+            }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <a href="index.html" class="logo"><span>White</span>&<span>Oak</span></a>
+                <button class="theme-toggle-btn" id="themeToggleBtn">🌙 Тёмная</button>
+            </div>
+        </div>
+        <div class="nav-links">
+            <div class="container">
+                <ul>
+                    <li><a href="index.html" style="color:var(--accent-green);">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <i class="fas fa-leaf"></i> Ручная работа из массива дерева
+                </div>
+                <h1>Мебель, которая <span>рассказывает</span> историю</h1>
+                <p>Создаем предметы интерьера из натурального дуба, ясеня и ореха. Классические столярные соединения, натуральные масла и вечный дизайн.</p>
+                <div class="hero-actions">
+                    <a href="catalog.html" class="btn-primary" style="text-decoration:none;">Смотреть каталог <i class="fas fa-arrow-right" style="margin-left:8px;"></i></a>
+                    <a href="#about" class="btn-secondary" style="text-decoration:none;">О мастерской</a>
+                </div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-value">100%</div>
+                        <div class="hero-stat-label">Массив дерева</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">5+</div>
+                        <div class="hero-stat-label">Лет опыта</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-value">200+</div>
+                        <div class="hero-stat-label">Изделий</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=800&auto=format&fit=crop" alt="Мебель из дерева White & Oak">
+            </div>
+        </div>
+
+        <!-- FEATURED PRODUCTS -->
+        <h1 class="section-title">Популярные товары</h1>
+        <div class="featured-header">
+            <p style="color:var(--text-secondary); font-size:15px;">Избранные изделия нашей мастерской</p>
+            <a href="catalog.html" class="btn-secondary" style="text-decoration:none;">Весь каталог <i class="fas fa-arrow-right" style="margin-left:6px;"></i></a>
+        </div>
+        <div class="products-grid" id="featured-products">
+            <div style="text-align:center; padding:60px; grid-column:1/-1;">
+                <div class="loading-spinner"><i class="fas fa-spinner" style="font-size:28px; animation: spin 1s linear infinite;"></i> Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-tree"></i>
+                <h3>Натуральные материалы</h3>
+                <p>Используем только массив дуба, ясеня и ореха. Никаких плит МДФ или клееного бруса — только цельное дерево.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-hand-sparkles"></i>
+                <h3>Ручная работа</h3>
+                <p>Каждое изделие создается вручную нашими мастерами. Классические столярные соединения обеспечивают долговечность.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-leaf"></i>
+                <h3>Экологичные покрытия</h3>
+                <p>Покрываем мебель только натуральными маслами и воском. Безопасно для детей и подходит для любого интерьера.</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-truck"></i>
+                <h3>Доставка по России</h3>
+                <p>Бережно упакуем и доставим ваше изделие в любую точку России. Также доступен самовывоз из мастерской.</p>
+            </div>
+        </div>
+
+        <!-- ABOUT PREVIEW -->
+        <div id="about" class="about-preview" style="margin: 56px 0;">
+            <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=800&auto=format&fit=crop" class="about-preview-img" alt="Наша мастерская">
+            <div class="about-preview-text">
+                <h2>О нашей мастерской</h2>
+                <p>«White & Oak» — это не фабрика, а сообщество мастеров, влюбленных в дерево. Мы создаем мебель, которая передается из поколения в поколение.</p>
+                <p>В каждой детали мы используем классические столярные соединения — шип-паз, «ласточкин хвост» — чтобы мебель служила десятилетиями.</p>
+                <div class="about-values">
+                    <div class="about-value-item"><i class="fas fa-check-circle"></i> Гарантия качества на каждое изделие</div>
+                    <div class="about-value-item"><i class="fas fa-check-circle"></i> Индивидуальный подход к заказчику</div>
+                    <div class="about-value-item"><i class="fas fa-check-circle"></i> Изготовление по вашим размерам</div>
+                    <div class="about-value-item"><i class="fas fa-check-circle"></i> Натуральные масла и воски для покрытия</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="contact-block" id="contact">
+            <h1 class="section-title" style="margin-top:0;">Свяжитесь с нами</h1>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Контакты</h3>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><a href="mailto:yarich92@gmail.com">yarich92@gmail.com</a></span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Россия, ручная работа</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Пн–Пт: 10:00–19:00</span>
+                    </div>
+                    <div class="contact-cta">
+                        <h4>Интересует индивидуальный заказ?</h4>
+                        <p>Напишите нам и мы обсудим ваш проект. Изготовим мебель по вашим размерам и пожеланиям.</p>
+                    </div>
+                </div>
+                <div>
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800&auto=format&fit=crop" alt="Процесс создания мебели" style="width:100%; height:320px; object-fit:cover; border-radius:16px; box-shadow: var(--shadow);">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>White & Oak</h4>
+                    <p>Мебель ручной работы из массива дерева. Натуральные материалы и вечный дизайн.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Каталог</h4>
+                    <p><a href="catalog.html?category=tables">Столы</a></p>
+                    <p><a href="catalog.html?category=chairs">Кресла и стулья</a></p>
+                    <p><a href="catalog.html?category=beds">Кровати</a></p>
+                    <p><a href="catalog.html?category=chests">Комоды</a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Информация</h4>
+                    <p><a href="#about">О мастерской</a></p>
+                    <p><a href="#contact">Контакты</a></p>
+                    <p><a href="catalog.html">Каталог</a></p>
+                </div>
+                <div class="footer-col">
+                    <h4>Связь</h4>
+                    <p><a href="mailto:yarich92@gmail.com" class="email-link">yarich92@gmail.com</a></p>
+                </div>
+            </div>
+            <div class="copyright">&copy; 2025 White & Oak. Все права защищены.</div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+    <script>
+        // Load featured products on home page
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('featured-products')) {
+                loadFeaturedProducts();
+            }
+        });
+    </script>
+</body>
+</html>

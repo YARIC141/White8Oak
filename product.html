@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Товар — White & Oak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo"><span>White</span>&<span>Oak</span></div>
+                <button class="theme-toggle-btn" id="themeToggleBtn">🌙 Тёмная</button>
+            </div>
+        </div>
+        <div class="nav-links">
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">Главная</a></li>
+                    <li><a href="catalog.html">Каталог</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="product-detail" id="product-detail">
+            <div style="text-align:center; padding:60px;">Загрузка...</div>
+        </div>
+    </main>
+
+    <!-- Модальное окно изображений -->
+    <div class="image-modal" id="imageModal">
+        <button class="close-modal"><i class="fas fa-times"></i></button>
+        <button class="nav-prev"><i class="fas fa-chevron-left"></i></button>
+        <img id="modalImage" src="" alt="Просмотр">
+        <button class="nav-next"><i class="fas fa-chevron-right"></i></button>
+        <div id="imageCounter"></div>
+    </div>
+
+    <!-- 3D модель модалка -->
+    <div class="model-viewer-modal" id="modelViewerModal">
+        <div class="model-viewer-header">
+            <h3 id="modelViewerTitle">3D модель</h3>
+            <button class="model-viewer-close" onclick="close3DViewer()"><i class="fas fa-times"></i></button>
+        </div>
+        <canvas id="modelViewerCanvas"></canvas>
+        <div class="model-viewer-hint"><i class="fas fa-hand-pointer"></i> Вращайте мышью &nbsp;|&nbsp; Масштаб — колёсико</div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col"><h4>White & Oak</h4><p>Мебель ручной работы</p></div>
+                <div class="footer-col"><h4>Каталог</h4>
+                    <p><a href="catalog.html?category=tables">Столы</a></p>
+                    <p><a href="catalog.html?category=chairs">Кресла и стулья</a></p>
+                </div>
+                <div class="footer-col"><h4>Связь</h4><p class="email-link">yarich92@gmail.com</p></div>
+            </div>
+            <div class="copyright">© 2025 White & Oak</div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
