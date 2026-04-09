@@ -288,9 +288,9 @@
                             <div style="color: var(--accent-green); font-weight: 600;" id="oTotal"></div>
                         </div>
                     </div>
-                    <div class="form-group"><label>ФИО</label><input type="text" placeholder="Иванов Иван Иванович"></div>
-                    <div class="form-group"><label>Телефон</label><input type="tel" placeholder="+7 (999) 123-45-67"></div>
-                    <div class="form-group"><label>Email</label><input type="email" placeholder="mail@example.com"></div>
+                    <div class="form-group"><label>ФИО</label><input type="text" id="oCustomerName" placeholder="Иванов Иван Иванович"></div>
+                    <div class="form-group"><label>Телефон</label><input type="tel" id="oCustomerPhone" placeholder="+7 (999) 123-45-67"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="oCustomerEmail" placeholder="mail@example.com"></div>
                     <div class="form-group">
                         <label>Способ получения</label>
                         <div class="delivery-options">
@@ -300,8 +300,9 @@
                     </div>
                     <div class="form-group" id="addressGroup" style="display: none; margin-top: -10px;">
                         <label>Адрес доставки</label>
-                        <input type="text" placeholder="Город, улица, дом, квартира">
+                        <input type="text" id="oAddress" placeholder="Город, улица, дом, квартира">
                     </div>
+                    <div class="form-group"><label>Пожелания к заказу</label><textarea id="oWishes" style="width:100%;padding:14px;border:1px solid var(--border-color);border-radius:6px;font-family:'Inter';font-size:15px;outline:none;background:var(--input-bg);color:var(--text-main);min-height:80px;resize:vertical;" placeholder="Особые пожелания, вопросы..."></textarea></div>
                     <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="submitOrder()">Подтвердить заказ</button>
                 </div>
                 <div class="success-box" id="successBox">
@@ -528,7 +529,48 @@
             navigateTo('order', null);
         }
 
-        function submitOrder() {
+        async function submitOrder() {
+            const name = document.getElementById('oCustomerName').value.trim();
+            const phone = document.getElementById('oCustomerPhone').value.trim();
+            const email = document.getElementById('oCustomerEmail').value.trim();
+            const addressEl = document.getElementById('oAddress');
+            const address = addressEl ? addressEl.value.trim() : '';
+            const wishes = document.getElementById('oWishes').value.trim();
+            const delivery = document.querySelector('input[name="delivery"]:checked').value;
+
+            if (!name || !phone || !email) {
+                alert('Пожалуйста, заполните ФИО, Телефон и Email');
+                return;
+            }
+
+            const orderItems = cart.map(item => {
+                const p = products.find(pr => pr.id === item.productId);
+                return { productName: p.name, price: p.price, quantity: item.qty, color: item.color, category: p.category };
+            });
+            const grandTotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const orderId = 'WO-' + Date.now().toString(36).toUpperCase();
+
+            // Клиентская версия — только EmailJS (сервер API недоступен на GitHub Pages)
+            try {
+                await emailjs.send('whiteoak', 'template_ec3phrc', {
+                    to_email: 'yarich92@gmail.com',
+                    from_name: name,
+                    from_email: email,
+                    from_phone: phone,
+                    order_id: orderId,
+                    order_items: orderItems.map(i => i.productName + ' (' + i.color + ') x' + i.quantity).join(', '),
+                    order_total: grandTotal.toString(),
+                    delivery_type: delivery === 'delivery' ? 'Доставка' : 'Самовывоз',
+                    address: delivery === 'delivery' ? address : 'Самовывоз',
+                    wishes: wishes || 'Нет'
+                });
+                console.log('📧 Заказ #' + orderId + ' отправлен');
+            } catch (e) {
+                console.warn('⚠️ Ошибка EmailJS:', e.message);
+                alert('Ошибка отправки заказа. Попробуйте позже или свяжитесь с нами напрямую.');
+                return;
+            }
+
             document.getElementById('orderFormWrapper').style.display = 'none';
             document.getElementById('successBox').style.display = 'block';
             cart = []; updateCartBadge();
@@ -536,5 +578,7 @@
 
         init();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>(function(){ emailjs.init('YOUR_PUBLIC_KEY'); })();</script>
 </body>
 </html>
