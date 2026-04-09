@@ -12,37 +12,50 @@
       "inStock": true,
       "featured": true,
       "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
+    },
+    {
+      "id": 2,
+      "title": "Стол",
+      "price": 1200,
+      "oldPrice": null,
+      "category": "tables",
+      "image": "1775750004722-photo_2026-04-09_13-49-50.jpg",
+      "images": [],
+      "description": "Стол",
+      "inStock": true,
+      "featured": false,
+      "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
     }
   ],
   "categories": [
     {
       "id": "tables",
-      "name": "ÃÂ¡ÃÂÃÂ¾ÃÂ»ÃÂ",
+      "name": "Столы",
       "icon": "fa-table"
     },
     {
       "id": "chairs",
-      "name": "ÃÂÃÂÃÂµÃÂÃÂ»ÃÂ° ÃÂ¸ ÃÂÃÂÃÂÃÂ»ÃÂÃÂ",
+      "name": "Стулья",
       "icon": "fa-chair"
     },
     {
       "id": "beds",
-      "name": "ÃÂÃÂÃÂ¾ÃÂ²ÃÂ°ÃÂÃÂ¸",
+      "name": "Кровати¸",
       "icon": "fa-bed"
     },
     {
       "id": "shelves",
-      "name": "ÃÂ¨ÃÂºÃÂ°ÃÂÃÂ ÃÂ¸ ÃÂºÃÂ¾ÃÂ¼ÃÂ¾ÃÂ´ÃÂ",
+      "name": "Шкафы и комоды",
       "icon": "fa-layer-group"
     },
     {
       "id": "nightstands",
-      "name": "ÃÂ¢ÃÂÃÂ¼ÃÂ±ÃÂ",
+      "name": "Тумбы",
       "icon": "fa-draw-polygon"
     },
     {
       "id": "chests",
-      "name": "ÃÂÃÂ¾ÃÂ¼ÃÂ¾ÃÂ´ÃÂ",
+      "name": "Комоды",
       "icon": "fa-archive"
     }
   ]
