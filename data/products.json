@@ -85,6 +85,30 @@
         "Дымчатый ясень",
         "Дуб копченый"
       ]
+    },
+    {
+      "id": 6,
+      "title": "Стеллаж модульный",
+      "price": 23000,
+      "oldPrice": 32000,
+      "category": "shelves",
+      "image": "photo_2026-04-09_13-49-50.jpg",
+      "images": [
+        "1775828941625-photo_2026-04-09_13-49-50.jpg"
+      ],
+      "description": "Стеллаж супер пупер",
+      "material": "Березовая фанера",
+      "size": "-",
+      "weight": "-",
+      "colors": [
+        "Орех",
+        "Дуб",
+        "Белый",
+        "Черный"
+      ],
+      "inStock": true,
+      "featured": true,
+      "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
     }
   ],
   "categories": [
