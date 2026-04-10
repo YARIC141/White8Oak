@@ -98,6 +98,21 @@
       "inStock": true,
       "featured": true,
       "model3d": ""
+    },
+    {
+      "id": 8,
+      "title": "Cnjk",
+      "price": 45042,
+      "oldPrice": 4524,
+      "category": "chairs",
+      "image": "торшер-со-шторой.png",
+      "images": [
+        "стол-.трансформер.png"
+      ],
+      "description": "xfghxfh h ssgrg",
+      "inStock": true,
+      "featured": true,
+      "model3d": "data/models/светильник---лампа.glb"
     }
   ],
   "categories": [
