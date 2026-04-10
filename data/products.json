@@ -23,27 +23,6 @@
       ]
     },
     {
-      "id": 2,
-      "title": "Журнальный столик Пень",
-      "price": 35000,
-      "oldPrice": null,
-      "category": "tables",
-      "image": "",
-      "images": [],
-      "imageUrl": "https://images.unsplash.com/photo-1532372576444-dda954194ad0?w=800",
-      "description": "Невероятный столик из цельного спила дерева. Каждый экземпляр уникален.",
-      "inStock": true,
-      "featured": true,
-      "model3d": "",
-      "size": "45×60×60 см",
-      "weight": "25 кг",
-      "material": "Массив ореха",
-      "colors": [
-        "Темный орех",
-        "Ясень"
-      ]
-    },
-    {
       "id": 3,
       "title": "Кресло Уют",
       "price": 45000,
