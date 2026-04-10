@@ -85,19 +85,6 @@
         "Дымчатый ясень",
         "Дуб копченый"
       ]
-    },
-    {
-      "id": 7,
-      "title": "Стеллаж модульный",
-      "price": 52,
-      "oldPrice": 52,
-      "category": "nightstands",
-      "image": "1775751759687-photo_2026-04-09_13-49-50.jpg",
-      "images": [],
-      "description": "шдщ",
-      "inStock": true,
-      "featured": true,
-      "model3d": ""
     }
   ],
   "categories": [
