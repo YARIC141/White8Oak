@@ -108,27 +108,6 @@
       ]
     },
     {
-      "id": 6,
-      "title": "Шкаф Минимал",
-      "price": 180000,
-      "oldPrice": null,
-      "category": "shelves",
-      "image": "",
-      "images": [],
-      "imageUrl": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800",
-      "description": "Встроенная LED-подсветка, скрытые петли. Минималистичный дизайн.",
-      "inStock": true,
-      "featured": true,
-      "model3d": "",
-      "size": "210×120×60 см",
-      "weight": "95 кг",
-      "material": "Массив дуба",
-      "colors": [
-        "Беленный дуб",
-        "Орех"
-      ]
-    },
-    {
       "id": 7,
       "title": "Стеллаж модульный",
       "price": 52,
