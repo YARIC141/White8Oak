@@ -660,17 +660,17 @@
             submitBtn.disabled  = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
 
-            // 1. Отправить заказ на сервер (Fly.io)
+            // 1. Сохранить заказ в Google Sheets
             try {
-                const r = await fetch(CONFIG.SERVER_URL + '/api/orders', {
-                    method:  'POST',
+                await fetch(CONFIG.GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    mode:   'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify(order)
+                    body:   JSON.stringify(order)
                 });
-                if (!r.ok) console.warn('Сервер вернул ошибку:', r.status);
-                else console.log('✅ Заказ ' + orderId + ' сохранён на сервере');
+                console.log('✅ Заказ ' + orderId + ' отправлен в Google Sheets');
             } catch (e) {
-                console.warn('Сервер недоступен, заказ будет только в email:', e.message);
+                console.warn('Google Sheets недоступен:', e.message);
             }
 
             // 2. Email-уведомление через EmailJS
