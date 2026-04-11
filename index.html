@@ -47,7 +47,8 @@
         a { text-decoration: none; color: inherit; }
 
         /* === САЙДБАР === */
-        .sidebar { width: var(--sidebar-width); height: 100vh; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 30px 0; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color var(--theme-speed) ease, border-color var(--theme-speed) ease; flex-shrink: 0; position: relative; overflow: hidden; z-index: 100; }
+        .sidebar { width: var(--sidebar-width); height: 100vh; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 30px 0; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color var(--theme-speed) ease, border-color var(--theme-speed) ease; flex-shrink: 0; position: relative; overflow: visible; z-index: 100; }
+        .sidebar-inner { overflow: hidden; flex: 1; display: flex; flex-direction: column; min-height: 0; }
         .sidebar.collapsed { width: var(--sidebar-collapsed); }
         .sidebar.collapsed .logo-text, .sidebar.collapsed .nav-text { opacity: 0; width: 0; margin: 0; }
         .sidebar.collapsed .theme-toggle span { opacity: 0; width: 0; overflow: hidden; }
@@ -75,8 +76,9 @@
         .toggle-switch.active { background: var(--accent-green); }
         .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .toggle-switch.active::after { transform: translateX(24px); }
-        .toggle-sidebar-btn { position: absolute; top: 50%; right: -15px; transform: translateY(-50%); width: 30px; height: 30px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 110; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, transform 0.3s, color 0.2s; color: var(--text-muted); font-size: 12px; }
+        .toggle-sidebar-btn { position: absolute; top: 50%; right: -15px; transform: translateY(-50%); width: 30px; height: 30px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 110; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, color 0.2s; color: var(--text-muted); font-size: 12px; }
         .toggle-sidebar-btn:hover { color: var(--text-main); }
+        .toggle-sidebar-btn i { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .sidebar.collapsed .toggle-sidebar-btn i { transform: rotate(180deg); }
         /* === ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ — ИКОНКА === */
         .theme-icon-btn {
@@ -87,19 +89,21 @@
             transition: color 0.3s ease, background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
         }
         .theme-icon-btn:hover { color: var(--text-main); }
-        .theme-icon-el { display: inline-block; transition: transform 0.4s ease; }
-        .theme-icon-btn.icon-spin .theme-icon-el { animation: themeIconSpin 0.45s ease forwards; }
-        @keyframes themeIconSpin {
-            0%   { transform: rotate(0deg)   scale(1);   }
-            40%  { transform: rotate(80deg)  scale(0.5); }
-            100% { transform: rotate(180deg) scale(1);   }
+        .theme-icon-el { display: inline-block; }
+        .theme-icon-btn.icon-spin .theme-icon-el { animation: themeIconPop 0.45s ease; }
+        @keyframes themeIconPop {
+            0%   { transform: scale(1);   opacity: 1; }
+            40%  { transform: scale(0);   opacity: 0; }
+            60%  { transform: scale(0);   opacity: 0; }
+            100% { transform: scale(1);   opacity: 1; }
         }
         .header-theme-btn {
             position: absolute; top: 18px; right: 24px; z-index: 50;
-            background: var(--bg-secondary); box-shadow: var(--shadow);
-            transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, box-shadow var(--theme-speed) ease;
+            background: transparent; border: none; box-shadow: none;
+            font-size: 22px; color: var(--text-muted);
+            transition: color 0.3s ease;
         }
-        .header-theme-btn:hover { box-shadow: var(--shadow-hover); }
+        .header-theme-btn:hover { color: var(--accent-green); box-shadow: none; }
 
         /* === ОСНОВНОЙ КОНТЕНТ === */
         .main-content { flex: 1; height: 100vh; position: relative; overflow: hidden; background-color: var(--bg-primary); transition: background-color var(--theme-speed) ease; }
@@ -524,7 +528,7 @@
         }
         /* === КАНАРЕЙКА === */
         .canary-widget {
-            position: absolute; top: 72px; right: 16px; z-index: 48;
+            position: fixed; top: 72px; right: 20px; z-index: 9000;
             width: 58px; height: 54px; pointer-events: none;
             filter: drop-shadow(0 2px 6px rgba(0,0,0,0.13));
             animation: canaryBob 2.6s ease-in-out infinite;
@@ -588,19 +592,21 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="toggle-sidebar-btn" onclick="toggleSidebarFull()"><i class="fas fa-chevron-left"></i></div>
-        <div class="logo"><i class="fas fa-tree"></i><span class="logo-text">White & Oak</span></div>
-        <nav class="nav-menu">
-            <div class="nav-link active" onclick="navigateTo('home', this)"><i class="fas fa-home"></i><span class="nav-text">Главная</span></div>
-            <div class="nav-link" onclick="navigateTo('catalog', this)"><i class="fas fa-th-large"></i><span class="nav-text">Каталог</span></div>
-            <div class="nav-link" onclick="navigateTo('about', this)"><i class="fas fa-info-circle"></i><span class="nav-text">О нас</span></div>
-            <div class="nav-link" onclick="navigateTo('cart', this)"><i class="fas fa-shopping-cart"></i><span class="nav-text">Корзина</span><div class="cart-badge" id="cartBadge" style="display:none;">0</div></div>
-            <div class="nav-link" onclick="navigateTo('help', this)" style="margin-top: auto;"><i class="fas fa-book-open"></i><span class="nav-text">Инструкция</span></div>
-        </nav>
-        <div class="theme-toggle-wrapper">
-            <div class="theme-toggle" onclick="toggleTheme()">
-                <span id="sidebarThemeText">Светлая</span>
-                <div class="theme-icon-btn">
-                    <i class="fas fa-sun theme-icon-el"></i>
+        <div class="sidebar-inner">
+            <div class="logo"><i class="fas fa-tree"></i><span class="logo-text">White & Oak</span></div>
+            <nav class="nav-menu">
+                <div class="nav-link active" onclick="navigateTo('home', this)"><i class="fas fa-home"></i><span class="nav-text">Главная</span></div>
+                <div class="nav-link" onclick="navigateTo('catalog', this)"><i class="fas fa-th-large"></i><span class="nav-text">Каталог</span></div>
+                <div class="nav-link" onclick="navigateTo('about', this)"><i class="fas fa-info-circle"></i><span class="nav-text">О нас</span></div>
+                <div class="nav-link" onclick="navigateTo('cart', this)"><i class="fas fa-shopping-cart"></i><span class="nav-text">Корзина</span><div class="cart-badge" id="cartBadge" style="display:none;">0</div></div>
+                <div class="nav-link" onclick="navigateTo('help', this)" style="margin-top: auto;"><i class="fas fa-book-open"></i><span class="nav-text">Инструкция</span></div>
+            </nav>
+            <div class="theme-toggle-wrapper">
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <span id="sidebarThemeText">Светлая</span>
+                    <div class="theme-icon-btn">
+                        <i class="fas fa-sun theme-icon-el"></i>
+                    </div>
                 </div>
             </div>
         </div>
