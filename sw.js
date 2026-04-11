@@ -1,5 +1,5 @@
 // Меняй версию при каждом деплое — это сбросит кеш у всех пользователей
-const CACHE = 'white-oak-v2';
+const CACHE = 'white-oak-v3';
 
 const PRECACHE = [
     '/White8Oak/config.js',
@@ -37,45 +37,34 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // index.html — Network-first: всегда свежая версия приложения
-    if (url.pathname === '/White8Oak/' || url.pathname.endsWith('index.html')) {
+    // Изображения товаров — cache-first (большие файлы, меняются редко)
+    if (url.pathname.includes('/images/products/')) {
         event.respondWith(
-            fetch(event.request)
-                .then(response => {
-                    const clone = response.clone();
-                    caches.open(CACHE).then(cache => cache.put(event.request, clone));
+            caches.match(event.request).then(cached => {
+                const network = fetch(event.request).then(response => {
+                    if (response.ok) {
+                        const clone = response.clone();
+                        caches.open(CACHE).then(cache => cache.put(event.request, clone));
+                    }
                     return response;
-                })
-                .catch(() => caches.match(event.request))
+                });
+                return cached || network;
+            })
         );
         return;
     }
 
-    // products.json — Network-first: свежий каталог, фолбек на кеш (офлайн)
-    if (url.pathname.endsWith('products.json')) {
-        event.respondWith(
-            fetch(event.request)
-                .then(response => {
-                    const clone = response.clone();
-                    caches.open(CACHE).then(cache => cache.put(event.request, clone));
-                    return response;
-                })
-                .catch(() => caches.match(event.request))
-        );
-        return;
-    }
-
-    // CSS, JS, картинки, иконки — Cache-first (быстро, обновляем в фоне)
+    // Всё остальное (HTML, JS, CSS, JSON, иконки) — network-first
+    // Свежий контент при каждом запросе, фолбек на кеш если офлайн
     event.respondWith(
-        caches.match(event.request).then(cached => {
-            const network = fetch(event.request).then(response => {
+        fetch(event.request)
+            .then(response => {
                 if (response.ok) {
                     const clone = response.clone();
                     caches.open(CACHE).then(cache => cache.put(event.request, clone));
                 }
                 return response;
-            });
-            return cached || network;
-        })
+            })
+            .catch(() => caches.match(event.request))
     );
 });

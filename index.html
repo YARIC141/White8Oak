@@ -1283,8 +1283,11 @@
         // ── PWA: регистрация Service Worker ──────────────────────────────
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/White8Oak/sw.js')
-                    .then(() => console.log('[SW] Зарегистрирован'))
+                navigator.serviceWorker.register('/White8Oak/sw.js', { updateViaCache: 'none' })
+                    .then(reg => {
+                        console.log('[SW] Зарегистрирован');
+                        reg.update(); // принудительная проверка обновления при каждом запуске
+                    })
                     .catch(err => console.warn('[SW] Ошибка:', err));
             });
         }
