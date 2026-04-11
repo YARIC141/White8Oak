@@ -412,7 +412,7 @@
 
         /* Обёртка поиска+сортировки: строка на десктопе */
         .catalog-search-sort { display: flex; gap: 12px; margin-bottom: 14px; }
-        .catalog-search-sort #fp-search { flex: 1; min-width: 200px; }
+        .catalog-search-sort #fp-search { flex: 0 0 280px; min-width: 200px; }
 
         @media (max-width: 900px) {
             .catalog-filter-bar { display: flex; }
@@ -606,7 +606,7 @@
                 </div>
                 <div id="fp-sort">
                     <select class="sort-select" id="catalogSort" onchange="applyCatalogFilters()">
-                        <option value="">По умолчанию</option>
+                        <option value="">Сортировка по умолчанию</option>
                         <option value="price-asc">Цена ↑</option>
                         <option value="price-desc">Цена ↓</option>
                     </select>
