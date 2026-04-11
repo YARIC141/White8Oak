@@ -2,10 +2,10 @@
   "products": [
     {
       "id": 1,
-      "title": "Обеденный стол Эко-Дуб",
+      "title": "Софа Эко-Дуб",
       "price": 68000,
       "oldPrice": 85000,
-      "category": "tables",
+      "category": "beds",
       "image": "",
       "images": [],
       "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
