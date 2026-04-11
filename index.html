@@ -482,6 +482,43 @@
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
         function toggleAddress(show) { document.getElementById('addressGroup').style.display = show ? 'block' : 'none'; }
 
+        // ── Свайп для сайдбара ────────────────────────────────────────────
+        function initSidebarSwipe() {
+            const sidebar = document.getElementById('sidebar');
+            const main    = document.querySelector('.main-content');
+            let startX = 0, startY = 0;
+
+            function onStart(e) {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }
+
+            function onEnd(e) {
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                // Игнорируем преимущественно вертикальные движения
+                if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+                if (dx > 0) sidebar.classList.remove('collapsed');
+                else        sidebar.classList.add('collapsed');
+            }
+
+            // Свайп по сайдбару
+            sidebar.addEventListener('touchstart', onStart, { passive: true });
+            sidebar.addEventListener('touchend',   onEnd,   { passive: true });
+
+            // Свайп по основному контенту:
+            // — вправо от левого края (<30px) → раскрыть
+            // — влево в любом месте → свернуть
+            main.addEventListener('touchstart', onStart, { passive: true });
+            main.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+                if (dx > 0 && startX < 30) sidebar.classList.remove('collapsed');
+                else if (dx < 0)           sidebar.classList.add('collapsed');
+            }, { passive: true });
+        }
+
         function navigateTo(pageId, el) {
             if (pageId === 'order' && cart.length === 0) return;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -821,6 +858,7 @@
         }
 
         init();
+        initSidebarSwipe();
 
         // ── PWA: регистрация Service Worker ──────────────────────────────
         if ('serviceWorker' in navigator) {
