@@ -15,6 +15,8 @@
     <meta name="apple-mobile-web-app-title" content="White &amp; Oak">
     <link rel="apple-touch-icon" href="icons/icon.svg">
 
+    <!-- Применяем тему до рендера — без вспышки светлой темы при обновлении -->
+    <script>if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')</script>
     <style>
         /* === ТЕМЫ === */
         :root {
@@ -24,6 +26,14 @@
             --accent-green: #3B4D3B; --accent-green-hover: #2f3d2f; --accent-terra: #C4724D;
             --input-bg: #fff; --sidebar-width: 260px; --sidebar-collapsed: 70px; --theme-speed: 0.4s;
         }
+        /* Тёмная тема — применяется сразу через html[data-theme], без ожидания JS */
+        html[data-theme="dark"] {
+            --bg-primary: #121212; --bg-secondary: #1e1e1e; --bg-sidebar: #181818;
+            --text-main: #e0e0e0; --text-muted: #a0a0a0; --border-color: #333333;
+            --shadow: 0 4px 15px rgba(0,0,0,0.2); --shadow-hover: 0 8px 25px rgba(0,0,0,0.4);
+            --accent-green: #66bb6a; --accent-green-hover: #81c784; --accent-terra: #ff8a65; --input-bg: #2c2c2c;
+        }
+        /* Оставляем body.dark-theme как синоним для совместимости с JS */
         body.dark-theme {
             --bg-primary: #121212; --bg-secondary: #1e1e1e; --bg-sidebar: #181818;
             --text-main: #e0e0e0; --text-muted: #a0a0a0; --border-color: #333333;
@@ -185,6 +195,40 @@
         }
         .sidebar-overlay.active { display: block; }
 
+        /* === PTR — PULL-TO-REFRESH ИНДИКАТОР === */
+        #ptrIndicator {
+            position: fixed;
+            top: -64px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 44px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: top 0.15s ease, box-shadow 0.15s ease;
+            pointer-events: none;
+        }
+        #ptrIndicator i {
+            font-size: 18px;
+            color: var(--accent-green);
+            transition: transform 0.3s ease;
+        }
+        #ptrIndicator.pulling { top: 12px; }
+        #ptrIndicator.ready i { transform: rotate(180deg); }
+        #ptrIndicator.spinning i {
+            animation: ptrSpin 0.6s linear infinite;
+        }
+        @keyframes ptrSpin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
         /* === МОБИЛЬНАЯ АДАПТАЦИЯ === */
 
         /* Плавные отступы для order-wrapper и cart-item через clamp */
@@ -263,6 +307,9 @@
 
     <!-- Оверлей для закрытия сайдбара по тапу на мобильных -->
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebarOnOverlay()"></div>
+
+    <!-- PTR — индикатор обновления при свайпе вниз -->
+    <div id="ptrIndicator"><i class="fas fa-arrow-down"></i></div>
 
     <!-- МОДАЛЬНОЕ ОКНО -->
     <div class="image-modal" id="imageModal">
@@ -529,27 +576,63 @@
         }
 
         function initTouchGestures() {
-            const sidebar = document.getElementById('sidebar');
-            const isPWA   = window.matchMedia('(display-mode: standalone)').matches
-                         || window.navigator.standalone === true;
-            let startX = 0, startY = 0;
+            const sidebar  = document.getElementById('sidebar');
+            const ptrEl    = document.getElementById('ptrIndicator');
+            const isPWA    = window.matchMedia('(display-mode: standalone)').matches
+                          || window.navigator.standalone === true;
+            const PTR_THRESHOLD = 90;
+            let startX = 0, startY = 0, ptrActive = false;
 
             document.addEventListener('touchstart', e => {
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
+                ptrActive = false;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', e => {
+                if (!isPWA) return;
+                const activePage = document.querySelector('.page.active');
+                if (activePage && activePage.scrollTop > 0) return;
+
+                const dy = e.touches[0].clientY - startY;
+                const dx = e.touches[0].clientX - startX;
+                // Только вертикальный свайп вниз
+                if (dy <= 0 || Math.abs(dy) < Math.abs(dx) * 1.5) return;
+
+                ptrActive = true;
+                const progress = Math.min(dy / PTR_THRESHOLD, 1);
+                ptrEl.classList.add('pulling');
+                if (dy >= PTR_THRESHOLD) {
+                    ptrEl.classList.add('ready');
+                } else {
+                    ptrEl.classList.remove('ready');
+                    // Пропорциональное смещение до порога
+                    ptrEl.style.top = (-64 + progress * 76) + 'px';
+                }
             }, { passive: true });
 
             document.addEventListener('touchend', e => {
                 const dx = e.changedTouches[0].clientX - startX;
                 const dy = e.changedTouches[0].clientY - startY;
 
-                // Pull-to-refresh: вниз > 90px, преимущественно вертикальный, только в PWA
-                if (isPWA && dy > 90 && Math.abs(dy) > Math.abs(dx) * 2) {
+                // Pull-to-refresh: вниз > порога, преимущественно вертикальный, только в PWA
+                if (isPWA && ptrActive && dy >= PTR_THRESHOLD && Math.abs(dy) > Math.abs(dx) * 1.5) {
                     const activePage = document.querySelector('.page.active');
                     if (!activePage || activePage.scrollTop === 0) {
-                        window.location.reload();
+                        // Показываем спиннер, потом перезагружаем
+                        ptrEl.classList.remove('ready');
+                        ptrEl.classList.add('spinning');
+                        ptrEl.style.top = '12px';
+                        setTimeout(() => window.location.reload(), 400);
                         return;
                     }
+                }
+
+                // Скрываем PTR индикатор
+                if (ptrActive) {
+                    ptrEl.classList.remove('pulling', 'ready', 'spinning');
+                    ptrEl.style.top = '';
+                    ptrActive = false;
                 }
 
                 // Свайп сайдбара: горизонтальный > 50px
