@@ -529,49 +529,46 @@
         /* === КАНАРЕЙКА === */
         .canary-widget {
             position: fixed; top: 72px; right: 20px; z-index: 9000;
-            width: 58px; height: 54px; pointer-events: none;
-            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.13));
-            animation: canaryBob 2.6s ease-in-out infinite;
+            width: 58px; height: 52px; pointer-events: none;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.20));
+            animation: canaryBob 2.8s ease-in-out infinite;
         }
-        @media (max-width: 900px) { .canary-widget { display: none; } }
-        #canaryWing {
+        @media (max-width: 480px) {
+            .canary-widget { width: 40px; height: 36px; top: 64px; right: 12px; }
+        }
+        .canary-widget #cWing {
             transform-box: fill-box; transform-origin: right center;
-            animation: wingIdle 2s ease-in-out infinite;
+            animation: wingIdleAnim 2.8s ease-in-out infinite;
         }
         @keyframes canaryBob {
-            0%,100% { transform: translateY(0);    }
-            50%     { transform: translateY(-5px);  }
+            0%,100% { transform: translateY(0);   }
+            50%     { transform: translateY(-4px); }
         }
-        @keyframes wingIdle {
-            0%,100% { transform: rotate(0deg);   }
-            50%     { transform: rotate(-14deg);  }
+        @keyframes wingIdleAnim {
+            0%,100% { transform: rotate(-8deg);  }
+            50%     { transform: rotate(-22deg); }
+        }
+        @keyframes wingFlap {
+            0%,32%   { transform: rotate(-42deg); }
+            33%,65%  { transform: rotate(-8deg);  }
+            66%,100% { transform: rotate(22deg);  }
         }
         @keyframes canaryFlyUp {
             0%   { transform: translateY(0)     rotate(0deg);   }
-            30%  { transform: translateY(-18px) rotate(-20deg); }
-            70%  { transform: translateY(-9px)  rotate(-12deg); }
+            25%  { transform: translateY(-16px) rotate(-20deg); }
+            75%  { transform: translateY(-8px)  rotate(-14deg); }
             100% { transform: translateY(0)     rotate(0deg);   }
-        }
-        @keyframes wingFlyUp {
-            0%,100% { transform: rotate(0deg);   }
-            25%     { transform: rotate(-45deg);  }
-            75%     { transform: rotate(-28deg);  }
         }
         @keyframes canaryFlyDown {
             0%   { transform: translateY(0)    rotate(0deg);  }
-            30%  { transform: translateY(14px) rotate(20deg); }
-            70%  { transform: translateY(7px)  rotate(12deg); }
+            25%  { transform: translateY(14px) rotate(20deg); }
+            75%  { transform: translateY(7px)  rotate(14deg); }
             100% { transform: translateY(0)    rotate(0deg);  }
-        }
-        @keyframes wingFlyDown {
-            0%,100% { transform: rotate(0deg);  }
-            25%     { transform: rotate(16deg);  }
-            75%     { transform: rotate(9deg);   }
         }
         .canary-widget.fly-up   { animation: canaryFlyUp   0.75s ease-out; }
         .canary-widget.fly-down { animation: canaryFlyDown 0.75s ease-out; }
-        .canary-widget.fly-up   #canaryWing { animation: wingFlyUp   0.37s ease-in-out 2; }
-        .canary-widget.fly-down #canaryWing { animation: wingFlyDown 0.37s ease-in-out 2; }
+        .canary-widget.fly-up   #cWing { animation: wingFlap 0.75s linear; }
+        .canary-widget.fly-down #cWing { animation: wingFlap 0.75s linear; }
     </style>
 </head>
 <body>
@@ -629,32 +626,17 @@
         </button>
         <!-- Канарейка — летит вверх/вниз при скролле -->
         <div id="canaryWidget" class="canary-widget" aria-hidden="true">
-            <svg viewBox="0 0 68 62" xmlns="http://www.w3.org/2000/svg" overflow="visible">
+            <svg viewBox="0 0 60 52" xmlns="http://www.w3.org/2000/svg">
                 <!-- Хвост -->
-                <path d="M17 41 Q5 37 3 46 Q12 41 15 45 Q7 50 4 57 Q13 50 17 53" stroke="#CCA800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                <path d="M17 41 Q9 43 8 51 Q13 46 17 49" stroke="#DDB800" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-                <!-- Крыло -->
-                <ellipse id="canaryWing" cx="26" cy="33" rx="17" ry="7.5" fill="#D4AA00" transform="rotate(-22 26 33)"/>
+                <path d="M14,29 L1,22 L4,31 L1,41 L14,35 Z" fill="#FFD700"/>
                 <!-- Тело -->
-                <ellipse cx="32" cy="37" rx="18" ry="13" fill="#FFE234"/>
+                <ellipse cx="28" cy="33" rx="16" ry="11" fill="#FFD700"/>
+                <!-- Крыло (анимируется) -->
+                <ellipse id="cWing" cx="23" cy="27" rx="13" ry="4.5" fill="#B8900A"/>
                 <!-- Голова -->
-                <circle cx="47" cy="24" r="13" fill="#FFE234"/>
-                <!-- Румянец -->
-                <ellipse cx="50" cy="29" rx="5" ry="3.5" fill="#FFAD8A" opacity="0.4"/>
-                <!-- Клюв верхний -->
-                <path d="M57 20 L66 24 L57 24 Z" fill="#F08C00"/>
-                <!-- Клюв нижний -->
-                <path d="M57 24 L65 26 L57 27 Z" fill="#D97A00"/>
-                <!-- Глаз -->
-                <circle cx="52" cy="20" r="3.5" fill="#1a1a1a"/>
-                <circle cx="53.3" cy="18.8" r="1.1" fill="white"/>
-                <!-- Ноги -->
-                <line x1="29" y1="50" x2="23" y2="58" stroke="#F08C00" stroke-width="1.8" stroke-linecap="round"/>
-                <line x1="23" y1="58" x2="19" y2="60" stroke="#F08C00" stroke-width="1.4" stroke-linecap="round"/>
-                <line x1="23" y1="58" x2="20" y2="62" stroke="#F08C00" stroke-width="1.4" stroke-linecap="round"/>
-                <line x1="38" y1="50" x2="32" y2="58" stroke="#F08C00" stroke-width="1.8" stroke-linecap="round"/>
-                <line x1="32" y1="58" x2="28" y2="60" stroke="#F08C00" stroke-width="1.4" stroke-linecap="round"/>
-                <line x1="32" y1="58" x2="29" y2="62" stroke="#F08C00" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="42" cy="21" r="11" fill="#FFD700"/>
+                <!-- Клюв -->
+                <path d="M51,16 L60,21 L51,25 Z" fill="#F5A000"/>
             </svg>
         </div>
 
