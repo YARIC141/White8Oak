@@ -1,0 +1,20 @@
+{
+  "name": "White & Oak — Мебель ручной работы",
+  "short_name": "White & Oak",
+  "description": "Мебель из массива дерева ручной работы",
+  "start_url": "/White8Oak/",
+  "scope": "/White8Oak/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F5F1EB",
+  "theme_color": "#3B4D3B",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/White8Oak/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#3B4D3B" rx="80"/>
+  <text x="256" y="200" font-family="Georgia,serif" font-size="96" font-weight="600" text-anchor="middle" fill="#F5F1EB">White</text>
+  <text x="256" y="310" font-family="Georgia,serif" font-size="96" font-weight="600" text-anchor="middle" fill="#C4724D">&amp;</text>
+  <text x="256" y="420" font-family="Georgia,serif" font-size="96" font-weight="600" text-anchor="middle" fill="#F5F1EB">Oak</text>
+</svg>
