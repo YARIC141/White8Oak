@@ -104,7 +104,7 @@
         .pop-card h3, .cat-card h3 { font-size: 18px; margin-bottom: 10px; }
         .cat-card .desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; flex: 1; transition: color var(--theme-speed) ease; }
         .cat-card-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
-        .hero-home { display: flex; gap: 40px; align-items: center; height: 80%; flex-wrap: wrap; }
+        .hero-home { display: flex; gap: 40px; align-items: flex-start; min-height: 70%; flex-wrap: wrap; padding-bottom: 40px; }
         .hero-text { flex: 1 1 300px; }
         .hero-text h1 { font-size: 48px; line-height: 1.1; margin-bottom: 20px; }
         .hero-text p { font-size: 15px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.7; max-width: 450px; transition: color var(--theme-speed) ease; }
@@ -648,17 +648,19 @@
             const sidebar  = document.getElementById('sidebar');
             const ptrEl    = document.getElementById('ptrIndicator');
             const PTR_THRESHOLD = 90;
-            let startX = 0, startY = 0, ptrActive = false;
+            let startX = 0, startY = 0, ptrActive = false, startAtTop = false;
 
             document.addEventListener('touchstart', e => {
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
                 ptrActive = false;
+                const activePage = document.querySelector('.page.active');
+                // PTR допустим только если страница была в самом верху в момент начала жеста
+                startAtTop = !activePage || activePage.scrollTop === 0;
             }, { passive: true });
 
             document.addEventListener('touchmove', e => {
-                const activePage = document.querySelector('.page.active');
-                if (activePage && activePage.scrollTop > 0) return;
+                if (!startAtTop) return;
 
                 const dy = e.touches[0].clientY - startY;
                 const dx = e.touches[0].clientX - startX;
