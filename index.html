@@ -350,6 +350,89 @@
             .order-cta button { margin-top: 0 !important; }
             .order-cta #offlineMsg { margin-bottom: 10px; }
         }
+
+        /* === SKELETON === */
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-card { background: var(--bg-secondary); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+        .skeleton-img, .skeleton-line {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--bg-primary) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        .skeleton-img  { width: 100%; height: 180px; display: block; }
+        .skeleton-body { padding: 15px 20px; display: flex; flex-direction: column; gap: 10px; }
+        .skeleton-line { height: 13px; border-radius: 4px; }
+        .skeleton-line.w60 { width: 60%; }
+        .skeleton-line.w40 { width: 40%; }
+
+        /* === КАТАЛОГ: поиск, сортировка, фильтр цены === */
+        .catalog-controls { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+        .search-box {
+            flex: 1; min-width: 200px;
+            display: flex; align-items: center; gap: 10px;
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 10px; padding: 0 14px;
+            transition: border-color 0.2s, background-color var(--theme-speed) ease;
+        }
+        .search-box:focus-within { border-color: var(--accent-green); }
+        .search-box i { color: var(--text-muted); font-size: 13px; }
+        .search-box input {
+            flex: 1; border: none; background: none; outline: none;
+            font-family: 'Inter'; font-size: 14px; color: var(--text-main);
+            padding: 12px 0;
+        }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .sort-select {
+            padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 10px;
+            font-family: 'Inter'; font-size: 14px; background: var(--bg-secondary); color: var(--text-main);
+            cursor: pointer; outline: none;
+            transition: border-color 0.2s, background-color var(--theme-speed) ease, color var(--theme-speed) ease;
+        }
+        .sort-select:focus { border-color: var(--accent-green); }
+        .price-filter {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+            font-size: 13px; color: var(--text-muted); flex-wrap: wrap;
+        }
+        .price-filter input {
+            width: 90px; padding: 8px 10px;
+            border: 1px solid var(--border-color); border-radius: 8px;
+            font-family: 'Inter'; font-size: 13px;
+            background: var(--bg-secondary); color: var(--text-main); outline: none;
+            transition: border-color 0.2s, background-color var(--theme-speed) ease, color var(--theme-speed) ease;
+        }
+        .price-filter input:focus { border-color: var(--accent-green); }
+        .price-filter input[type=number] { -moz-appearance: textfield; }
+        .price-filter input[type=number]::-webkit-inner-spin-button,
+        .price-filter input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+        .reset-price-btn {
+            background: none; border: none; cursor: pointer;
+            color: var(--text-muted); font-size: 18px; padding: 0 2px; line-height: 1;
+            transition: color 0.2s;
+        }
+        .reset-price-btn:hover { color: #ff4d4f; }
+
+        /* === УВЕДОМЛЕНИЕ О СТАТУСЕ ЗАКАЗА === */
+        .order-status-banner {
+            position: fixed; bottom: 24px; right: 20px;
+            background: var(--accent-green); color: #fff;
+            padding: 14px 18px; border-radius: 12px;
+            display: flex; align-items: center; gap: 12px;
+            z-index: 9000; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            max-width: 320px; font-size: 14px; line-height: 1.4;
+            animation: slideInUp 0.35s ease;
+        }
+        .order-status-banner strong { display: block; margin-top: 2px; }
+        .order-status-banner .banner-close {
+            background: none; border: none; color: rgba(255,255,255,0.8);
+            font-size: 20px; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0; line-height: 1;
+        }
+        @keyframes slideInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to   { transform: translateY(0);    opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -418,11 +501,26 @@
 
         <section id="page-catalog" class="page">
             <h2 class="section-title">Каталог мебели</h2>
-            <div class="category-filters">
-                <button class="cat-btn active" onclick="filterProducts('all', this)">Все</button>
-                <button class="cat-btn" onclick="filterProducts('Столы', this)">Столы</button>
-                <button class="cat-btn" onclick="filterProducts('Кресла и стулья', this)">Кресла и стулья</button>
-                <button class="cat-btn" onclick="filterProducts('Шкафы и комоды', this)">Шкафы и комоды</button>
+            <div class="catalog-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="catalogSearch" placeholder="Поиск по названию, материалу..." oninput="applyCatalogFilters()">
+                </div>
+                <select class="sort-select" id="catalogSort" onchange="applyCatalogFilters()">
+                    <option value="">По умолчанию</option>
+                    <option value="price-asc">Цена ↑</option>
+                    <option value="price-desc">Цена ↓</option>
+                </select>
+            </div>
+            <div class="price-filter">
+                <span>Цена:</span>
+                <input type="number" id="priceMin" placeholder="от" oninput="applyCatalogFilters()">
+                <span>—</span>
+                <input type="number" id="priceMax" placeholder="до" oninput="applyCatalogFilters()">
+                <button class="reset-price-btn" onclick="resetPriceFilter()" title="Сбросить фильтр цены">×</button>
+            </div>
+            <div class="category-filters" id="categoryFilters">
+                <button class="cat-btn active" onclick="setCatalogCategory('all', this)">Все</button>
             </div>
             <div class="catalog-grid" id="catalogContainer"></div>
         </section>
@@ -545,6 +643,57 @@
         let currentProductId = null;
         let activeImgIndex   = 0;
 
+        // ── Уведомления о статусе заказа ──────────────────────────────────
+        function saveOrderToHistory(phone, name) {
+            const orders = JSON.parse(localStorage.getItem('whiteoak_orders') || '[]');
+            orders.unshift({ phone, name, submittedAt: Date.now(), knownStatus: 'Новый' });
+            localStorage.setItem('whiteoak_orders', JSON.stringify(orders.slice(0, 5)));
+        }
+
+        function showOrderNotification(name, status) {
+            const banner = document.createElement('div');
+            banner.className = 'order-status-banner';
+            banner.innerHTML = `<i class="fas fa-bell"></i><div>Статус заказа обновлён<strong>${status}</strong></div><button class="banner-close" onclick="this.parentElement.remove()">×</button>`;
+            document.body.appendChild(banner);
+            setTimeout(() => banner.remove(), 7000);
+
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('White & Oak', {
+                    body: 'Статус вашего заказа: ' + status,
+                    icon: '/White8Oak/icons/icon.svg'
+                });
+            }
+        }
+
+        async function checkOrderUpdates() {
+            const saved = JSON.parse(localStorage.getItem('whiteoak_orders') || '[]');
+            if (!saved.length || !CONFIG.GOOGLE_SHEET_URL) return;
+            try {
+                const r = await fetch(CONFIG.GOOGLE_SHEET_URL);
+                if (!r.ok) return;
+                const data = await r.json();
+                const sheetOrders = data.orders || data || [];
+                let changed = false;
+                const updated = saved.map(item => {
+                    const matches = sheetOrders.filter(o => String(o.phone || '').replace(/\D/g,'') === String(item.phone || '').replace(/\D/g,''));
+                    if (!matches.length) return item;
+                    // Берём самый близкий по времени заказ
+                    const closest = matches.sort((a, b) =>
+                        Math.abs(new Date(a.date) - item.submittedAt) - Math.abs(new Date(b.date) - item.submittedAt)
+                    )[0];
+                    if (closest.status && closest.status !== item.knownStatus) {
+                        showOrderNotification(item.name, closest.status);
+                        changed = true;
+                        return { ...item, knownStatus: closest.status };
+                    }
+                    return item;
+                });
+                if (changed) localStorage.setItem('whiteoak_orders', JSON.stringify(updated));
+            } catch (e) {
+                console.warn('[Orders] Не удалось проверить статус:', e.message);
+            }
+        }
+
         // ── Вспомогательные функции для работы со схемой products.json ─────
         function formatPrice(num) {
             return (num || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽';
@@ -598,6 +747,7 @@
 
         // ── Инициализация ──────────────────────────────────────────────────
         async function init() {
+            renderSkeletons();
             await loadProducts();
             renderHome();
             updateCartBadge();
@@ -609,6 +759,7 @@
                 document.getElementById('sidebarThemeText').innerHTML = darkText;
                 document.getElementById('headerThemeText').innerHTML = darkText;
             }
+            checkOrderUpdates();
         }
 
         // ── Утилиты UI ────────────────────────────────────────────────────
@@ -730,22 +881,41 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             if (el) el.classList.add('active');
-            if (pageId === 'catalog') filterProducts('all', document.querySelector('.cat-btn'));
+            if (pageId === 'catalog') { currentCatalogCategory = 'all'; updateCategoryFilters(); applyCatalogFilters(); }
             if (pageId === 'cart') renderCart();
         }
 
         // ── Каталог ───────────────────────────────────────────────────────
+        let currentCatalogCategory = 'all';
+
+        function renderSkeletons() {
+            const skel = Array(4).fill(`
+                <div class="skeleton-card">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line"></div>
+                        <div class="skeleton-line w60"></div>
+                        <div class="skeleton-line w40"></div>
+                    </div>
+                </div>`).join('');
+            const popular = document.getElementById('popularContainer');
+            const catalog = document.getElementById('catalogContainer');
+            if (popular) popular.innerHTML = skel;
+            if (catalog) catalog.innerHTML = skel;
+        }
+
         function updateCategoryFilters() {
-            const container = document.querySelector('.category-filters');
+            const container = document.getElementById('categoryFilters');
             if (!container || !products.length) return;
             const cats = categories.length
                 ? categories
                 : [...new Set(products.map(p => getProductCategory(p)))].map(id => ({ id, name: id }));
-            let html = '<button class="cat-btn active" onclick="filterProducts(\'all\', this)">Все</button>';
+            let html = `<button class="cat-btn ${currentCatalogCategory === 'all' ? 'active' : ''}" onclick="setCatalogCategory('all', this)">Все</button>`;
             cats.forEach(cat => {
                 const id   = cat.id   || cat;
                 const name = cat.name || cat;
-                html += `<button class="cat-btn" onclick="filterProducts('${id}', this)">${name}</button>`;
+                const active = currentCatalogCategory === id ? 'active' : '';
+                html += `<button class="cat-btn ${active}" onclick="setCatalogCategory('${id}', this)">${name}</button>`;
             });
             container.innerHTML = html;
         }
@@ -766,15 +936,47 @@
             });
         }
 
-        function filterProducts(cat, btn) {
+        function setCatalogCategory(cat, btn) {
+            currentCatalogCategory = cat;
             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
+            applyCatalogFilters();
+        }
+
+        function resetPriceFilter() {
+            document.getElementById('priceMin').value = '';
+            document.getElementById('priceMax').value = '';
+            applyCatalogFilters();
+        }
+
+        function applyCatalogFilters() {
+            const search = (document.getElementById('catalogSearch')?.value || '').trim().toLowerCase();
+            const sort   = document.getElementById('catalogSort')?.value || '';
+            const minP   = parseFloat(document.getElementById('priceMin')?.value) || 0;
+            const maxP   = parseFloat(document.getElementById('priceMax')?.value) || Infinity;
             const c = document.getElementById('catalogContainer');
             if (!c) return;
+
+            let filtered = currentCatalogCategory === 'all'
+                ? [...products]
+                : products.filter(p => getProductCategory(p) === currentCatalogCategory);
+
+            if (search) {
+                filtered = filtered.filter(p =>
+                    (getProductName(p) || '').toLowerCase().includes(search) ||
+                    (p.material || '').toLowerCase().includes(search) ||
+                    (getProductCategory(p) || '').toLowerCase().includes(search)
+                );
+            }
+
+            filtered = filtered.filter(p => p.price >= minP && p.price <= maxP);
+
+            if (sort === 'price-asc')  filtered.sort((a, b) => a.price - b.price);
+            if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+
             c.innerHTML = '';
-            const filtered = (cat === 'all') ? products : products.filter(p => getProductCategory(p) === cat);
             if (!filtered.length) {
-                c.innerHTML = '<div class="empty-cart"><i class="fas fa-box-open"></i>Нет товаров в этой категории</div>';
+                c.innerHTML = '<div class="empty-cart"><i class="fas fa-box-open"></i> Ничего не найдено</div>';
                 return;
             }
             filtered.forEach(p => {
@@ -1066,6 +1268,11 @@
             submitBtn.innerHTML = 'Оформить заказ';
             document.getElementById('orderFormWrapper').style.display = 'none';
             document.getElementById('successBox').style.display = 'block';
+            // Сохраняем заказ для отслеживания статуса
+            saveOrderToHistory(phone, name);
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
             cart = [];
             updateCartBadge();
         }
