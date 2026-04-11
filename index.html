@@ -106,7 +106,7 @@
         .header-theme-btn:hover { color: var(--accent-green); box-shadow: none; }
 
         /* === ОСНОВНОЙ КОНТЕНТ === */
-        .main-content { flex: 1; height: 100vh; position: relative; overflow: hidden; background-color: var(--bg-primary); transition: background-color var(--theme-speed) ease; }
+        .main-content { flex: 1; height: 100vh; position: relative; overflow: hidden; z-index: 2; }
         .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 40px 50px; overflow-y: auto; overscroll-behavior-y: none; opacity: 0; visibility: hidden; transform: translateY(10px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
         .page.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .page::-webkit-scrollbar { width: 6px; }
@@ -526,49 +526,18 @@
             from { transform: translateY(30px); opacity: 0; }
             to   { transform: translateY(0);    opacity: 1; }
         }
-        /* === КАНАРЕЙКА === */
-        .canary-widget {
-            position: fixed; top: 72px; right: 20px; z-index: 9000;
-            width: 58px; height: 52px; pointer-events: none;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.20));
-            animation: canaryBob 2.8s ease-in-out infinite;
-        }
-        @media (max-width: 480px) {
-            .canary-widget { width: 40px; height: 36px; top: 64px; right: 12px; }
-        }
-        .canary-widget #cWing {
-            transform-box: fill-box; transform-origin: right center;
-            animation: wingIdleAnim 2.8s ease-in-out infinite;
-        }
-        @keyframes canaryBob {
-            0%,100% { transform: translateY(0);   }
-            50%     { transform: translateY(-4px); }
-        }
-        @keyframes wingIdleAnim {
-            0%,100% { transform: rotate(-8deg);  }
-            50%     { transform: rotate(-22deg); }
-        }
-        @keyframes wingFlap {
-            0%,32%   { transform: rotate(-42deg); }
-            33%,65%  { transform: rotate(-8deg);  }
-            66%,100% { transform: rotate(22deg);  }
-        }
-        @keyframes canaryFlyUp {
-            0%   { transform: translateY(0)     rotate(0deg);   }
-            25%  { transform: translateY(-16px) rotate(-20deg); }
-            75%  { transform: translateY(-8px)  rotate(-14deg); }
-            100% { transform: translateY(0)     rotate(0deg);   }
-        }
-        @keyframes canaryFlyDown {
-            0%   { transform: translateY(0)    rotate(0deg);  }
-            25%  { transform: translateY(14px) rotate(20deg); }
-            75%  { transform: translateY(7px)  rotate(14deg); }
-            100% { transform: translateY(0)    rotate(0deg);  }
-        }
-        .canary-widget.fly-up   { animation: canaryFlyUp   0.75s ease-out; }
-        .canary-widget.fly-down { animation: canaryFlyDown 0.75s ease-out; }
-        .canary-widget.fly-up   #cWing { animation: wingFlap 0.75s linear; }
-        .canary-widget.fly-down #cWing { animation: wingFlap 0.75s linear; }
+        /* === ПАРАЛЛАКС-ФОН === */
+        :root { --p1: rgba(0,0,0,0.055); --p2: rgba(0,0,0,0.085); --p3: rgba(0,0,0,0.13); --p4: rgba(0,0,0,0.19); }
+        html[data-theme="dark"], body.dark-theme { --p1: rgba(255,255,255,0.07); --p2: rgba(255,255,255,0.105); --p3: rgba(255,255,255,0.16); --p4: rgba(255,255,255,0.24); }
+        .parallax-bg { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+        .p-layer { position: absolute; inset: 0; will-change: transform; }
+        #pL1 { color: var(--p1); } #pL2 { color: var(--p2); } #pL3 { color: var(--p3); } #pL4 { color: var(--p4); }
+        .p-sun { display: block; } .p-moon { display: none; }
+        .p-clouds { display: block; } .p-stars { display: none; }
+        html[data-theme="dark"] .p-sun,  body.dark-theme .p-sun  { display: none; }
+        html[data-theme="dark"] .p-moon, body.dark-theme .p-moon { display: block; }
+        html[data-theme="dark"] .p-clouds, body.dark-theme .p-clouds { display: none; }
+        html[data-theme="dark"] .p-stars,  body.dark-theme .p-stars  { display: block; }
     </style>
 </head>
 <body>
@@ -620,25 +589,71 @@
         })();
     </script>
 
+    <!-- Параллакс-фон: фиксированный, за основным контентом -->
+    <div id="parallaxBg" class="parallax-bg" aria-hidden="true">
+        <!-- Слой 1: Солнце (светлая тема) / Луна (тёмная тема) -->
+        <div class="p-layer" id="pL1">
+            <svg class="p-sun" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:7%;right:10%;width:130px;height:130px">
+                <circle cx="50" cy="50" r="20" fill="currentColor"/>
+                <g stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
+                    <line x1="50" y1="5"  x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="95"/>
+                    <line x1="5"  y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="95" y2="50"/>
+                    <line x1="18" y1="18" x2="27" y2="27"/><line x1="73" y1="73" x2="82" y2="82"/>
+                    <line x1="82" y1="18" x2="73" y2="27"/><line x1="18" y1="82" x2="27" y2="73"/>
+                </g>
+            </svg>
+            <svg class="p-moon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:7%;right:10%;width:110px;height:110px">
+                <defs><mask id="pmm"><rect width="80" height="80" fill="white"/><circle cx="50" cy="34" r="23" fill="black"/></mask></defs>
+                <circle cx="38" cy="42" r="27" fill="currentColor" mask="url(#pmm)"/>
+            </svg>
+        </div>
+        <!-- Слой 2: Облака (светлая) / Звёзды (тёмная) -->
+        <div class="p-layer" id="pL2">
+            <svg class="p-clouds" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:60%">
+                <g fill="currentColor">
+                    <ellipse cx="165" cy="112" rx="55" ry="24"/><circle cx="133" cy="97" r="24"/><circle cx="168" cy="88" r="30"/><circle cx="204" cy="98" r="21"/>
+                </g>
+                <g fill="currentColor" transform="translate(530,-8)">
+                    <ellipse cx="80" cy="102" rx="65" ry="28"/><circle cx="48" cy="84" r="28"/><circle cx="85" cy="75" r="35"/><circle cx="124" cy="85" r="24"/>
+                </g>
+                <g fill="currentColor" transform="translate(960,15)">
+                    <ellipse cx="65" cy="88" rx="40" ry="18"/><circle cx="46" cy="77" r="18"/><circle cx="68" cy="72" r="22"/><circle cx="90" cy="78" r="16"/>
+                </g>
+            </svg>
+            <svg class="p-stars" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:70%">
+                <g fill="currentColor">
+                    <circle cx="80"  cy="55"  r="2"/><circle cx="210" cy="30"  r="1.5"/><circle cx="345" cy="78"  r="2.5"/>
+                    <circle cx="475" cy="42"  r="1.5"/><circle cx="598" cy="68" r="2"/>  <circle cx="728" cy="25"  r="3"/>
+                    <circle cx="862" cy="72"  r="1.5"/><circle cx="985" cy="38" r="2"/>  <circle cx="1108" cy="62" r="2.5"/>
+                    <circle cx="1258" cy="33" r="1.5"/><circle cx="155" cy="148" r="1.5"/><circle cx="308" cy="165" r="2"/>
+                    <circle cx="458" cy="132" r="1.5"/><circle cx="622" cy="152" r="2.5"/><circle cx="782" cy="138" r="1.5"/>
+                    <circle cx="922" cy="168" r="2"/>  <circle cx="1072" cy="142" r="1.5"/><circle cx="1202" cy="158" r="2"/>
+                    <circle cx="1355" cy="148" r="1.5"/><circle cx="52"  cy="195" r="1.5"/><circle cx="412" cy="200" r="2"/>
+                    <circle cx="698" cy="185" r="1.5"/><circle cx="1012" cy="205" r="1.5"/><circle cx="1312" cy="190" r="2"/>
+                    <path d="M425,92 L428,100 L436,103 L428,106 L425,114 L422,106 L414,103 L422,100 Z"/>
+                    <path d="M858,48 L860,54 L866,56 L860,58 L858,64 L856,58 L850,56 L856,54 Z"/>
+                    <path d="M1185,102 L1188,110 L1196,113 L1188,116 L1185,124 L1182,116 L1174,113 L1182,110 Z"/>
+                </g>
+            </svg>
+        </div>
+        <!-- Слой 3: Горы -->
+        <div class="p-layer" id="pL3">
+            <svg viewBox="0 0 1400 400" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:0;left:-80px;right:-80px;width:calc(100% + 160px);height:45%">
+                <path d="M-200,400 L80,120 L220,380 L360,80 L490,350 L630,100 L770,360 L910,60 L1050,310 L1190,145 L1330,270 L1500,400 Z" fill="currentColor"/>
+            </svg>
+        </div>
+        <!-- Слой 4: Деревья -->
+        <div class="p-layer" id="pL4">
+            <svg viewBox="0 0 1400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:0;left:-100px;right:-100px;width:calc(100% + 200px);height:28%">
+                <path d="M-200,200 L-120,65 L-80,200 L-45,45 L-10,200 L20,80 L55,200 L90,50 L122,200 L155,40 L190,200 L225,72 L260,200 L295,48 L330,200 L365,62 L400,200 L435,38 L470,200 L505,78 L540,200 L575,55 L610,200 L645,42 L680,200 L715,68 L750,200 L785,50 L820,200 L855,45 L890,200 L925,75 L960,200 L995,48 L1030,200 L1065,62 L1100,200 L1135,40 L1170,200 L1205,72 L1240,200 L1275,50 L1310,200 L1345,45 L1380,200 L1415,68 L1450,200 L1500,200 Z" fill="currentColor"/>
+            </svg>
+        </div>
+    </div>
+
     <div class="main-content">
         <button class="theme-icon-btn header-theme-btn" onclick="toggleTheme()" type="button" aria-label="Сменить тему">
             <i class="fas fa-sun theme-icon-el"></i>
         </button>
-        <!-- Канарейка — летит вверх/вниз при скролле -->
-        <div id="canaryWidget" class="canary-widget" aria-hidden="true">
-            <svg viewBox="0 0 60 52" xmlns="http://www.w3.org/2000/svg">
-                <!-- Хвост -->
-                <path d="M14,29 L1,22 L4,31 L1,41 L14,35 Z" fill="#FFD700"/>
-                <!-- Тело -->
-                <ellipse cx="28" cy="33" rx="16" ry="11" fill="#FFD700"/>
-                <!-- Крыло (анимируется) -->
-                <ellipse id="cWing" cx="23" cy="27" rx="13" ry="4.5" fill="#B8900A"/>
-                <!-- Голова -->
-                <circle cx="42" cy="21" r="11" fill="#FFD700"/>
-                <!-- Клюв -->
-                <path d="M51,16 L60,21 L51,25 Z" fill="#F5A000"/>
-            </svg>
-        </div>
 
         <section id="page-home" class="page active">
             <div class="hero-home">
@@ -1622,33 +1637,40 @@
             updateCartBadge();
         }
 
-        // ── Канарейка: реагирует на скролл ───────────────────────────────
-        function initCanary() {
-            const canary = document.getElementById('canaryWidget');
-            if (!canary) return;
-            let lastScrollTop = 0;
-            let flyTimer = null;
+        // ── Параллакс-фон: мышь + скролл ─────────────────────────────────
+        function initParallax() {
+            const layers = [
+                { el: document.getElementById('pL1'), mf: 0.014, sf: 0.006 },
+                { el: document.getElementById('pL2'), mf: 0.028, sf: 0.013 },
+                { el: document.getElementById('pL3'), mf: 0.052, sf: 0.024 },
+                { el: document.getElementById('pL4'), mf: 0.085, sf: 0.038 },
+            ];
+            let tx = 0, ty = 0, cx = 0, cy = 0, scrollY = 0;
 
+            document.addEventListener('mousemove', e => {
+                tx = e.clientX - window.innerWidth  / 2;
+                ty = e.clientY - window.innerHeight / 2;
+            });
             document.querySelectorAll('.page').forEach(page => {
                 page.addEventListener('scroll', () => {
-                    const st = page.scrollTop;
-                    if (Math.abs(st - lastScrollTop) < 10) return;
-                    const dir = st < lastScrollTop ? 'up' : 'down';
-                    lastScrollTop = st;
-
-                    canary.classList.remove('fly-up', 'fly-down');
-                    void canary.offsetWidth; // сброс анимации
-                    canary.classList.add('fly-' + dir);
-
-                    clearTimeout(flyTimer);
-                    flyTimer = setTimeout(() => canary.classList.remove('fly-up', 'fly-down'), 850);
+                    if (page.classList.contains('active')) scrollY = page.scrollTop;
                 }, { passive: true });
             });
+
+            (function tick() {
+                requestAnimationFrame(tick);
+                cx += (tx - cx) * 0.06;
+                cy += (ty - cy) * 0.06;
+                layers.forEach(({ el, mf, sf }) => {
+                    if (el) el.style.transform =
+                        `translate(${cx * mf}px, ${cy * mf - scrollY * sf}px)`;
+                });
+            })();
         }
 
         init();
         initTouchGestures();
-        initCanary();
+        initParallax();
 
         // ── PWA: регистрация Service Worker ──────────────────────────────
         if ('serviceWorker' in navigator) {
