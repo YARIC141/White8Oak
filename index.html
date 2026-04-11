@@ -162,6 +162,31 @@
         .spec-item label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; transition: color var(--theme-speed) ease;}
         .spec-item span { font-size: 15px; font-weight: 500; }
 
+        /* Обёртка главного фото с кнопкой 3D */
+        .product-img-wrap { position: relative; }
+        .gallery-3d-btn {
+            position: absolute; bottom: 12px; right: 12px;
+            width: 46px; height: 46px; border-radius: 50%;
+            background: rgba(196,114,77,0.88); color: #fff; border: none;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; cursor: pointer; z-index: 5;
+            backdrop-filter: blur(4px);
+            transition: background 0.2s, transform 0.15s;
+        }
+        .gallery-3d-btn:hover { background: var(--accent-terra); transform: scale(1.1); }
+
+        /* Кнопка «В корзину» — sticky на мобильных */
+        @media (max-width: 900px) {
+            .product-cta {
+                position: sticky; bottom: 0;
+                background: var(--bg-secondary);
+                padding: 14px 0 max(14px, env(safe-area-inset-bottom));
+                border-top: 1px solid var(--border-color);
+                z-index: 10;
+                transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
+            }
+        }
+
         /* Форма заказа */
         .order-wrapper { max-width: 600px; margin: 0 auto; background: var(--bg-secondary); padding: 50px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color var(--theme-speed) ease; }
         .order-item-info { background: var(--bg-primary); padding: 15px; border-radius: 8px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; transition: background-color var(--theme-speed) ease; }
@@ -388,7 +413,12 @@
         <section id="page-product" class="page">
             <div class="product-layout">
                 <div class="product-gallery">
-                    <img id="pImg" class="product-img" src="" alt="Фото" onclick="openModal()">
+                    <div class="product-img-wrap">
+                        <img id="pImg" class="product-img" src="" alt="Фото" onclick="openModal()">
+                        <button id="gallery3dBtn" class="gallery-3d-btn" style="display:none;" onclick="openModel3D(currentProductId)" title="Просмотреть 3D модель">
+                            <i class="fas fa-cube"></i>
+                        </button>
+                    </div>
                     <div class="product-thumbnails" id="pThumbnails"></div>
                 </div>
                 <div class="product-info">
@@ -410,13 +440,15 @@
                         <div class="spec-item"><label>Вес</label><span id="pWeight">-</span></div>
                         <div class="spec-item"><label>Материал</label><span id="pMaterial">-</span></div>
                     </div>
-                    <button class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 14px;" onclick="addToCart(currentProductId)">
-                        <i class="fas fa-cart-plus"></i> Добавить в корзину
-                    </button>
-                    <div id="model3dBtnContainer" style="display:none; margin-top: 12px;">
-                        <button class="btn btn-primary" style="width:100%;padding:14px;font-size:13px;background:var(--accent-terra);" onclick="openModel3D(currentProductId)">
-                            <i class="fas fa-cube"></i> Просмотреть 3D модель
+                    <div class="product-cta">
+                        <button class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 14px;" onclick="addToCart(currentProductId)">
+                            <i class="fas fa-cart-plus"></i> Добавить в корзину
                         </button>
+                        <div id="model3dBtnContainer" style="display:none; margin-top: 12px;">
+                            <button class="btn btn-primary" style="width:100%;padding:14px;font-size:13px;background:var(--accent-terra);" onclick="openModel3D(currentProductId)">
+                                <i class="fas fa-cube"></i> Просмотреть 3D модель
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -755,6 +787,7 @@
             document.getElementById('pColorText').textContent = getProductColors(p)[0];
 
             document.getElementById('model3dBtnContainer').style.display = p.model3d ? 'block' : 'none';
+            document.getElementById('gallery3dBtn').style.display    = p.model3d ? 'flex'  : 'none';
 
             navigateTo('product', null);
         }
