@@ -384,6 +384,17 @@
             </div>
         </div>
     </aside>
+    <script>
+        (function(){
+            if (window.innerWidth < 900) {
+                var s = document.getElementById('sidebar');
+                s.style.transition = 'none';
+                s.classList.add('collapsed');
+                // Возвращаем transition после первого кадра
+                requestAnimationFrame(function(){ requestAnimationFrame(function(){ s.style.transition = ''; }); });
+            }
+        })();
+    </script>
 
     <div class="main-content">
         <div class="header-theme-toggle" onclick="toggleTheme()">
@@ -597,10 +608,6 @@
                 const darkText = '<i class="fas fa-moon"></i> Темная';
                 document.getElementById('sidebarThemeText').innerHTML = darkText;
                 document.getElementById('headerThemeText').innerHTML = darkText;
-            }
-            // На малых экранах сайдбар стартует в сложенном состоянии
-            if (window.innerWidth < 900) {
-                document.getElementById('sidebar').classList.add('collapsed');
             }
         }
 
