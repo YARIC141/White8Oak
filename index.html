@@ -821,31 +821,39 @@
 
         // ── Инициализация ──────────────────────────────────────────────────
         async function init() {
+            // Применяем тему ДО загрузки товаров — никакой задержки
+            applyTheme(localStorage.getItem('theme') === 'dark');
             renderSkeletons();
             await loadProducts();
             renderHome();
             updateCartBadge();
             updateCategoryFilters();
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.querySelectorAll('.toggle-switch').forEach(el => el.classList.add('active'));
-                const darkText = '<i class="fas fa-moon"></i> Темная';
-                document.getElementById('sidebarThemeText').innerHTML = darkText;
-                document.getElementById('headerThemeText').innerHTML = darkText;
-            }
             checkOrderUpdates();
-            // Инициализируем стек истории стартовой страницей
             navHistory = [{ pageId: 'home', prodId: null }];
             navIndex   = 0;
         }
 
         // ── Утилиты UI ────────────────────────────────────────────────────
-        function toggleTheme() {
-            const isDark = document.body.classList.toggle('dark-theme');
+        function applyTheme(isDark) {
+            // Синхронизируем оба механизма: html[data-theme] (для pre-render) и body.dark-theme (для JS)
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.classList.add('dark-theme');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                document.body.classList.remove('dark-theme');
+            }
             document.querySelectorAll('.toggle-switch').forEach(el => el.classList.toggle('active', isDark));
-            const newText = isDark ? '<i class="fas fa-moon"></i> Темная' : '<i class="fas fa-sun"></i> Светлая';
-            document.getElementById('sidebarThemeText').innerHTML = newText;
-            document.getElementById('headerThemeText').innerHTML = newText;
+            const text = isDark ? '<i class="fas fa-moon"></i> Темная' : '<i class="fas fa-sun"></i> Светлая';
+            const sEl = document.getElementById('sidebarThemeText');
+            const hEl = document.getElementById('headerThemeText');
+            if (sEl) sEl.innerHTML = text;
+            if (hEl) hEl.innerHTML = text;
+        }
+
+        function toggleTheme() {
+            const isDark = !document.body.classList.contains('dark-theme');
+            applyTheme(isDark);
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
