@@ -120,7 +120,7 @@
         .cat-btn { padding: 8px 20px; border: 1px solid var(--border-color); background: var(--bg-secondary); font-family: 'Inter'; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 20px; transition: all 0.2s, background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, color var(--theme-speed) ease; }
         .cat-btn.active { background-color: var(--text-main); color: var(--bg-primary); border-color: var(--text-main); }
         .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
-        .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; height: 80%; }
+        .about-layout { display: flex; flex-direction: column; gap: 30px; max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
         .about-img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); transition: box-shadow var(--theme-speed) ease; }
         .about-text p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; font-size: 15px; transition: color var(--theme-speed) ease; }
 
@@ -627,9 +627,9 @@
 
         <section id="page-about" class="page">
             <div class="about-layout">
+                <h1>О нашей мастерской</h1>
                 <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=800&auto=format&fit=crop" class="about-img" alt="Мастерская">
                 <div class="about-text">
-                    <h1>О нашей мастерской</h1>
                     <p>«White & Oak» — это не фабрика, а сообщество мастеров, влюбленных в дерево.</p>
                     <p>В каждой детали мы используем классические столярные соединения.</p>
                     <p style="font-weight: 500; color: var(--text-main);">Мы покрываем изделия только натуральными маслами.</p>
