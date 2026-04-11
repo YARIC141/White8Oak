@@ -67,7 +67,7 @@
         .cart-badge { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: var(--accent-terra); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
         .theme-toggle-wrapper { padding: 0 25px; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 20px; transition: padding 0.3s, border-color var(--theme-speed) ease; }
         .sidebar.collapsed .theme-toggle-wrapper { padding: 20px 10px 0; }
-        .theme-toggle { display: flex; align-items: center; justify-content: space-between; }
+        .theme-toggle { display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .theme-toggle span { font-size: 13px; color: var(--text-muted); transition: opacity 0.2s, width 0.2s, color var(--theme-speed) ease; white-space: nowrap; }
         .toggle-switch { width: 50px; height: 26px; background: var(--border-color); border-radius: 13px; position: relative; cursor: pointer; flex-shrink: 0; transition: background-color var(--theme-speed) ease; }
         .toggle-switch.active { background: var(--accent-green); }
@@ -77,7 +77,13 @@
         .toggle-sidebar-btn:hover { color: var(--text-main); }
         .sidebar.collapsed .toggle-sidebar-btn i { transform: rotate(180deg); }
         .header-theme-toggle { position: absolute; top: 20px; right: 30px; z-index: 50; display: flex; align-items: center; gap: 12px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 30px; box-shadow: var(--shadow); cursor: pointer; transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, box-shadow var(--theme-speed) ease; }
-        .header-theme-toggle span { font-size: 12px; color: var(--text-muted); font-weight: 500; transition: color var(--theme-speed) ease; }
+        .header-theme-toggle span {
+            font-size: 12px; color: var(--text-muted); font-weight: 500;
+            max-width: 0; opacity: 0; overflow: hidden;
+            transition: max-width 0.3s ease, opacity 0.3s ease, color var(--theme-speed) ease;
+            white-space: nowrap;
+        }
+        .header-theme-toggle.label-visible span { max-width: 100px; opacity: 1; }
 
         /* === ОСНОВНОЙ КОНТЕНТ === */
         .main-content { flex: 1; height: 100vh; position: relative; overflow: hidden; background-color: var(--bg-primary); transition: background-color var(--theme-speed) ease; }
@@ -462,6 +468,15 @@
         }
         .reset-price-btn:hover { color: #ff4d4f; }
 
+        /* === ИНСТРУКЦИЯ === */
+        .help-page { max-width: 680px; margin: 0 auto; padding-bottom: 40px; }
+        .help-section { margin-bottom: 32px; }
+        .help-section h3 { font-size: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .help-section h3 i { color: var(--accent-green); font-size: 16px; transition: color var(--theme-speed) ease; }
+        .help-section p, .help-section li { font-size: 14px; color: var(--text-muted); line-height: 1.75; transition: color var(--theme-speed) ease; }
+        .help-section ul { padding-left: 20px; }
+        .help-section ul li { margin-bottom: 5px; }
+
         /* === УВЕДОМЛЕНИЕ О СТАТУСЕ ЗАКАЗА === */
         .order-status-banner {
             position: fixed; bottom: 24px; right: 20px;
@@ -507,6 +522,7 @@
             <div class="nav-link" onclick="navigateTo('catalog', this)"><i class="fas fa-th-large"></i><span class="nav-text">Каталог</span></div>
             <div class="nav-link" onclick="navigateTo('about', this)"><i class="fas fa-info-circle"></i><span class="nav-text">О нас</span></div>
             <div class="nav-link" onclick="navigateTo('cart', this)"><i class="fas fa-shopping-cart"></i><span class="nav-text">Корзина</span><div class="cart-badge" id="cartBadge" style="display:none;">0</div></div>
+            <div class="nav-link" onclick="navigateTo('help', this)" style="margin-top: auto;"><i class="fas fa-book-open"></i><span class="nav-text">Инструкция</span></div>
         </nav>
         <div class="theme-toggle-wrapper">
             <div class="theme-toggle">
@@ -702,6 +718,61 @@
                 </div>
             </div>
         </section>
+
+        <section id="page-help" class="page">
+            <div class="help-page">
+                <h2 class="section-title">Инструкция</h2>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-hand-point-up"></i> Навигация свайпами</h3>
+                    <ul>
+                        <li><strong>Вправо</strong> (от левого края) — открыть боковое меню.</li>
+                        <li><strong>Влево</strong> (по открытому меню) — свернуть боковое меню.</li>
+                        <li><strong>Влево</strong> в области контента — вернуться назад по истории экранов.</li>
+                        <li><strong>Вправо</strong> в области контента — перейти вперёд по истории.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-leaf"></i> Обновление страницы</h3>
+                    <p>Потяните экран сверху вниз (когда страница прокручена в самый верх) — появится индикатор в виде листа. Удерживайте до щелчка, чтобы обновить данные.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-wifi"></i> Работа офлайн</h3>
+                    <p>Приложение кешируется при первом открытии и продолжает работать без интернета. Товары, стили и изображения загружаются из кеша. Оформить заказ можно только при наличии сети.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-th-large"></i> Каталог</h3>
+                    <ul>
+                        <li>На мобильных фильтры свёрнуты в иконки: поиск, сортировка, цена, раздел.</li>
+                        <li>Нажмите иконку — откроется соответствующая панель ввода.</li>
+                        <li>Оранжевая точка на иконке означает, что фильтр активен.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-shopping-cart"></i> Заказ</h3>
+                    <ul>
+                        <li>Добавьте товар в корзину из каталога или страницы товара.</li>
+                        <li>В корзине укажите количество и перейдите к оформлению.</li>
+                        <li>Заполните имя, телефон, email и способ получения.</li>
+                        <li>После подтверждения менеджер получит письмо с деталями заказа.</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-bell"></i> Статус заказа</h3>
+                    <p>Когда менеджер изменит статус вашего заказа, приложение покажет уведомление при следующем открытии. Разрешите уведомления браузера — и они появятся даже при закрытом приложении.</p>
+                </div>
+
+                <div class="help-section">
+                    <h3><i class="fas fa-cube"></i> 3D-просмотр</h3>
+                    <p>Если у товара есть 3D-модель, на главном фото появится кнопка <i class="fas fa-cube" style="color:var(--accent-terra);"></i>. Нажмите её, чтобы осмотреть мебель со всех сторон.</p>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script src="config.js"></script>
@@ -855,6 +926,13 @@
             const isDark = !document.body.classList.contains('dark-theme');
             applyTheme(isDark);
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            // Показываем подпись в заголовке на 1 секунду с анимацией
+            const headerToggle = document.querySelector('.header-theme-toggle');
+            if (headerToggle) {
+                clearTimeout(headerToggle._labelTimer);
+                headerToggle.classList.add('label-visible');
+                headerToggle._labelTimer = setTimeout(() => headerToggle.classList.remove('label-visible'), 1200);
+            }
         }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
         function toggleAddress(show) { document.getElementById('addressGroup').style.display = show ? 'block' : 'none'; }

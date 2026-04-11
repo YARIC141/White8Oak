@@ -1,5 +1,5 @@
 // Меняй версию при каждом деплое — это сбросит кеш у всех пользователей
-const CACHE = 'white-oak-v3';
+const CACHE = 'white-oak-v4';
 
 const PRECACHE = [
     '/White8Oak/config.js',
