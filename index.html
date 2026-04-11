@@ -175,11 +175,29 @@
         .modal-next { right: 20px; }
         .modal-close { position: absolute; top: 20px; right: 30px; background: none; border: none; color: white; font-size: 40px; cursor: pointer; }
 
+        /* === САЙДБАР: ОВЕРЛЕЙ ДЛЯ ЗАКРЫТИЯ ПО ТАПУ === */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: 99;
+        }
+        .sidebar-overlay.active { display: block; }
+
         /* === МОБИЛЬНАЯ АДАПТАЦИЯ === */
 
         /* Плавные отступы для order-wrapper и cart-item через clamp */
         .order-wrapper { padding: clamp(20px, 5vw, 50px); }
         .cart-item { padding: clamp(14px, 3vw, 20px); }
+
+        /* Уменьшение сайдбара пропорционально ширине экрана */
+        @media (max-width: 640px) {
+            :root { --sidebar-width: 200px; --sidebar-collapsed: 56px; }
+        }
+        @media (max-width: 400px) {
+            :root { --sidebar-width: 175px; --sidebar-collapsed: 50px; }
+        }
 
         @media (max-width: 900px) {
             /* Детали товара: двухколоночный → одноколоночный */
@@ -243,6 +261,9 @@
 </head>
 <body>
 
+    <!-- Оверлей для закрытия сайдбара по тапу на мобильных -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebarOnOverlay()"></div>
+
     <!-- МОДАЛЬНОЕ ОКНО -->
     <div class="image-modal" id="imageModal">
         <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
@@ -252,7 +273,7 @@
     </div>
 
     <aside class="sidebar" id="sidebar">
-        <div class="toggle-sidebar-btn" onclick="toggleSidebar()"><i class="fas fa-chevron-left"></i></div>
+        <div class="toggle-sidebar-btn" onclick="toggleSidebarFull()"><i class="fas fa-chevron-left"></i></div>
         <div class="logo"><i class="fas fa-tree"></i><span class="logo-text">White & Oak</span></div>
         <nav class="nav-menu">
             <div class="nav-link active" onclick="navigateTo('home', this)"><i class="fas fa-home"></i><span class="nav-text">Главная</span></div>
@@ -482,12 +503,35 @@
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
         function toggleAddress(show) { document.getElementById('addressGroup').style.display = show ? 'block' : 'none'; }
 
-        // ── Свайп для сайдбара ────────────────────────────────────────────
+        // ── Сайдбар: свайп + закрытие по тапу снаружи ───────────────────
+        const MOBILE_BREAKPOINT = 900;
+
+        function setSidebarOpen(open) {
+            const sidebar  = document.getElementById('sidebar');
+            const overlay  = document.getElementById('sidebarOverlay');
+            const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+            if (open) {
+                sidebar.classList.remove('collapsed');
+                if (isMobile) overlay.classList.add('active');
+            } else {
+                sidebar.classList.add('collapsed');
+                overlay.classList.remove('active');
+            }
+        }
+
+        function closeSidebarOnOverlay() {
+            setSidebarOpen(false);
+        }
+
+        function toggleSidebarFull() {
+            const collapsed = document.getElementById('sidebar').classList.contains('collapsed');
+            setSidebarOpen(collapsed);
+        }
+
         function initSidebarSwipe() {
             const sidebar = document.getElementById('sidebar');
             let startX = 0, startY = 0;
 
-            // Слушаем на document — не теряем события из-за дочерних элементов
             document.addEventListener('touchstart', e => {
                 startX = e.touches[0].clientX;
                 startY = e.touches[0].clientY;
@@ -496,26 +540,19 @@
             document.addEventListener('touchend', e => {
                 const dx = e.changedTouches[0].clientX - startX;
                 const dy = e.changedTouches[0].clientY - startY;
-
-                // Игнорируем короткие и вертикальные движения
                 if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
 
-                const sidebarW = sidebar.offsetWidth; // 260 или 70
-
-                if (dx > 0) {
-                    // Свайп вправо — раскрыть
-                    // Срабатывает если начат в пределах сайдбара или у левого края
-                    if (startX < sidebarW + 20) {
-                        sidebar.classList.remove('collapsed');
-                    }
-                } else {
-                    // Свайп влево — свернуть
-                    // Срабатывает если начат в пределах раскрытого сайдбара
-                    if (startX < sidebarW + 20) {
-                        sidebar.classList.add('collapsed');
-                    }
-                }
+                const sidebarW = sidebar.offsetWidth;
+                if (dx > 0 && startX < sidebarW + 20) setSidebarOpen(true);
+                if (dx < 0 && startX < sidebarW + 20) setSidebarOpen(false);
             }, { passive: true });
+
+            // Скрывать оверлей при ресайзе на десктоп
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= MOBILE_BREAKPOINT) {
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                }
+            });
         }
 
         function navigateTo(pageId, el) {
