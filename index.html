@@ -394,16 +394,22 @@
         }
         .fib.has-value .filter-dot { display: block; }
 
+        /* Обёртка поиска+сортировки: строка на десктопе */
+        .catalog-search-sort { display: flex; gap: 12px; margin-bottom: 14px; }
+        .catalog-search-sort #fp-search { flex: 1; min-width: 200px; }
+
         @media (max-width: 900px) {
             .catalog-filter-bar { display: flex; }
+            .catalog-search-sort { display: block; margin: 0; }
 
-            #fp-controls, #fp-price, .category-filters {
+            #fp-search, #fp-sort, #fp-price, .category-filters {
                 max-height: 0; overflow: hidden;
                 margin-bottom: 0; padding-bottom: 0; border-bottom: none;
                 transition: max-height 0.35s ease, margin-bottom 0.25s ease;
             }
-            #fp-controls.panel-open  { max-height: 160px; margin-bottom: 10px; }
-            #fp-price.panel-open     { max-height: 80px;  margin-bottom: 10px; }
+            #fp-search.panel-open { max-height: 70px;  margin-bottom: 10px; }
+            #fp-sort.panel-open   { max-height: 70px;  margin-bottom: 10px; }
+            #fp-price.panel-open  { max-height: 80px;  margin-bottom: 10px; }
             .category-filters.panel-open {
                 max-height: 200px; margin-bottom: 20px;
                 padding-bottom: 20px; border-bottom: 1px solid var(--border-color);
@@ -546,11 +552,12 @@
 
             <!-- Иконки-фильтры: видны только на мобильных -->
             <div class="catalog-filter-bar">
-                <button class="fib" id="fib-search" onclick="toggleFilterPanel('fp-controls', this)">
+                <button class="fib" id="fib-search" onclick="toggleFilterPanel('fp-search', this)">
                     <span class="filter-dot"></span>
                     <i class="fas fa-search"></i><span>Поиск</span>
                 </button>
-                <button class="fib" id="fib-sort" onclick="toggleFilterPanel('fp-controls', this)">
+                <button class="fib" id="fib-sort" onclick="toggleFilterPanel('fp-sort', this)">
+                    <span class="filter-dot"></span>
                     <i class="fas fa-sort"></i><span>Сорт.</span>
                 </button>
                 <button class="fib" id="fib-price" onclick="toggleFilterPanel('fp-price', this)">
@@ -563,16 +570,21 @@
                 </button>
             </div>
 
-            <div class="catalog-controls" id="fp-controls">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="catalogSearch" placeholder="Поиск по названию, материалу..." oninput="applyCatalogFilters()">
+            <!-- Поиск и сортировка: на десктопе в строку, на мобильных — отдельные панели -->
+            <div class="catalog-search-sort">
+                <div id="fp-search">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="catalogSearch" placeholder="Поиск по названию, материалу..." oninput="applyCatalogFilters()">
+                    </div>
                 </div>
-                <select class="sort-select" id="catalogSort" onchange="applyCatalogFilters()">
-                    <option value="">По умолчанию</option>
-                    <option value="price-asc">Цена ↑</option>
-                    <option value="price-desc">Цена ↓</option>
-                </select>
+                <div id="fp-sort">
+                    <select class="sort-select" id="catalogSort" onchange="applyCatalogFilters()">
+                        <option value="">По умолчанию</option>
+                        <option value="price-asc">Цена ↑</option>
+                        <option value="price-desc">Цена ↓</option>
+                    </select>
+                </div>
             </div>
             <div class="price-filter" id="fp-price">
                 <span>Цена:</span>
@@ -822,6 +834,9 @@
                 document.getElementById('headerThemeText').innerHTML = darkText;
             }
             checkOrderUpdates();
+            // Инициализируем стек истории стартовой страницей
+            navHistory = [{ pageId: 'home', prodId: null }];
+            navIndex   = 0;
         }
 
         // ── Утилиты UI ────────────────────────────────────────────────────
@@ -860,15 +875,17 @@
         function initTouchGestures() {
             const sidebar  = document.getElementById('sidebar');
             const ptrEl    = document.getElementById('ptrIndicator');
-            const PTR_THRESHOLD = 90;
-            let startX = 0, startY = 0, ptrActive = false, startAtTop = false;
+            const PTR_THRESHOLD  = 90;
+            const NAV_THRESHOLD  = 72; // порог для навигационного свайпа
+            let startX = 0, startY = 0, startTarget = null;
+            let ptrActive = false, startAtTop = false;
 
             document.addEventListener('touchstart', e => {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                ptrActive = false;
+                startX      = e.touches[0].clientX;
+                startY      = e.touches[0].clientY;
+                startTarget = e.target;
+                ptrActive   = false;
                 const activePage = document.querySelector('.page.active');
-                // PTR допустим только если страница была в самом верху в момент начала жеста
                 startAtTop = !activePage || activePage.scrollTop === 0;
             }, { passive: true });
 
@@ -916,11 +933,27 @@
                     ptrActive = false;
                 }
 
-                // Свайп сайдбара: горизонтальный > 50px
+                // Не обрабатываем свайп из инпута (выделение текста)
+                const isInput = ['INPUT','TEXTAREA','SELECT'].includes(startTarget?.tagName);
+                if (isInput) return;
+
+                // Только горизонтальный свайп
                 if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+
                 const sidebarW = sidebar.offsetWidth;
-                if (dx > 0 && startX < sidebarW + 20) setSidebarOpen(true);
-                if (dx < 0 && startX < sidebarW + 20) setSidebarOpen(false);
+
+                // Свайп сайдбара: начало у края сайдбара
+                if (startX < sidebarW + 30) {
+                    if (dx > 0) setSidebarOpen(true);
+                    if (dx < 0) setSidebarOpen(false);
+                    return;
+                }
+
+                // Навигационный свайп: начало в зоне основного контента
+                if (Math.abs(dx) >= NAV_THRESHOLD) {
+                    if (dx < 0) navBack();    // вправо→влево = назад
+                    else        navForward(); // влево→вправо = вперёд
+                }
             }, { passive: true });
 
             // Закрытие по тапу снаружи (мобильные)
@@ -937,6 +970,11 @@
             });
         }
 
+        // ── История навигации ─────────────────────────────────────────────
+        let navHistory  = [];
+        let navIndex    = -1;
+        let _noHistory  = false; // флаг: не писать в историю при восстановлении
+
         function navigateTo(pageId, el) {
             if (pageId === 'order' && cart.length === 0) return;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -947,11 +985,46 @@
                 currentCatalogCategory = 'all';
                 updateCategoryFilters();
                 applyCatalogFilters();
-                // Закрываем все мобильные панели при открытии каталога
                 FILTER_PANELS.forEach(id => document.getElementById(id)?.classList.remove('panel-open'));
                 FILTER_BTNS.forEach(id => document.getElementById(id)?.classList.remove('active'));
             }
             if (pageId === 'cart') renderCart();
+
+            if (!_noHistory) {
+                // Обрезаем «будущее» и пишем новую запись
+                navHistory = navHistory.slice(0, navIndex + 1);
+                navHistory.push({ pageId, prodId: currentProductId });
+                navIndex = navHistory.length - 1;
+            }
+        }
+
+        function _navLinkEl(pageId) {
+            return [...document.querySelectorAll('.nav-link')]
+                .find(el => (el.getAttribute('onclick') || '').includes(`'${pageId}'`)) || null;
+        }
+
+        function _restoreState(state) {
+            if (!state) return;
+            if (state.pageId === 'order' && cart.length === 0) return;
+            _noHistory = true;
+            if (state.pageId === 'product' && state.prodId) {
+                openProduct(state.prodId);
+            } else {
+                navigateTo(state.pageId, _navLinkEl(state.pageId));
+            }
+            _noHistory = false;
+        }
+
+        function navBack() {
+            if (navIndex <= 0) return;
+            navIndex--;
+            _restoreState(navHistory[navIndex]);
+        }
+
+        function navForward() {
+            if (navIndex >= navHistory.length - 1) return;
+            navIndex++;
+            _restoreState(navHistory[navIndex]);
         }
 
         // ── Каталог ───────────────────────────────────────────────────────
@@ -1019,8 +1092,8 @@
         }
 
         // ── Мобильные панели фильтров ─────────────────────────────────────
-        const FILTER_PANELS = ['fp-controls', 'fp-price', 'categoryFilters'];
-        const FILTER_BTNS   = ['fib-search', 'fib-price', 'fib-cat'];
+        const FILTER_PANELS = ['fp-search', 'fp-sort', 'fp-price', 'categoryFilters'];
+        const FILTER_BTNS   = ['fib-search', 'fib-sort', 'fib-price', 'fib-cat'];
 
         function toggleFilterPanel(panelId, clickedBtn) {
             if (window.innerWidth >= MOBILE_BREAKPOINT) return;
@@ -1028,15 +1101,8 @@
             if (!panel) return;
             const isOpen = panel.classList.contains('panel-open');
 
-            // Закрываем все панели и кнопки
             FILTER_PANELS.forEach(id => document.getElementById(id)?.classList.remove('panel-open'));
-            FILTER_BTNS.forEach(id => {
-                const b = document.getElementById(id);
-                if (b) b.classList.remove('active');
-            });
-            // fib-search и fib-sort оба открывают fp-controls
-            document.getElementById('fib-search')?.classList.remove('active');
-            document.getElementById('fib-sort')?.classList.remove('active');
+            FILTER_BTNS.forEach(id => document.getElementById(id)?.classList.remove('active'));
 
             if (!isOpen) {
                 panel.classList.add('panel-open');
