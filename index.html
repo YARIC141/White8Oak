@@ -400,6 +400,10 @@
                         <input type="text" id="oAddress" placeholder="Город, улица, дом, квартира">
                     </div>
                     <div class="form-group"><label>Пожелания к заказу</label><textarea id="oWishes" style="width:100%;padding:14px;border:1px solid var(--border-color);border-radius:6px;font-family:'Inter';font-size:15px;outline:none;background:var(--input-bg);color:var(--text-main);min-height:80px;resize:vertical;" placeholder="Особые пожелания, вопросы..."></textarea></div>
+                    <div id="offlineMsg" style="display:none;background:#fff3cd;color:#7a5c00;border:1px solid #ffc107;border-radius:8px;padding:14px 16px;margin-bottom:12px;font-size:14px;line-height:1.5;">
+                        <i class="fas fa-wifi" style="margin-right:6px;opacity:0.6;"></i>
+                        Заказ не может быть создан пока вы не подключитесь к сети. Вернитесь в корзину позднее.
+                    </div>
                     <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="submitOrder()">Подтвердить заказ</button>
                 </div>
                 <div class="success-box" id="successBox">
@@ -503,33 +507,31 @@
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
         function toggleAddress(show) { document.getElementById('addressGroup').style.display = show ? 'block' : 'none'; }
 
-        // ── Сайдбар: свайп + закрытие по тапу снаружи ───────────────────
+        // ── Жесты: сайдбар + pull-to-refresh ────────────────────────────
         const MOBILE_BREAKPOINT = 900;
 
         function setSidebarOpen(open) {
-            const sidebar  = document.getElementById('sidebar');
-            const overlay  = document.getElementById('sidebarOverlay');
-            const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
             if (open) {
                 sidebar.classList.remove('collapsed');
-                if (isMobile) overlay.classList.add('active');
+                if (window.innerWidth < MOBILE_BREAKPOINT) overlay.classList.add('active');
             } else {
                 sidebar.classList.add('collapsed');
                 overlay.classList.remove('active');
             }
         }
 
-        function closeSidebarOnOverlay() {
-            setSidebarOpen(false);
-        }
+        function closeSidebarOnOverlay() { setSidebarOpen(false); }
 
         function toggleSidebarFull() {
-            const collapsed = document.getElementById('sidebar').classList.contains('collapsed');
-            setSidebarOpen(collapsed);
+            setSidebarOpen(document.getElementById('sidebar').classList.contains('collapsed'));
         }
 
-        function initSidebarSwipe() {
+        function initTouchGestures() {
             const sidebar = document.getElementById('sidebar');
+            const isPWA   = window.matchMedia('(display-mode: standalone)').matches
+                         || window.navigator.standalone === true;
             let startX = 0, startY = 0;
 
             document.addEventListener('touchstart', e => {
@@ -540,14 +542,30 @@
             document.addEventListener('touchend', e => {
                 const dx = e.changedTouches[0].clientX - startX;
                 const dy = e.changedTouches[0].clientY - startY;
-                if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
 
+                // Pull-to-refresh: вниз > 90px, преимущественно вертикальный, только в PWA
+                if (isPWA && dy > 90 && Math.abs(dy) > Math.abs(dx) * 2) {
+                    const activePage = document.querySelector('.page.active');
+                    if (!activePage || activePage.scrollTop === 0) {
+                        window.location.reload();
+                        return;
+                    }
+                }
+
+                // Свайп сайдбара: горизонтальный > 50px
+                if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
                 const sidebarW = sidebar.offsetWidth;
                 if (dx > 0 && startX < sidebarW + 20) setSidebarOpen(true);
                 if (dx < 0 && startX < sidebarW + 20) setSidebarOpen(false);
             }, { passive: true });
 
-            // Скрывать оверлей при ресайзе на десктоп
+            // Закрытие по тапу снаружи (мобильные)
+            document.addEventListener('click', e => {
+                if (window.innerWidth >= MOBILE_BREAKPOINT) return;
+                if (sidebar.classList.contains('collapsed')) return;
+                if (!sidebar.contains(e.target)) setSidebarOpen(false);
+            });
+
             window.addEventListener('resize', () => {
                 if (window.innerWidth >= MOBILE_BREAKPOINT) {
                     document.getElementById('sidebarOverlay').classList.remove('active');
@@ -809,6 +827,13 @@
         }
 
         async function submitOrder() {
+            // Блокировка в офлайн-режиме
+            if (!navigator.onLine) {
+                document.getElementById('offlineMsg').style.display = 'block';
+                return;
+            }
+            document.getElementById('offlineMsg').style.display = 'none';
+
             const name     = document.getElementById('oCustomerName').value.trim();
             const phone    = document.getElementById('oCustomerPhone').value.trim();
             const email    = document.getElementById('oCustomerEmail').value.trim();
@@ -894,7 +919,7 @@
         }
 
         init();
-        initSidebarSwipe();
+        initTouchGestures();
 
         // ── PWA: регистрация Service Worker ──────────────────────────────
         if ('serviceWorker' in navigator) {
