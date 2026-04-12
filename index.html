@@ -540,9 +540,9 @@
         /* Небо: два слоя с плавным кроссфейдом при смене темы */
         .p-sky { position: absolute; inset: 0; transition: opacity var(--theme-speed) ease; }
         .p-sky-day   { background: linear-gradient(to bottom,
-            #8F93A7 0%, #AEA9A5 32%, #C9A87C 66%, #D4AC82 100%); }
+            #6E9EC2 0%, #96B8CC 28%, #C4A47C 66%, #D0B086 100%); }
         .p-sky-night { background: linear-gradient(to bottom,
-            #1C1E2E 0%, #2C2B38 32%, #3C3028 66%, #302420 100%); opacity: 0; }
+            #0A0E1C 0%, #161A2A 32%, #221E28 68%, #1A1614 100%); opacity: 0; }
         html[data-theme="dark"] .p-sky-day,   body.dark-theme .p-sky-day   { opacity: 0; }
         html[data-theme="dark"] .p-sky-night, body.dark-theme .p-sky-night { opacity: 1; }
         .p-layer { position: absolute; inset: 0; will-change: transform; }
@@ -634,47 +634,57 @@
 
         <!-- Слой 2: Облака (день) / Звёзды (ночь) -->
         <div class="p-layer" id="pL2">
-            <!-- ОБЛАКА: 5 групп мягких округлых форм -->
-            <svg class="p-clouds" viewBox="0 0 1400 380" preserveAspectRatio="xMidYMid meet"
-                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:58%">
+            <!-- ОБЛАКА: 5 групп, крупные, хаотичные позиции -->
+            <svg class="p-clouds" viewBox="0 0 1400 500" preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:72%">
+                <!-- Облако 1: крупное, левее, y≈95 -->
                 <g fill="currentColor">
-                    <ellipse cx="175" cy="115" rx="58" ry="25"/>
-                    <circle cx="140" cy="99"  r="25"/><circle cx="178" cy="89" r="32"/><circle cx="216" cy="100" r="22"/>
+                    <ellipse cx="190" cy="138" rx="88" ry="36"/>
+                    <circle cx="138" cy="112" r="38"/><circle cx="192" cy="96" r="50"/><circle cx="250" cy="114" r="34"/>
                 </g>
-                <g fill="currentColor" transform="translate(530,-6)">
-                    <ellipse cx="82" cy="106" rx="70" ry="30"/>
-                    <circle cx="47" cy="86"  r="30"/><circle cx="85" cy="76" r="38"/><circle cx="128" cy="87" r="26"/>
+                <!-- Облако 2: очень крупное, центр-лево, y≈38 -->
+                <g fill="currentColor">
+                    <ellipse cx="660" cy="72" rx="104" ry="42"/>
+                    <circle cx="598" cy="46" r="46"/><circle cx="664" cy="28" r="58"/><circle cx="730" cy="48" r="40"/>
                 </g>
-                <g fill="currentColor" transform="translate(970,18)">
-                    <ellipse cx="66" cy="90" rx="42" ry="19"/>
-                    <circle cx="46" cy="79"  r="19"/><circle cx="69" cy="73" r="24"/><circle cx="93" cy="80" r="17"/>
+                <!-- Облако 3: среднее, правый край, y≈155 -->
+                <g fill="currentColor">
+                    <ellipse cx="1160" cy="188" rx="68" ry="28"/>
+                    <circle cx="1114" cy="166" r="32"/><circle cx="1162" cy="153" r="40"/><circle cx="1210" cy="167" r="28"/>
                 </g>
-                <g fill="currentColor" transform="translate(338,52)">
-                    <ellipse cx="46" cy="67" rx="30" ry="13"/>
-                    <circle cx="31" cy="59"  r="14"/><circle cx="49" cy="55" r="17"/><circle cx="64" cy="60" r="12"/>
+                <!-- Облако 4: маленькое, левый центр, y≈260 -->
+                <g fill="currentColor">
+                    <ellipse cx="400" cy="298" rx="50" ry="20"/>
+                    <circle cx="368" cy="282" r="22"/><circle cx="402" cy="274" r="28"/><circle cx="436" cy="282" r="20"/>
                 </g>
-                <g fill="currentColor" transform="translate(775,34)">
-                    <ellipse cx="42" cy="72" rx="26" ry="12"/>
-                    <circle cx="29" cy="65"  r="13"/><circle cx="44" cy="61" r="15"/><circle cx="58" cy="66" r="11"/>
+                <!-- Облако 5: среднее, правый центр, y≈218 -->
+                <g fill="currentColor">
+                    <ellipse cx="940" cy="248" rx="58" ry="24"/>
+                    <circle cx="900" cy="232" r="26"/><circle cx="942" cy="220" r="34"/><circle cx="984" cy="232" r="22"/>
                 </g>
             </svg>
-            <!-- ЗВЁЗДЫ: 4-лучевые как в референсе + точки -->
+            <!-- ЗВЁЗДЫ: хаотичное расположение по всей высоте -->
             <svg class="p-stars" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet"
-                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:70%">
+                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:80%">
                 <g fill="currentColor">
-                    <!-- Маленькие точки -->
-                    <circle cx="82"  cy="58"  r="1.8"/><circle cx="215" cy="34"  r="1.4"/><circle cx="348" cy="80"  r="2.2"/>
-                    <circle cx="478" cy="46"  r="1.5"/><circle cx="600" cy="70"  r="1.9"/><circle cx="730" cy="30"  r="2.5"/>
-                    <circle cx="865" cy="76"  r="1.5"/><circle cx="988" cy="42"  r="1.9"/><circle cx="1110" cy="64" r="2.2"/>
-                    <circle cx="1260" cy="37" r="1.5"/><circle cx="158" cy="152" r="1.5"/><circle cx="310" cy="164" r="1.9"/>
-                    <circle cx="462" cy="134" r="1.5"/><circle cx="625" cy="153" r="2.2"/><circle cx="784" cy="140" r="1.5"/>
-                    <circle cx="926" cy="170" r="1.9"/><circle cx="1075" cy="144" r="1.5"/><circle cx="1205" cy="160" r="1.9"/>
-                    <!-- 4-лучевые звёзды (как в референсе) -->
-                    <path d="M422,88  L424.5,95 L431,98  L424.5,101 L422,108 L419.5,101 L413,98  L419.5,95  Z"/>
-                    <path d="M857,50  L859,55.5 L864,58  L859,60.5 L857,66  L855,60.5 L850,58  L855,55.5 Z"/>
-                    <path d="M1182,106 L1184.5,113 L1191,116 L1184.5,119 L1182,126 L1179.5,119 L1173,116 L1179.5,113 Z"/>
-                    <path d="M292,70  L294,75.5 L299,78  L294,80.5 L292,86  L290,80.5 L285,78  L290,75.5 Z"/>
-                    <path d="M682,44  L684,49.5 L689,52  L684,54.5 L682,60  L680,54.5 L675,52  L680,49.5 Z"/>
+                    <!-- Точки: рассыпаны хаотично по всей площади -->
+                    <circle cx="54"  cy="42"  r="1.6"/><circle cx="183" cy="118" r="1.4"/><circle cx="267" cy="26"  r="2.0"/>
+                    <circle cx="391" cy="87"  r="1.5"/><circle cx="512" cy="195" r="1.8"/><circle cx="628" cy="54"  r="2.4"/>
+                    <circle cx="715" cy="148" r="1.5"/><circle cx="833" cy="22"  r="1.8"/><circle cx="947" cy="106" r="2.0"/>
+                    <circle cx="1038" cy="73" r="1.4"/><circle cx="1156" cy="188" r="1.6"/><circle cx="1283" cy="45" r="2.2"/>
+                    <circle cx="118" cy="226" r="1.5"/><circle cx="244" cy="312" r="1.8"/><circle cx="376" cy="178" r="1.4"/>
+                    <circle cx="488" cy="278" r="2.0"/><circle cx="606" cy="390" r="1.5"/><circle cx="744" cy="244" r="1.7"/>
+                    <circle cx="868" cy="336" r="1.5"/><circle cx="992" cy="198" r="1.9"/><circle cx="1108" cy="414" r="1.5"/>
+                    <circle cx="1224" cy="292" r="1.8"/><circle cx="1348" cy="154" r="1.5"/><circle cx="72"  cy="468" r="1.6"/>
+                    <circle cx="320" cy="482" r="1.4"/><circle cx="558" cy="510" r="2.0"/><circle cx="796" cy="448" r="1.5"/>
+                    <!-- 4-лучевые звёзды — хаотично рассыпаны -->
+                    <path d="M148,72  l2.8,7.2 7.2,2.8 -7.2,2.8 -2.8,7.2 -2.8,-7.2 -7.2,-2.8 7.2,-2.8 Z"/>
+                    <path d="M470,162 l3.2,8.2 8.2,3.2 -8.2,3.2 -3.2,8.2 -3.2,-8.2 -8.2,-3.2 8.2,-3.2 Z"/>
+                    <path d="M793,38  l2.4,6.2 6.2,2.4 -6.2,2.4 -2.4,6.2 -2.4,-6.2 -6.2,-2.4 6.2,-2.4 Z"/>
+                    <path d="M1068,264 l3.0,7.8 7.8,3.0 -7.8,3.0 -3.0,7.8 -3.0,-7.8 -7.8,-3.0 7.8,-3.0 Z"/>
+                    <path d="M320,360 l2.6,6.6 6.6,2.6 -6.6,2.6 -2.6,6.6 -2.6,-6.6 -6.6,-2.6 6.6,-2.6 Z"/>
+                    <path d="M646,480 l2.2,5.6 5.6,2.2 -5.6,2.2 -2.2,5.6 -2.2,-5.6 -5.6,-2.2 5.6,-2.2 Z"/>
+                    <path d="M1310,410 l2.8,7.0 7.0,2.8 -7.0,2.8 -2.8,7.0 -2.8,-7.0 -7.0,-2.8 7.0,-2.8 Z"/>
                 </g>
             </svg>
         </div>
@@ -683,24 +693,22 @@
         <div class="p-layer" id="pL3">
             <svg viewBox="0 0 1600 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-80px;left:-150px;width:calc(100% + 300px);height:calc(55% + 80px)">
-                <!-- Дальняя гряда: пологие холмы -->
+                <!-- Дальняя гряда: широкие пологие холмы -->
                 <path opacity="0.52"
-                    d="M-200,500 C-80,500 -20,340 100,325 C220,310 300,500 480,500
-                       C660,500 740,318 920,305 C1100,292 1180,500 1360,500
-                       C1540,500 1620,500 1800,500 Z"
+                    d="M-200,500 C-40,500 80,338 320,322 C560,306 660,500 960,500
+                       C1260,500 1360,312 1600,298 C1840,284 1920,500 2100,500 Z"
                     fill="currentColor"/>
-                <!-- Ближняя гряда: чуть выше холмы, всё ещё плавные -->
+                <!-- Ближняя гряда: шире и плавнее -->
                 <path
-                    d="M-200,500 C-60,500 20,228 180,210 C340,192 440,500 640,500
-                       C840,500 940,195 1120,178 C1300,161 1400,500 1600,500
-                       C1700,500 1760,500 1800,500 Z"
+                    d="M-200,500 C-30,500 100,224 360,206 C620,188 760,500 1060,500
+                       C1360,500 1500,190 1740,172 C1980,154 2060,500 2200,500 Z"
                     fill="currentColor"/>
             </svg>
         </div>
 
         <!-- Слой 4: Дальние ёлки (3-ярусные, генерируются в JS) -->
         <div class="p-layer" id="pL4">
-            <svg id="treeSvgFar" viewBox="0 0 1600 260" preserveAspectRatio="none"
+            <svg id="treeSvgFar" viewBox="0 0 2100 260" preserveAspectRatio="none"
                  xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-110px;left:-150px;width:calc(100% + 300px);height:calc(28% + 110px)">
                 <defs>
@@ -714,7 +722,7 @@
 
         <!-- Слой 5: Ближние ёлки — крупные, со стволами -->
         <div class="p-layer" id="pL5">
-            <svg id="treeSvgNear" viewBox="0 0 1400 300" preserveAspectRatio="none"
+            <svg id="treeSvgNear" viewBox="0 0 1900 300" preserveAspectRatio="none"
                  xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-150px;left:-150px;width:calc(100% + 300px);height:calc(36% + 150px)">
                 <defs>
@@ -1728,11 +1736,11 @@
         // ── Параллакс-фон: мышь + скролл ─────────────────────────────────
         function initParallax() {
             const layers = [
-                { el: document.getElementById('pL1'), mf: 0.014, sf: 0.006 },
-                { el: document.getElementById('pL2'), mf: 0.028, sf: 0.013 },
-                { el: document.getElementById('pL3'), mf: 0.052, sf: 0.024 },
-                { el: document.getElementById('pL4'), mf: 0.085, sf: 0.038 },
-                { el: document.getElementById('pL5'), mf: 0.12,  sf: 0.05  },
+                { el: document.getElementById('pL1'), mf: 0.014, sf: 0.009 },
+                { el: document.getElementById('pL2'), mf: 0.028, sf: 0.020 },
+                { el: document.getElementById('pL3'), mf: 0.052, sf: 0.036 },
+                { el: document.getElementById('pL4'), mf: 0.085, sf: 0.057 },
+                { el: document.getElementById('pL5'), mf: 0.12,  sf: 0.075 },
             ];
             let tx = 0, ty = 0, cx = 0, cy = 0, scrollY = 0;
 
@@ -1763,8 +1771,8 @@
                     svg.appendChild(use);
                 }
             }
-            buildTrees('treeSvgFar',  '#pt',                    22, 1600, 260, 0.78, 1.16, 42);
-            buildTrees('treeSvgNear', ['#ptt', '#ptt', '#oak'],  9, 1400, 300, 1.25, 1.72, 17);
+            buildTrees('treeSvgFar',  '#pt',                    28, 2100, 260, 0.78, 1.16, 42);
+            buildTrees('treeSvgNear', ['#ptt', '#ptt', '#oak'], 12, 1900, 300, 1.25, 1.72, 17);
 
             (function tick() {
                 requestAnimationFrame(tick);
