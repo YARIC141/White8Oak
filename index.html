@@ -527,22 +527,22 @@
             to   { transform: translateY(0);    opacity: 1; }
         }
         /* === ПАРАЛЛАКС-ФОН === */
-        /* Цвета слоёв: прозрачности поверх неба */
+        /* Цвета слоёв: чёрно-белые тона */
         :root {
-            --p1: rgba(240,234,220,0.90); --p2: rgba(246,240,230,0.82);
-            --p3: rgba(0,0,0,0.16);       --p4: rgba(0,0,0,0.42); --p5: rgba(0,0,0,0.64);
+            --p1: rgba(255,255,255,0.92); --p2: rgba(255,255,255,0.80);
+            --p3: rgba(0,0,0,0.14);       --p4: rgba(0,0,0,0.40); --p5: rgba(0,0,0,0.62);
         }
         html[data-theme="dark"], body.dark-theme {
-            --p1: rgba(198,204,218,0.80); --p2: rgba(212,196,196,0.70);
-            --p3: rgba(255,255,255,0.09); --p4: rgba(0,0,0,0.50); --p5: rgba(0,0,0,0.70);
+            --p1: rgba(220,220,228,0.84); --p2: rgba(210,215,228,0.72);
+            --p3: rgba(255,255,255,0.08); --p4: rgba(0,0,0,0.48); --p5: rgba(0,0,0,0.68);
         }
         .parallax-bg { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
         /* Небо: два слоя с плавным кроссфейдом при смене темы */
         .p-sky { position: absolute; inset: 0; transition: opacity var(--theme-speed) ease; }
         .p-sky-day   { background: linear-gradient(to bottom,
-            #6E9EC2 0%, #96B8CC 28%, #C4A47C 66%, #D0B086 100%); }
+            #C8C8C8 0%, #DCDCDC 40%, #E8E8E8 100%); }
         .p-sky-night { background: linear-gradient(to bottom,
-            #0A0E1C 0%, #161A2A 32%, #221E28 68%, #1A1614 100%); opacity: 0; }
+            #080808 0%, #101010 40%, #181818 100%); opacity: 0; }
         html[data-theme="dark"] .p-sky-day,   body.dark-theme .p-sky-day   { opacity: 0; }
         html[data-theme="dark"] .p-sky-night, body.dark-theme .p-sky-night { opacity: 1; }
         .p-layer { position: absolute; inset: 0; will-change: transform; }
@@ -712,10 +712,13 @@
                  xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-110px;left:-150px;width:calc(100% + 300px);height:calc(28% + 110px)">
                 <defs>
-                    <!-- Ёлка: Q-bezier для мягких боков ярусов -->
-                    <path id="pt"
-                        d="M0,-100 Q9,-74 14,-56 L8,-56 Q13,-38 21,-23 L13,-23 Q15,-11 27,0 L-27,0 Q-15,-11 -13,-23 L-21,-23 Q-13,-38 -8,-56 L-14,-56 Q-9,-74 0,-100 Z"
-                        fill="currentColor"/>
+                    <!-- Дерево: кластер кругов, без острых форм -->
+                    <g id="pt" fill="currentColor">
+                        <circle cx="0"   cy="-44" r="30"/>
+                        <circle cx="-20" cy="-30" r="20"/>
+                        <circle cx="20"  cy="-30" r="20"/>
+                        <circle cx="0"   cy="-64" r="20"/>
+                    </g>
                 </defs>
             </svg>
         </div>
@@ -726,19 +729,20 @@
                  xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-150px;left:-150px;width:calc(100% + 300px);height:calc(36% + 150px)">
                 <defs>
-                    <!-- Ёлка со стволом: Q-bezier бока + ствол -->
-                    <path id="ptt"
-                        d="M0,-100 Q9,-74 14,-56 L8,-56 Q13,-38 21,-23 L13,-23 Q15,-11 27,0 L5,0 L5,26 L-5,26 L-5,0 L-27,0 Q-15,-11 -13,-23 L-21,-23 Q-13,-38 -8,-56 L-14,-56 Q-9,-74 0,-100 Z"
-                        fill="currentColor"/>
-                    <!-- Дуб: округлая крона из кругов + ствол -->
+                    <!-- Дерево-куст: плотный кластер кругов со стволом -->
+                    <g id="ptt" fill="currentColor">
+                        <rect x="-5" y="-24" width="10" height="24"/>
+                        <circle cx="0"   cy="-54" r="34"/>
+                        <circle cx="-22" cy="-40" r="23"/>
+                        <circle cx="22"  cy="-40" r="23"/>
+                        <circle cx="-10" cy="-74" r="18"/>
+                        <circle cx="10"  cy="-74" r="18"/>
+                        <circle cx="0"   cy="-82" r="16"/>
+                    </g>
+                    <!-- Дерево-шар: одиночная крупная крона ("леденец") -->
                     <g id="oak" fill="currentColor">
-                        <rect x="-5" y="-28" width="10" height="28"/>
-                        <circle cx="0"   cy="-52" r="28"/>
-                        <circle cx="-18" cy="-42" r="20"/>
-                        <circle cx="18"  cy="-42" r="20"/>
-                        <circle cx="-10" cy="-68" r="17"/>
-                        <circle cx="10"  cy="-68" r="17"/>
-                        <circle cx="0"   cy="-76" r="15"/>
+                        <rect x="-4" y="-22" width="8" height="22"/>
+                        <circle cx="0" cy="-62" r="44"/>
                     </g>
                 </defs>
             </svg>
