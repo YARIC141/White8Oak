@@ -527,11 +527,11 @@
             to   { transform: translateY(0);    opacity: 1; }
         }
         /* === ПАРАЛЛАКС-ФОН === */
-        :root { --p1: rgba(0,0,0,0.055); --p2: rgba(0,0,0,0.085); --p3: rgba(0,0,0,0.13); --p4: rgba(0,0,0,0.19); }
-        html[data-theme="dark"], body.dark-theme { --p1: rgba(255,255,255,0.07); --p2: rgba(255,255,255,0.105); --p3: rgba(255,255,255,0.16); --p4: rgba(255,255,255,0.24); }
-        .parallax-bg { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+        :root { --p1: rgba(0,0,0,0.055); --p2: rgba(0,0,0,0.085); --p3: rgba(0,0,0,0.13); --p4: rgba(0,0,0,0.19); --p5: rgba(0,0,0,0.26); }
+        html[data-theme="dark"], body.dark-theme { --p1: rgba(255,255,255,0.07); --p2: rgba(255,255,255,0.105); --p3: rgba(255,255,255,0.16); --p4: rgba(255,255,255,0.24); --p5: rgba(255,255,255,0.32); }
+        .parallax-bg { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
         .p-layer { position: absolute; inset: 0; will-change: transform; }
-        #pL1 { color: var(--p1); } #pL2 { color: var(--p2); } #pL3 { color: var(--p3); } #pL4 { color: var(--p4); }
+        #pL1 { color: var(--p1); } #pL2 { color: var(--p2); } #pL3 { color: var(--p3); } #pL4 { color: var(--p4); } #pL5 { color: var(--p5); }
         .p-sun { display: block; } .p-moon { display: none; }
         .p-clouds { display: block; } .p-stars { display: none; }
         html[data-theme="dark"] .p-sun,  body.dark-theme .p-sun  { display: none; }
@@ -636,16 +636,29 @@
                 </g>
             </svg>
         </div>
-        <!-- Слой 3: Горы -->
+        <!-- Слой 3: Горы (две гряды, плавные кривые Безье) -->
         <div class="p-layer" id="pL3">
-            <svg viewBox="0 0 1400 400" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:0;left:-80px;right:-80px;width:calc(100% + 160px);height:45%">
-                <path d="M-200,400 L80,120 L220,380 L360,80 L490,350 L630,100 L770,360 L910,60 L1050,310 L1190,145 L1330,270 L1500,400 Z" fill="currentColor"/>
+            <svg viewBox="0 0 1600 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:-80px;left:-150px;width:calc(100% + 300px);height:calc(45% + 80px)">
+                <!-- Дальняя гряда — приглушённее, невысокие пики -->
+                <path opacity="0.5" d="M-200,400 L0,195 C80,400 160,400 250,205 C330,400 410,400 490,185 C570,400 650,400 730,200 C810,400 890,400 970,190 C1050,400 1130,400 1210,205 C1290,400 1450,400 1800,400 Z" fill="currentColor"/>
+                <!-- Ближняя гряда — острые пики, плавные глубокие долины -->
+                <path d="M-200,400 L80,125 C150,400 260,400 360,88 C430,400 560,400 650,105 C720,400 850,400 940,68 C1010,400 1140,400 1220,148 C1300,400 1440,400 1800,400 Z" fill="currentColor"/>
             </svg>
         </div>
-        <!-- Слой 4: Деревья -->
+        <!-- Слой 4: Дальние ёлки (заполняется в JS через <use>) -->
         <div class="p-layer" id="pL4">
-            <svg viewBox="0 0 1400 200" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:0;left:-100px;right:-100px;width:calc(100% + 200px);height:28%">
-                <path d="M-200,200 L-120,65 L-80,200 L-45,45 L-10,200 L20,80 L55,200 L90,50 L122,200 L155,40 L190,200 L225,72 L260,200 L295,48 L330,200 L365,62 L400,200 L435,38 L470,200 L505,78 L540,200 L575,55 L610,200 L645,42 L680,200 L715,68 L750,200 L785,50 L820,200 L855,45 L890,200 L925,75 L960,200 L995,48 L1030,200 L1065,62 L1100,200 L1135,40 L1170,200 L1205,72 L1240,200 L1275,50 L1310,200 L1345,45 L1380,200 L1415,68 L1450,200 L1500,200 Z" fill="currentColor"/>
+            <svg id="treeSvgFar" viewBox="0 0 1600 260" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:-110px;left:-150px;width:calc(100% + 300px);height:calc(30% + 110px)">
+                <defs>
+                    <path id="pt" d="M0,-100 L13,-60 L7,-60 L19,-25 L10,-25 L26,0 L-26,0 L-10,-25 L-19,-25 L-7,-60 L-13,-60 Z" fill="currentColor"/>
+                </defs>
+            </svg>
+        </div>
+        <!-- Слой 5: Ближние ёлки — крупные, со стволами -->
+        <div class="p-layer" id="pL5">
+            <svg id="treeSvgNear" viewBox="0 0 1400 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:-150px;left:-150px;width:calc(100% + 300px);height:calc(38% + 150px)">
+                <defs>
+                    <path id="ptt" d="M0,-100 L13,-60 L7,-60 L19,-25 L10,-25 L26,0 L4,0 L4,22 L-4,22 L-4,0 L-26,0 L-10,-25 L-19,-25 L-7,-60 L-13,-60 Z" fill="currentColor"/>
+                </defs>
             </svg>
         </div>
     </div>
@@ -1644,6 +1657,7 @@
                 { el: document.getElementById('pL2'), mf: 0.028, sf: 0.013 },
                 { el: document.getElementById('pL3'), mf: 0.052, sf: 0.024 },
                 { el: document.getElementById('pL4'), mf: 0.085, sf: 0.038 },
+                { el: document.getElementById('pL5'), mf: 0.12,  sf: 0.05  },
             ];
             let tx = 0, ty = 0, cx = 0, cy = 0, scrollY = 0;
 
@@ -1656,6 +1670,25 @@
                     if (page.classList.contains('active')) scrollY = page.scrollTop;
                 }, { passive: true });
             });
+
+            // Генерация ёлок: count штук, base = y-позиция основания, sMin/sMax — масштаб
+            function buildTrees(svgId, tmpl, count, vW, baseY, sMin, sMax, seed) {
+                const svg = document.getElementById(svgId);
+                if (!svg) return;
+                let rng = seed >>> 0;
+                const rand = () => { rng = (Math.imul(rng, 1664525) + 1013904223) >>> 0; return rng / 4294967295; };
+                const step = (vW + 300) / count;
+                for (let i = 0; i < count; i++) {
+                    const x = -150 + step * i + (rand() - 0.5) * step * 0.55;
+                    const s = (sMin + rand() * (sMax - sMin)).toFixed(2);
+                    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+                    use.setAttribute('href', tmpl);
+                    use.setAttribute('transform', `translate(${x.toFixed(0)},${baseY}) scale(${s})`);
+                    svg.appendChild(use);
+                }
+            }
+            buildTrees('treeSvgFar',  '#pt',  22, 1600, 260, 0.78, 1.16, 42);
+            buildTrees('treeSvgNear', '#ptt',  9, 1400, 300, 1.30, 1.82, 17);
 
             (function tick() {
                 requestAnimationFrame(tick);
