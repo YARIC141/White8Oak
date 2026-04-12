@@ -630,23 +630,24 @@
 
         <!-- Слой 2: Облака (день) / Звёзды (ночь) -->
         <div class="p-layer" id="pL2">
-            <!-- ДАЛЬНИЕ ОБЛАКА: 3 шт., равномерно по ширине, меньше -->
-            <svg class="p-clouds" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid meet"
-                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:78%">
-                <!-- Левое: x≈200, высоко -->
+            <!-- ДАЛЬНИЕ ОБЛАКА: белые, 3 шт., разброс по высоте от верха до низа -->
+            <svg class="p-clouds" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;top:0;left:0;width:100%;height:92%;color:rgba(255,255,255,0.92)">
+                <!-- Левое: очень высоко, маленькое -->
                 <g fill="currentColor">
-                    <ellipse cx="200" cy="118" rx="70" ry="28"/>
-                    <circle cx="160" cy="96"  r="30"/><circle cx="202" cy="82"  r="38"/><circle cx="244" cy="97"  r="26"/>
+                    <ellipse cx="190" cy="66"  rx="60" ry="24"/>
+                    <circle cx="156" cy="46"  r="25"/><circle cx="191" cy="34"  r="31"/><circle cx="226" cy="47"  r="21"/>
                 </g>
-                <!-- Центральное: x≈700, чуть ниже -->
+                <!-- Центральное: средняя высота, крупное -->
                 <g fill="currentColor">
-                    <ellipse cx="700" cy="164" rx="74" ry="30"/>
-                    <circle cx="658" cy="140" r="32"/><circle cx="702" cy="126" r="40"/><circle cx="746" cy="141" r="28"/>
+                    <ellipse cx="700" cy="240" rx="95" ry="38"/>
+                    <circle cx="650" cy="208" r="40"/><circle cx="702" cy="192" r="50"/><circle cx="756" cy="210" r="34"/>
                 </g>
-                <!-- Правое: x≈1190, высоко -->
+                <!-- Правое: очень низко, маленькое -->
                 <g fill="currentColor">
-                    <ellipse cx="1190" cy="106" rx="66" ry="26"/>
-                    <circle cx="1152" cy="86"  r="28"/><circle cx="1192" cy="74"  r="34"/><circle cx="1232" cy="87"  r="24"/>
+                    <ellipse cx="1190" cy="486" rx="58" ry="22"/>
+                    <circle cx="1158" cy="468" r="24"/><circle cx="1191" cy="458" r="29"/><circle cx="1224" cy="469" r="20"/>
                 </g>
             </svg>
             <!-- ЗВЁЗДЫ: хаотичное расположение по всей высоте -->
@@ -675,20 +676,21 @@
             </svg>
         </div>
 
-        <!-- Слой 2b: Ближние крупные облака (больше параллакса чем дальние) -->
+        <!-- Слой 2b: Ближние крупные облака (больше параллакса) -->
         <div class="p-layer" id="pL2b">
-            <!-- БЛИЖНИЕ ОБЛАКА: 2 шт., +30% крупнее, между дальними по x, ниже по y -->
-            <svg class="p-clouds2" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid meet"
-                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:78%">
-                <!-- Центр-лево: x≈440, пониже — перекрывает дальнее левое и центральное -->
+            <!-- БЛИЖНИЕ ОБЛАКА: белые, одно очень высоко, одно очень низко, крупнее -->
+            <svg class="p-clouds2" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;top:0;left:0;width:100%;height:92%;color:rgba(255,255,255,0.95)">
+                <!-- Центр-право: очень высоко, большое — над дальним левым -->
                 <g fill="currentColor">
-                    <ellipse cx="440" cy="256" rx="91" ry="36"/>
-                    <circle cx="388" cy="226" r="39"/><circle cx="442" cy="208" r="49"/><circle cx="498" cy="228" r="33"/>
+                    <ellipse cx="960" cy="104" rx="98" ry="39"/>
+                    <circle cx="904" cy="74"  r="42"/><circle cx="962" cy="58"  r="52"/><circle cx="1020" cy="76" r="36"/>
                 </g>
-                <!-- Центр-право: x≈950, средняя высота — перекрывает дальнее центральное и правое -->
+                <!-- Центр-лево: очень низко, самое крупное — над дальним правым -->
                 <g fill="currentColor">
-                    <ellipse cx="950" cy="218" rx="96" ry="39"/>
-                    <circle cx="894" cy="186" r="42"/><circle cx="952" cy="168" r="52"/><circle cx="1012" cy="188" r="36"/>
+                    <ellipse cx="430" cy="528" rx="114" ry="46"/>
+                    <circle cx="368" cy="492" r="48"/><circle cx="432" cy="474" r="60"/><circle cx="498" cy="494" r="42"/>
                 </g>
             </svg>
         </div>
