@@ -707,12 +707,19 @@
                  xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-110px;left:-150px;width:calc(100% + 300px);height:calc(28% + 110px)">
                 <defs>
-                    <!-- Дерево: 4 круга, плотно сбитые в округлый силуэт -->
+                    <!-- Дерево-куст: округлый силуэт -->
                     <g id="pt" fill="currentColor">
                         <circle cx="0"   cy="-44" r="36"/>
                         <circle cx="-16" cy="-28" r="22"/>
                         <circle cx="16"  cy="-28" r="22"/>
                         <circle cx="0"   cy="-64" r="22"/>
+                    </g>
+                    <!-- Ель из трёх треугольников + ствол -->
+                    <g id="pine" fill="currentColor">
+                        <polygon points="0,-90 18,-46 -18,-46"/>
+                        <polygon points="0,-64 24,-18 -24,-18"/>
+                        <polygon points="0,-38 30,8 -30,8"/>
+                        <rect x="-4" y="8" width="8" height="18"/>
                     </g>
                 </defs>
             </svg>
@@ -724,7 +731,7 @@
                  xmlns="http://www.w3.org/2000/svg"
                  style="position:absolute;bottom:-150px;left:-150px;width:calc(100% + 300px);height:calc(36% + 150px)">
                 <defs>
-                    <!-- Дерево-куст: 4 круга, плотный округлый силуэт + ствол -->
+                    <!-- Дерево-куст: округлый силуэт + ствол -->
                     <g id="ptt" fill="currentColor">
                         <rect x="-5" y="-24" width="10" height="24"/>
                         <circle cx="0"   cy="-58" r="40"/>
@@ -737,6 +744,13 @@
                         <rect x="-4" y="-22" width="8" height="22"/>
                         <circle cx="0" cy="-64" r="46"/>
                     </g>
+                    <!-- Ель из трёх треугольников + ствол, крупная -->
+                    <g id="pine2" fill="currentColor">
+                        <polygon points="0,-100 20,-52 -20,-52"/>
+                        <polygon points="0,-72 28,-20 -28,-20"/>
+                        <polygon points="0,-44 34,10 -34,10"/>
+                        <rect x="-5" y="10" width="10" height="22"/>
+                    </g>
                 </defs>
             </svg>
         </div>
@@ -745,7 +759,7 @@
 
     <!-- Невидимый хитбокс над солнцем/луной — поверх main-content (z-index > 2) -->
     <div id="sunMoonHit" onclick="toggleTheme()" role="button" aria-label="Сменить тему"
-         style="position:fixed;top:5%;right:7%;width:clamp(70px,16vw,155px);height:clamp(70px,16vw,155px);z-index:10;cursor:pointer;border-radius:50%"></div>
+         style="position:fixed;top:5%;right:7%;width:clamp(70px,16vw,155px);height:clamp(70px,16vw,155px);z-index:10;cursor:pointer;border-radius:50%;-webkit-tap-highlight-color:rgba(0,0,0,0);outline:none;-webkit-user-select:none;user-select:none"></div>
 
     <div class="main-content">
 
@@ -1770,8 +1784,8 @@
                     svg.appendChild(use);
                 }
             }
-            buildTrees('treeSvgFar',  '#pt',                    28, 2100, 260, 0.78, 1.16, 42, 2.5);
-            buildTrees('treeSvgNear', ['#ptt', '#ptt', '#oak'], 12, 1900, 300, 1.25, 1.72, 17, 2.5);
+            buildTrees('treeSvgFar',  ['#pt', '#pine', '#pine'],                16, 2100, 260, 0.78, 1.16, 42, 2.5);
+            buildTrees('treeSvgNear', ['#ptt', '#pine2', '#oak', '#pine2'],      8, 1900, 300, 1.25, 1.72, 17, 2.5);
 
             (function tick() {
                 requestAnimationFrame(tick);
