@@ -527,15 +527,31 @@
             to   { transform: translateY(0);    opacity: 1; }
         }
         /* === ПАРАЛЛАКС-ФОН === */
-        :root { --p1: rgba(0,0,0,0.055); --p2: rgba(0,0,0,0.085); --p3: rgba(0,0,0,0.13); --p4: rgba(0,0,0,0.19); --p5: rgba(0,0,0,0.26); }
-        html[data-theme="dark"], body.dark-theme { --p1: rgba(255,255,255,0.07); --p2: rgba(255,255,255,0.105); --p3: rgba(255,255,255,0.16); --p4: rgba(255,255,255,0.24); --p5: rgba(255,255,255,0.32); }
+        /* Цвета слоёв — по референсу */
+        :root {
+            --p1: #CAC4B4; --p2: #DDD4C0;
+            --p3: #8A96AC; --p4: #46405C; --p5: #1C192A;
+        }
+        html[data-theme="dark"], body.dark-theme {
+            --p1: #A2AABF; --p2: #BDB0B0;
+            --p3: #727A95; --p4: #38344E; --p5: #141226;
+        }
         .parallax-bg { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+        /* Небо: два слоя с плавным кроссфейдом при смене темы */
+        .p-sky { position: absolute; inset: 0; transition: opacity var(--theme-speed) ease; }
+        .p-sky-day   { background: linear-gradient(to bottom,
+            #8F93A7 0%, #AEA9A5 32%, #C9A87C 66%, #D4AC82 100%); }
+        .p-sky-night { background: linear-gradient(to bottom,
+            #1C1E2E 0%, #2C2B38 32%, #3C3028 66%, #302420 100%); opacity: 0; }
+        html[data-theme="dark"] .p-sky-day,   body.dark-theme .p-sky-day   { opacity: 0; }
+        html[data-theme="dark"] .p-sky-night, body.dark-theme .p-sky-night { opacity: 1; }
         .p-layer { position: absolute; inset: 0; will-change: transform; }
-        #pL1 { color: var(--p1); } #pL2 { color: var(--p2); } #pL3 { color: var(--p3); } #pL4 { color: var(--p4); } #pL5 { color: var(--p5); }
+        #pL1 { color: var(--p1); } #pL2 { color: var(--p2); }
+        #pL3 { color: var(--p3); } #pL4 { color: var(--p4); } #pL5 { color: var(--p5); }
         .p-sun { display: block; } .p-moon { display: none; }
         .p-clouds { display: block; } .p-stars { display: none; }
-        html[data-theme="dark"] .p-sun,  body.dark-theme .p-sun  { display: none; }
-        html[data-theme="dark"] .p-moon, body.dark-theme .p-moon { display: block; }
+        html[data-theme="dark"] .p-sun,    body.dark-theme .p-sun    { display: none; }
+        html[data-theme="dark"] .p-moon,   body.dark-theme .p-moon   { display: block; }
         html[data-theme="dark"] .p-clouds, body.dark-theme .p-clouds { display: none; }
         html[data-theme="dark"] .p-stars,  body.dark-theme .p-stars  { display: block; }
     </style>
@@ -591,76 +607,123 @@
 
     <!-- Параллакс-фон: фиксированный, за основным контентом -->
     <div id="parallaxBg" class="parallax-bg" aria-hidden="true">
-        <!-- Слой 1: Солнце (светлая тема) / Луна (тёмная тема) -->
+
+        <!-- НЕБО: два слоя — плавный кроссфейд день/ночь -->
+        <div class="p-sky p-sky-day"></div>
+        <div class="p-sky p-sky-night"></div>
+
+        <!-- Слой 1: Солнце (день) / Полумесяц (ночь) -->
         <div class="p-layer" id="pL1">
-            <svg class="p-sun" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:7%;right:10%;width:130px;height:130px">
-                <circle cx="50" cy="50" r="20" fill="currentColor"/>
-                <g stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none">
-                    <line x1="50" y1="5"  x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="95"/>
-                    <line x1="5"  y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="95" y2="50"/>
-                    <line x1="18" y1="18" x2="27" y2="27"/><line x1="73" y1="73" x2="82" y2="82"/>
-                    <line x1="82" y1="18" x2="73" y2="27"/><line x1="18" y1="82" x2="27" y2="73"/>
-                </g>
+            <!-- Солнце — большой простой круг, как в референсе (без лучей) -->
+            <svg class="p-sun" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;top:5%;right:7%;width:clamp(70px,16vw,155px);height:clamp(70px,16vw,155px)">
+                <circle cx="50" cy="50" r="46" fill="currentColor"/>
             </svg>
-            <svg class="p-moon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:7%;right:10%;width:110px;height:110px">
-                <defs><mask id="pmm"><rect width="80" height="80" fill="white"/><circle cx="50" cy="34" r="23" fill="black"/></mask></defs>
-                <circle cx="38" cy="42" r="27" fill="currentColor" mask="url(#pmm)"/>
-            </svg>
-        </div>
-        <!-- Слой 2: Облака (светлая) / Звёзды (тёмная) -->
-        <div class="p-layer" id="pL2">
-            <svg class="p-clouds" viewBox="0 0 1400 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:60%">
-                <g fill="currentColor">
-                    <ellipse cx="165" cy="112" rx="55" ry="24"/><circle cx="133" cy="97" r="24"/><circle cx="168" cy="88" r="30"/><circle cx="204" cy="98" r="21"/>
-                </g>
-                <g fill="currentColor" transform="translate(530,-8)">
-                    <ellipse cx="80" cy="102" rx="65" ry="28"/><circle cx="48" cy="84" r="28"/><circle cx="85" cy="75" r="35"/><circle cx="124" cy="85" r="24"/>
-                </g>
-                <g fill="currentColor" transform="translate(960,15)">
-                    <ellipse cx="65" cy="88" rx="40" ry="18"/><circle cx="46" cy="77" r="18"/><circle cx="68" cy="72" r="22"/><circle cx="90" cy="78" r="16"/>
-                </g>
-            </svg>
-            <svg class="p-stars" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:70%">
-                <g fill="currentColor">
-                    <circle cx="80"  cy="55"  r="2"/><circle cx="210" cy="30"  r="1.5"/><circle cx="345" cy="78"  r="2.5"/>
-                    <circle cx="475" cy="42"  r="1.5"/><circle cx="598" cy="68" r="2"/>  <circle cx="728" cy="25"  r="3"/>
-                    <circle cx="862" cy="72"  r="1.5"/><circle cx="985" cy="38" r="2"/>  <circle cx="1108" cy="62" r="2.5"/>
-                    <circle cx="1258" cy="33" r="1.5"/><circle cx="155" cy="148" r="1.5"/><circle cx="308" cy="165" r="2"/>
-                    <circle cx="458" cy="132" r="1.5"/><circle cx="622" cy="152" r="2.5"/><circle cx="782" cy="138" r="1.5"/>
-                    <circle cx="922" cy="168" r="2"/>  <circle cx="1072" cy="142" r="1.5"/><circle cx="1202" cy="158" r="2"/>
-                    <circle cx="1355" cy="148" r="1.5"/><circle cx="52"  cy="195" r="1.5"/><circle cx="412" cy="200" r="2"/>
-                    <circle cx="698" cy="185" r="1.5"/><circle cx="1012" cy="205" r="1.5"/><circle cx="1312" cy="190" r="2"/>
-                    <path d="M425,92 L428,100 L436,103 L428,106 L425,114 L422,106 L414,103 L422,100 Z"/>
-                    <path d="M858,48 L860,54 L866,56 L860,58 L858,64 L856,58 L850,56 L856,54 Z"/>
-                    <path d="M1185,102 L1188,110 L1196,113 L1188,116 L1185,124 L1182,116 L1174,113 L1182,110 Z"/>
-                </g>
-            </svg>
-        </div>
-        <!-- Слой 3: Горы (две гряды, плавные кривые Безье) -->
-        <div class="p-layer" id="pL3">
-            <svg viewBox="0 0 1600 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:-80px;left:-150px;width:calc(100% + 300px);height:calc(45% + 80px)">
-                <!-- Дальняя гряда — приглушённее, невысокие пики -->
-                <path opacity="0.5" d="M-200,400 L0,195 C80,400 160,400 250,205 C330,400 410,400 490,185 C570,400 650,400 730,200 C810,400 890,400 970,190 C1050,400 1130,400 1210,205 C1290,400 1450,400 1800,400 Z" fill="currentColor"/>
-                <!-- Ближняя гряда — острые пики, плавные глубокие долины -->
-                <path d="M-200,400 L80,125 C150,400 260,400 360,88 C430,400 560,400 650,105 C720,400 850,400 940,68 C1010,400 1140,400 1220,148 C1300,400 1440,400 1800,400 Z" fill="currentColor"/>
-            </svg>
-        </div>
-        <!-- Слой 4: Дальние ёлки (заполняется в JS через <use>) -->
-        <div class="p-layer" id="pL4">
-            <svg id="treeSvgFar" viewBox="0 0 1600 260" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:-110px;left:-150px;width:calc(100% + 300px);height:calc(30% + 110px)">
+            <!-- Полумесяц — как в референсе -->
+            <svg class="p-moon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;top:5%;right:7%;width:clamp(65px,15vw,148px);height:clamp(65px,15vw,148px)">
                 <defs>
-                    <path id="pt" d="M0,-100 L13,-60 L7,-60 L19,-25 L10,-25 L26,0 L-26,0 L-10,-25 L-19,-25 L-7,-60 L-13,-60 Z" fill="currentColor"/>
+                    <mask id="pmm">
+                        <rect width="100" height="100" fill="white"/>
+                        <circle cx="66" cy="40" r="37" fill="black"/>
+                    </mask>
+                </defs>
+                <circle cx="46" cy="52" r="42" fill="currentColor" mask="url(#pmm)"/>
+            </svg>
+        </div>
+
+        <!-- Слой 2: Облака (день) / Звёзды (ночь) -->
+        <div class="p-layer" id="pL2">
+            <!-- ОБЛАКА: 5 групп мягких округлых форм -->
+            <svg class="p-clouds" viewBox="0 0 1400 380" preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:58%">
+                <g fill="currentColor">
+                    <ellipse cx="175" cy="115" rx="58" ry="25"/>
+                    <circle cx="140" cy="99"  r="25"/><circle cx="178" cy="89" r="32"/><circle cx="216" cy="100" r="22"/>
+                </g>
+                <g fill="currentColor" transform="translate(530,-6)">
+                    <ellipse cx="82" cy="106" rx="70" ry="30"/>
+                    <circle cx="47" cy="86"  r="30"/><circle cx="85" cy="76" r="38"/><circle cx="128" cy="87" r="26"/>
+                </g>
+                <g fill="currentColor" transform="translate(970,18)">
+                    <ellipse cx="66" cy="90" rx="42" ry="19"/>
+                    <circle cx="46" cy="79"  r="19"/><circle cx="69" cy="73" r="24"/><circle cx="93" cy="80" r="17"/>
+                </g>
+                <g fill="currentColor" transform="translate(338,52)">
+                    <ellipse cx="46" cy="67" rx="30" ry="13"/>
+                    <circle cx="31" cy="59"  r="14"/><circle cx="49" cy="55" r="17"/><circle cx="64" cy="60" r="12"/>
+                </g>
+                <g fill="currentColor" transform="translate(775,34)">
+                    <ellipse cx="42" cy="72" rx="26" ry="12"/>
+                    <circle cx="29" cy="65"  r="13"/><circle cx="44" cy="61" r="15"/><circle cx="58" cy="66" r="11"/>
+                </g>
+            </svg>
+            <!-- ЗВЁЗДЫ: 4-лучевые как в референсе + точки -->
+            <svg class="p-stars" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:0;left:0;width:100%;height:70%">
+                <g fill="currentColor">
+                    <!-- Маленькие точки -->
+                    <circle cx="82"  cy="58"  r="1.8"/><circle cx="215" cy="34"  r="1.4"/><circle cx="348" cy="80"  r="2.2"/>
+                    <circle cx="478" cy="46"  r="1.5"/><circle cx="600" cy="70"  r="1.9"/><circle cx="730" cy="30"  r="2.5"/>
+                    <circle cx="865" cy="76"  r="1.5"/><circle cx="988" cy="42"  r="1.9"/><circle cx="1110" cy="64" r="2.2"/>
+                    <circle cx="1260" cy="37" r="1.5"/><circle cx="158" cy="152" r="1.5"/><circle cx="310" cy="164" r="1.9"/>
+                    <circle cx="462" cy="134" r="1.5"/><circle cx="625" cy="153" r="2.2"/><circle cx="784" cy="140" r="1.5"/>
+                    <circle cx="926" cy="170" r="1.9"/><circle cx="1075" cy="144" r="1.5"/><circle cx="1205" cy="160" r="1.9"/>
+                    <!-- 4-лучевые звёзды (как в референсе) -->
+                    <path d="M422,88  L424.5,95 L431,98  L424.5,101 L422,108 L419.5,101 L413,98  L419.5,95  Z"/>
+                    <path d="M857,50  L859,55.5 L864,58  L859,60.5 L857,66  L855,60.5 L850,58  L855,55.5 Z"/>
+                    <path d="M1182,106 L1184.5,113 L1191,116 L1184.5,119 L1182,126 L1179.5,119 L1173,116 L1179.5,113 Z"/>
+                    <path d="M292,70  L294,75.5 L299,78  L294,80.5 L292,86  L290,80.5 L285,78  L290,75.5 Z"/>
+                    <path d="M682,44  L684,49.5 L689,52  L684,54.5 L682,60  L680,54.5 L675,52  L680,49.5 Z"/>
+                </g>
+            </svg>
+        </div>
+
+        <!-- Слой 3: Горы — две гряды, геометрические силуэты -->
+        <div class="p-layer" id="pL3">
+            <svg viewBox="0 0 1600 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;bottom:-80px;left:-150px;width:calc(100% + 300px);height:calc(58% + 80px)">
+                <!-- Дальняя гряда: низкие, сглаженные холмы -->
+                <path opacity="0.55"
+                    d="M-200,500 L-50,280 C30,500 100,500 200,290 C280,500 360,500 460,275
+                       C540,500 620,500 720,285 C800,500 880,500 980,278
+                       C1060,500 1140,500 1240,288 C1320,500 1450,500 1800,500 Z"
+                    fill="currentColor"/>
+                <!-- Ближняя гряда: острые пики, глубокие долины (кривые Безье) -->
+                <path
+                    d="M-200,500 L60,148 C130,500 255,500 355,108
+                       C425,500 560,500 658,128 C728,500 860,500 958,82
+                       C1030,500 1162,500 1245,168 C1320,500 1455,500 1800,500 Z"
+                    fill="currentColor"/>
+            </svg>
+        </div>
+
+        <!-- Слой 4: Дальние ёлки (3-ярусные, генерируются в JS) -->
+        <div class="p-layer" id="pL4">
+            <svg id="treeSvgFar" viewBox="0 0 1600 260" preserveAspectRatio="none"
+                 xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;bottom:-110px;left:-150px;width:calc(100% + 300px);height:calc(28% + 110px)">
+                <defs>
+                    <path id="pt"
+                        d="M0,-100 L14,-58 L8,-58 L20,-24 L11,-24 L27,0 L-27,0 L-11,-24 L-20,-24 L-8,-58 L-14,-58 Z"
+                        fill="currentColor"/>
                 </defs>
             </svg>
         </div>
+
         <!-- Слой 5: Ближние ёлки — крупные, со стволами -->
         <div class="p-layer" id="pL5">
-            <svg id="treeSvgNear" viewBox="0 0 1400 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;bottom:-150px;left:-150px;width:calc(100% + 300px);height:calc(38% + 150px)">
+            <svg id="treeSvgNear" viewBox="0 0 1400 300" preserveAspectRatio="none"
+                 xmlns="http://www.w3.org/2000/svg"
+                 style="position:absolute;bottom:-150px;left:-150px;width:calc(100% + 300px);height:calc(36% + 150px)">
                 <defs>
-                    <path id="ptt" d="M0,-100 L13,-60 L7,-60 L19,-25 L10,-25 L26,0 L4,0 L4,22 L-4,22 L-4,0 L-26,0 L-10,-25 L-19,-25 L-7,-60 L-13,-60 Z" fill="currentColor"/>
+                    <path id="ptt"
+                        d="M0,-100 L14,-58 L8,-58 L20,-24 L11,-24 L27,0 L4.5,0 L4.5,24 L-4.5,24 L-4.5,0 L-27,0 L-11,-24 L-20,-24 L-8,-58 L-14,-58 Z"
+                        fill="currentColor"/>
                 </defs>
             </svg>
         </div>
+
     </div>
 
     <div class="main-content">
