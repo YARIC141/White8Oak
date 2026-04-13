@@ -280,24 +280,6 @@
       "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
     },
     {
-      "id": "6_1",
-      "groupId": 6,
-      "colorName": "Дуб",
-      "title": "Стеллаж модульный",
-      "price": 23000,
-      "oldPrice": 32000,
-      "category": "shelves",
-      "image": "",
-      "images": [],
-      "description": "Стеллаж супер пупер",
-      "material": "Березовая фанера",
-      "size": "-",
-      "weight": "-",
-      "inStock": true,
-      "featured": false,
-      "model3d": ""
-    },
-    {
       "id": "6_2",
       "groupId": 6,
       "colorName": "Белый",
