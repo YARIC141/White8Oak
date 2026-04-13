@@ -278,6 +278,26 @@
       "inStock": true,
       "featured": true,
       "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
+    },
+    {
+      "id": 8,
+      "groupId": 8,
+      "colorName": "Дуб",
+      "title": "Стеллаж модульный - Дуб",
+      "price": 23000,
+      "oldPrice": 32000,
+      "category": "shelves",
+      "image": "1776084025976-стол-.трансформер.png",
+      "images": [
+        "1776084026023-торшер-Temp0000.png"
+      ],
+      "description": "Стеллаж супер пупер",
+      "material": "Стол",
+      "size": "-",
+      "weight": "-",
+      "inStock": true,
+      "featured": false,
+      "model3d": ""
     }
   ],
   "categories": [
