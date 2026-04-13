@@ -6,8 +6,10 @@
       "price": 30000,
       "oldPrice": 40000,
       "category": "shelves",
-      "image": "1776079324585-photo_2026-04-09_13-49-50.jpg",
-      "images": [],
+      "image": "1776081138326-торшер-Temp0000.png",
+      "images": [
+        "1776081138385-торшер-Temp0000.png"
+      ],
       "description": "Стеллаж",
       "material": "",
       "size": "",
