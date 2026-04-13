@@ -1,6 +1,30 @@
 {
   "products": [
     {
+      "id": 7,
+      "title": "Стеллаж модульный пример",
+      "price": 30000,
+      "oldPrice": 40000,
+      "category": "shelves",
+      "image": "1776079324585-photo_2026-04-09_13-49-50.jpg",
+      "images": [],
+      "description": "Стеллаж",
+      "material": "",
+      "size": "",
+      "weight": "",
+      "colors": [
+        "кровать",
+        "торшер с диваном"
+      ],
+      "colorImages": {
+        "кровать": "Кровать.png",
+        "торшер с диваном": "торшер-с-диваном-новый.png"
+      },
+      "inStock": true,
+      "featured": true,
+      "model3d": "data/models/1776079324751-Стеллаж-модульный-для-glb.glb"
+    },
+    {
       "id": 3,
       "title": "Кресло Уют",
       "price": 45000,
@@ -109,30 +133,6 @@
       "inStock": true,
       "featured": true,
       "model3d": "data/models/Стеллаж-модульный-для-glb.glb"
-    },
-    {
-      "id": 7,
-      "title": "Стеллаж модульный пример",
-      "price": 30000,
-      "oldPrice": 40000,
-      "category": "shelves",
-      "image": "1776079324585-photo_2026-04-09_13-49-50.jpg",
-      "images": [],
-      "description": "Стеллаж",
-      "material": "",
-      "size": "",
-      "weight": "",
-      "colors": [
-        "кровать",
-        "торшер с диваном"
-      ],
-      "colorImages": {
-        "кровать": "Кровать.png",
-        "торшер с диваном": "торшер-с-диваном-новый.png"
-      },
-      "inStock": true,
-      "featured": true,
-      "model3d": "data/models/1776079324751-Стеллаж-модульный-для-glb.glb"
     }
   ],
   "categories": [
