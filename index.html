@@ -630,24 +630,29 @@
 
         <!-- Слой 2: Облака (день) / Звёзды (ночь) -->
         <div class="p-layer" id="pL2">
-            <!-- ДАЛЬНИЕ ОБЛАКА: белые, 3 шт., разброс по высоте от верха до низа -->
+            <!-- ДАЛЬНИЕ ОБЛАКА: светлее неба, темнее солнца; 3 уникальные формы -->
             <svg class="p-clouds" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet"
                  xmlns="http://www.w3.org/2000/svg"
-                 style="position:absolute;top:0;left:0;width:100%;height:92%;color:rgba(255,255,255,0.92)">
-                <!-- Левое: очень высоко, маленькое -->
+                 style="position:absolute;top:0;left:0;width:100%;height:92%;color:rgba(232,232,232,0.85)">
+                <!-- Облако 1: ПЕРИСТОЕ — длинное тонкое с мелкими буграми, очень высоко -->
                 <g fill="currentColor">
-                    <ellipse cx="190" cy="66"  rx="60" ry="24"/>
-                    <circle cx="156" cy="46"  r="25"/><circle cx="191" cy="34"  r="31"/><circle cx="226" cy="47"  r="21"/>
+                    <ellipse cx="190" cy="52" rx="108" ry="14"/>
+                    <circle cx="110" cy="44" r="16"/><circle cx="152" cy="38" r="20"/>
+                    <circle cx="198" cy="36" r="18"/><circle cx="244" cy="40" r="15"/>
+                    <circle cx="278" cy="48" r="12"/>
                 </g>
-                <!-- Центральное: средняя высота, крупное -->
+                <!-- Облако 2: КЛАССИЧЕСКОЕ 2× — многоярусная кучевая, средняя высота -->
                 <g fill="currentColor">
-                    <ellipse cx="700" cy="240" rx="95" ry="38"/>
-                    <circle cx="650" cy="208" r="40"/><circle cx="702" cy="192" r="50"/><circle cx="756" cy="210" r="34"/>
+                    <ellipse cx="700" cy="284" rx="120" ry="48"/>
+                    <circle cx="618" cy="236" r="50"/><circle cx="700" cy="210" r="62"/>
+                    <circle cx="784" cy="238" r="44"/><circle cx="660" cy="202" r="36"/>
                 </g>
-                <!-- Правое: очень низко, маленькое -->
+                <!-- Облако 3: АСИММЕТРИЧНОЕ с хвостом — больше слева, тает вправо, низко -->
                 <g fill="currentColor">
-                    <ellipse cx="1190" cy="486" rx="58" ry="22"/>
-                    <circle cx="1158" cy="468" r="24"/><circle cx="1191" cy="458" r="29"/><circle cx="1224" cy="469" r="20"/>
+                    <ellipse cx="1190" cy="492" rx="82" ry="28"/>
+                    <circle cx="1130" cy="466" r="34"/><circle cx="1176" cy="452" r="42"/>
+                    <circle cx="1226" cy="462" r="28"/><circle cx="1264" cy="476" r="18"/>
+                    <circle cx="1292" cy="486" r="11"/>
                 </g>
             </svg>
             <!-- ЗВЁЗДЫ: хаотичное расположение по всей высоте -->
@@ -678,19 +683,24 @@
 
         <!-- Слой 2b: Ближние крупные облака (больше параллакса) -->
         <div class="p-layer" id="pL2b">
-            <!-- БЛИЖНИЕ ОБЛАКА: белые, одно очень высоко, одно очень низко, крупнее -->
+            <!-- БЛИЖНИЕ ОБЛАКА: 2 уникальные формы, темнее солнца но светлее неба -->
             <svg class="p-clouds2" viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid meet"
                  xmlns="http://www.w3.org/2000/svg"
-                 style="position:absolute;top:0;left:0;width:100%;height:92%;color:rgba(255,255,255,0.95)">
-                <!-- Центр-право: очень высоко, большое — над дальним левым -->
+                 style="position:absolute;top:0;left:0;width:100%;height:92%;color:rgba(228,228,228,0.88)">
+                <!-- Облако 4: ШИРОКОЕ ПЛОСКОЕ — много бугров в ряд, очень высоко, правее -->
                 <g fill="currentColor">
-                    <ellipse cx="960" cy="104" rx="98" ry="39"/>
-                    <circle cx="904" cy="74"  r="42"/><circle cx="962" cy="58"  r="52"/><circle cx="1020" cy="76" r="36"/>
+                    <ellipse cx="970" cy="108" rx="148" ry="36"/>
+                    <circle cx="858" cy="80"  r="34"/><circle cx="904" cy="66"  r="42"/>
+                    <circle cx="954" cy="58"  r="48"/><circle cx="1006" cy="62" r="46"/>
+                    <circle cx="1056" cy="72" r="36"/><circle cx="1096" cy="86" r="26"/>
                 </g>
-                <!-- Центр-лево: очень низко, самое крупное — над дальним правым -->
+                <!-- Облако 5: БАШНЯ-КУМУЛУС 2× — вертикальная стопка, очень низко, левее -->
                 <g fill="currentColor">
-                    <ellipse cx="430" cy="528" rx="114" ry="46"/>
-                    <circle cx="368" cy="492" r="48"/><circle cx="432" cy="474" r="60"/><circle cx="498" cy="494" r="42"/>
+                    <ellipse cx="420" cy="594" rx="132" ry="50"/>
+                    <circle cx="356" cy="542" r="52"/><circle cx="422" cy="516" r="66"/>
+                    <circle cx="490" cy="544" r="50"/><circle cx="390" cy="486" r="44"/>
+                    <circle cx="454" cy="468" r="40"/><circle cx="422" cy="444" r="34"/>
+                    <circle cx="422" cy="420" r="26"/>
                 </g>
             </svg>
         </div>
@@ -1560,11 +1570,50 @@
                 modal.innerHTML = `
                     <button onclick="closeModel3D()" style="position:absolute;top:20px;right:30px;background:none;border:none;color:white;font-size:40px;cursor:pointer;z-index:10001;">&times;</button>
                     <h3 id="model3dTitle" style="color:#fff;font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:20px;"></h3>
-                    <model-viewer id="model3dViewer" style="width:80vw;height:65vh;max-width:900px;background:transparent;" camera-controls auto-rotate shadow-intensity="1"></model-viewer>
+                    <div style="position:relative;width:80vw;height:65vh;max-width:900px;">
+                        <model-viewer id="model3dViewer" style="width:100%;height:100%;background:transparent;" camera-controls auto-rotate shadow-intensity="1"></model-viewer>
+                        <div id="model3dLoader" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);border-radius:12px;gap:16px;">
+                            <div style="width:56px;height:56px;border:4px solid rgba(255,255,255,0.15);border-top-color:rgba(255,255,255,0.85);border-radius:50%;animation:spin3d 0.9s linear infinite;"></div>
+                            <div style="text-align:center;">
+                                <div style="color:#fff;font-size:15px;margin-bottom:6px;">Загрузка модели…</div>
+                                <div id="model3dPct" style="color:rgba(255,255,255,0.55);font-size:13px;">0%</div>
+                            </div>
+                            <div style="width:180px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;overflow:hidden;">
+                                <div id="model3dBar" style="height:100%;width:0%;background:rgba(255,255,255,0.75);border-radius:2px;transition:width 0.2s;"></div>
+                            </div>
+                        </div>
+                    </div>
                     <p style="color:rgba(255,255,255,0.5);margin-top:15px;font-size:13px;">Вращайте модель мышью • Скролл для масштаба</p>
                 `;
+                // CSS-анимация спиннера
+                if (!document.getElementById('spin3dStyle')) {
+                    const st = document.createElement('style');
+                    st.id = 'spin3dStyle';
+                    st.textContent = '@keyframes spin3d{to{transform:rotate(360deg)}}';
+                    document.head.appendChild(st);
+                }
                 document.body.appendChild(modal);
+
+                // Прогресс и завершение загрузки
+                const viewer = document.getElementById('model3dViewer');
+                viewer.addEventListener('progress', e => {
+                    const pct = Math.round((e.detail.totalProgress || 0) * 100);
+                    document.getElementById('model3dPct').textContent = pct + '%';
+                    document.getElementById('model3dBar').style.width = pct + '%';
+                });
+                viewer.addEventListener('load', () => {
+                    document.getElementById('model3dLoader').style.display = 'none';
+                });
             }
+
+            // Показать лоадер для новой модели
+            const loader = document.getElementById('model3dLoader');
+            if (loader) {
+                loader.style.display = 'flex';
+                document.getElementById('model3dPct').textContent = '0%';
+                document.getElementById('model3dBar').style.width = '0%';
+            }
+
             document.getElementById('model3dViewer').src = product.model3d;
             document.getElementById('model3dTitle').textContent = product.title + ' — 3D просмотр';
             modal.style.display = 'flex';
