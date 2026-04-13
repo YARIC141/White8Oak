@@ -23,6 +23,27 @@
       ]
     },
     {
+      "id": 4,
+      "title": "Стул Скандинавия",
+      "price": 14400,
+      "oldPrice": 18000,
+      "category": "chairs",
+      "image": "",
+      "images": [],
+      "imageUrl": "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=800",
+      "description": "Легкий, изящный и очень прочный стул из массива ясеня.",
+      "inStock": true,
+      "featured": true,
+      "model3d": "",
+      "size": "82×45×52 см",
+      "weight": "5 кг",
+      "material": "Массив ясеня",
+      "colors": [
+        "Ясень",
+        "Береза"
+      ]
+    },
+    {
       "id": 3,
       "title": "Кресло Уют",
       "price": 45000,
@@ -42,27 +63,6 @@
         "Темный орех",
         "Серый велюр",
         "Изумрудный велюр"
-      ]
-    },
-    {
-      "id": 4,
-      "title": "Стул Скандинавия",
-      "price": 14400,
-      "oldPrice": 18000,
-      "category": "chairs",
-      "image": "",
-      "images": [],
-      "imageUrl": "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=800",
-      "description": "Легкий, изящный и очень прочный стул из массива ясеня.",
-      "inStock": true,
-      "featured": true,
-      "model3d": "",
-      "size": "82×45×52 см",
-      "weight": "5 кг",
-      "material": "Массив ясеня",
-      "colors": [
-        "Ясень",
-        "Береза"
       ]
     },
     {
