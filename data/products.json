@@ -71,6 +71,24 @@
       "inStock": true,
       "featured": false,
       "model3d": ""
+    },
+    {
+      "id": 8,
+      "groupId": 8,
+      "colorName": "аерае",
+      "title": "верса",
+      "price": 453,
+      "oldPrice": 453453,
+      "category": "chairs",
+      "image": "1776155079252-белый.png",
+      "images": [],
+      "description": "араера",
+      "material": "",
+      "size": "",
+      "weight": "",
+      "inStock": true,
+      "featured": false,
+      "model3d": ""
     }
   ],
   "categories": [
