@@ -180,12 +180,6 @@
         .cv-item img:hover { transform: scale(1.07); }
         .cv-item img.active-cv { border-color: var(--accent-terra); }
         .cv-name { font-size: 10px; color: var(--text-muted); text-align: center; max-width: 62px; line-height: 1.3; }
-        /* Миниатюры вариантов в карточках каталога */
-        .card-color-variants { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-        .card-cv-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
-        .card-cv-item img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: border-color 0.15s; }
-        .card-cv-item img.active-cv { border-color: var(--accent-terra); }
-        .card-cv-label { font-size: 9px; color: var(--text-muted); text-align: center; max-width: 40px; line-height: 1.2; }
 
         .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         .spec-item label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; transition: color var(--theme-speed) ease;}
@@ -1390,23 +1384,12 @@
             container.innerHTML = html;
         }
 
-        function groupedBaseProducts(list) {
-            const seen = new Set();
-            return list.reduce((acc, p) => {
-                const gid = String(p.groupId);
-                if (seen.has(gid)) return acc;
-                seen.add(gid);
-                acc.push(products.find(pr => String(pr.id) === gid) || p);
-                return acc;
-            }, []);
-        }
-
         function renderHome() {
             const c = document.getElementById('popularContainer');
             if (!c) return;
             c.innerHTML = '';
-            const featured = groupedBaseProducts(products.filter(p => p.featured && p.inStock !== false));
-            const toShow = featured.length ? featured.slice(0, 4) : groupedBaseProducts(products).slice(0, 4);
+            const featured = products.filter(p => p.featured && p.inStock !== false);
+            const toShow = featured.length ? featured.slice(0, 4) : products.slice(0, 4);
             toShow.forEach(p => {
                 const badge3d = p.model3d ? `<span style="position:absolute;top:10px;right:10px;background:var(--accent-terra);color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openModel3D('${p.id}')"><i class="fas fa-cube"></i> 3D</span>` : '';
                 c.innerHTML += `<div class="pop-card" onclick="openProduct('${p.id}')" style="position:relative;">
@@ -1485,9 +1468,6 @@
             if (sort === 'price-asc')  filtered.sort((a, b) => a.price - b.price);
             if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
 
-            // Показываем один базовый товар на группу (дедупликация по groupId)
-            filtered = groupedBaseProducts(filtered);
-
             updateFilterDots();
             c.innerHTML = '';
             if (!filtered.length) {
@@ -1495,15 +1475,7 @@
                 return;
             }
             filtered.forEach(p => {
-                const btn3d  = p.model3d ? `<button class="btn btn-cart" style="background:var(--accent-terra);color:#fff;" onclick="event.stopPropagation();openModel3D('${p.id}')" title="3D модель"><i class="fas fa-cube"></i></button>` : '';
-                const group  = getProductGroup(p);
-                const colorThumbsHtml = group.length > 1
-                    ? `<div class="card-color-variants" onclick="event.stopPropagation()">` +
-                      group.map(v => `<div class="card-cv-item" onclick="openProduct('${v.id}')">
-                          <img src="${getProductImage(v)}" class="${String(v.id) === String(p.id) ? 'active-cv' : ''}" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=80'">
-                          <span class="card-cv-label">${esc(v.colorName || '')}</span>
-                      </div>`).join('') + `</div>`
-                    : '';
+                const btn3d = p.model3d ? `<button class="btn btn-cart" style="background:var(--accent-terra);color:#fff;" onclick="event.stopPropagation();openModel3D('${p.id}')" title="3D модель"><i class="fas fa-cube"></i></button>` : '';
                 const colorSubtitle = p.colorName ? `<span style="font-size:11px;color:var(--text-muted);">${esc(p.colorName)}</span>` : '';
                 c.innerHTML += `<div class="cat-card" onclick="openProduct('${p.id}')" style="position:relative;" data-cid="${p.id}">
                     <img src="${getProductImage(p)}" alt="${getProductName(p)}" class="card-main-img" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'">
@@ -1511,7 +1483,6 @@
                         <h3>${getProductName(p)}</h3>
                         ${colorSubtitle}
                         <p class="desc">${getProductDesc(p)}</p>
-                        ${colorThumbsHtml}
                         <div class="cat-card-footer">
                             ${getPriceHtml(p.price, p.oldPrice)}
                             <div style="display:flex;gap:8px;">${btn3d}<button class="btn btn-cart" onclick="event.stopPropagation();addToCart('${p.id}')">В корзину</button></div>
