@@ -120,10 +120,8 @@
         .btn-primary:hover { background-color: var(--accent-green-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59, 77, 59, 0.2); }
         .btn-cart { background-color: var(--accent-green); color: #fff; padding: 10px 18px; font-size: 11px; transition: all 0.2s ease, background-color var(--theme-speed) ease; }
         .btn-cart:hover { background-color: var(--accent-green-hover); }
-        .product-btn-cart { width: 100%; padding: 17px; font-size: 14px; background: transparent; color: var(--accent-green); border: 2px solid var(--accent-green); transition: all 0.2s ease, color var(--theme-speed) ease, border-color var(--theme-speed) ease; }
-        .product-btn-cart:hover { background: var(--accent-green); color: #fff; }
-        .product-btn-3d { width: 100%; padding: 13px; font-size: 13px; background: transparent; color: var(--accent-terra); border: 2px solid var(--accent-terra); transition: all 0.2s ease; }
-        .product-btn-3d:hover { background: var(--accent-terra); color: #fff; }
+        .product-btn-cart { width: 100%; padding: 18px; font-size: 14px; }
+        .product-btn-3d { width: 100%; padding: 14px; font-size: 13px; background-color: var(--accent-terra); }
         .section-title { font-size: 32px; margin-bottom: 30px; }
         .price-block { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
         .price-current { font-weight: 600; color: var(--accent-green); transition: color var(--theme-speed) ease; }
@@ -167,7 +165,7 @@
         .cart-item-total .old-total { font-size: 14px; color: var(--text-muted); text-decoration: line-through; transition: color var(--theme-speed) ease; }
         .remove-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; transition: color 0.2s; }
         .remove-btn:hover { color: #ff4d4f; }
-        .cart-summary { position: sticky; bottom: 0; margin-top: 20px; padding: 18px 25px max(18px, env(safe-area-inset-bottom)); background: var(--bg-secondary); border-radius: 12px 12px 0 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; z-index: 10; transition: background-color var(--theme-speed) ease; }
+        .cart-summary { position: sticky; bottom: 0; margin-top: 20px; padding: 18px 25px max(18px, env(safe-area-inset-bottom)); background: transparent; border-radius: 0; box-shadow: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; z-index: 10; }
         .total-amount { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; }
         .empty-cart { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 18px; transition: color var(--theme-speed) ease; }
 
@@ -215,11 +213,9 @@
         @media (max-width: 900px) {
             .product-cta {
                 position: sticky; bottom: 0;
-                background: var(--bg-secondary);
+                background: transparent;
                 padding: 14px 0 max(14px, env(safe-area-inset-bottom));
-                border-top: 1px solid var(--border-color);
                 z-index: 10;
-                transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
             }
         }
 
@@ -910,11 +906,11 @@
                     </div>
                     <div class="product-cta">
                         <div id="model3dBtnContainer" style="display:none; margin-bottom: 10px;">
-                            <button class="btn product-btn-3d" onclick="openModel3D(currentProductId)">
+                            <button class="btn btn-primary product-btn-3d" onclick="openModel3D(currentProductId)">
                                 <i class="fas fa-cube"></i> Просмотреть 3D модель
                             </button>
                         </div>
-                        <button class="btn product-btn-cart" onclick="addToCart(currentProductId)">
+                        <button class="btn btn-primary product-btn-cart" onclick="addToCart(currentProductId)">
                             <i class="fas fa-cart-plus"></i> Добавить в корзину
                         </button>
                     </div>
