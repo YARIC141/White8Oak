@@ -151,6 +151,22 @@
         .hero-text p { font-size: 15px; color: var(--text-muted); margin-bottom: 30px; line-height: 1.7; max-width: 450px; transition: color var(--theme-speed) ease; }
         .popular-section { flex: 2 1 400px; }
         .popular-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        /* === АККОРДЕОН (главная) === */
+        .home-accordion { margin-top: 48px; padding-bottom: 40px; }
+        .acc-item { border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 10px; overflow: hidden; transition: border-color var(--theme-speed) ease; }
+        .acc-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; cursor: pointer; font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--text-main); user-select: none; transition: background-color 0.2s ease, color var(--theme-speed) ease; gap: 12px; }
+        .acc-header:hover { background: var(--bg-secondary); }
+        .acc-item.open .acc-header { background: var(--bg-secondary); }
+        .acc-chevron { font-size: 13px; color: var(--text-muted); flex-shrink: 0; transition: transform 0.35s ease, color var(--theme-speed) ease; }
+        .acc-item.open .acc-chevron { transform: rotate(180deg); color: var(--accent-green); }
+        .acc-body { max-height: 0; overflow: hidden; transition: max-height 0.45s ease; }
+        .acc-body-inner { padding: 4px 24px 24px; color: var(--text-muted); font-size: 15px; line-height: 1.85; transition: color var(--theme-speed) ease; }
+        .acc-body-inner p { margin-bottom: 14px; }
+        .acc-body-inner p:last-child { margin-bottom: 0; }
+        .acc-body-inner strong { color: var(--text-main); font-weight: 600; transition: color var(--theme-speed) ease; }
+        .acc-body-inner ul { padding-left: 20px; margin-bottom: 14px; }
+        .acc-body-inner li { margin-bottom: 8px; }
+        .acc-item.open .acc-body { max-height: 1200px; }
         .category-filters { display: flex; gap: 10px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); transition: border-color var(--theme-speed) ease; flex-wrap: wrap; }
         .cat-btn { padding: 8px 20px; border: 1px solid var(--border-color); background: var(--bg-secondary); font-family: 'Inter'; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 20px; transition: all 0.2s, background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, color var(--theme-speed) ease; }
         .cat-btn.active { background-color: var(--text-main); color: var(--bg-primary); border-color: var(--text-main); }
@@ -176,7 +192,7 @@
         .cart-item-total .old-total { font-size: 14px; color: var(--text-muted); text-decoration: line-through; transition: color var(--theme-speed) ease; }
         .remove-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; transition: color 0.2s; }
         .remove-btn:hover { color: #ff4d4f; }
-        .cart-summary { position: sticky; bottom: 0; margin-top: 20px; padding: 18px 25px max(18px, env(safe-area-inset-bottom)); background: transparent; border-radius: 0; box-shadow: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; z-index: 10; }
+        .cart-summary { position: sticky; bottom: 0; margin-top: 20px; padding: 16px 0 max(28px, env(safe-area-inset-bottom)); background: transparent; border-radius: 0; box-shadow: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; z-index: 10; }
         .total-amount { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 700; }
         .empty-cart { text-align: center; padding: 80px 0; color: var(--text-muted); font-size: 18px; transition: color var(--theme-speed) ease; }
 
@@ -224,7 +240,7 @@
         .product-cta {
             position: sticky; bottom: 0;
             background: transparent;
-            padding: 14px 0 max(16px, env(safe-area-inset-bottom));
+            padding: 14px 0 max(28px, env(safe-area-inset-bottom));
             z-index: 10;
         }
 
@@ -370,19 +386,15 @@
         }
 
         /* Sticky «Подтвердить заказ» (форма) */
-        @media (max-width: 900px) {
-            .order-cta {
-                position: sticky; bottom: 0;
-                background: var(--bg-secondary);
-                padding: 14px 0 max(14px, env(safe-area-inset-bottom));
-                border-top: 1px solid var(--border-color);
-                margin-top: 16px;
-                z-index: 10;
-                transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
-            }
-            .order-cta button { margin-top: 0 !important; }
-            .order-cta #offlineMsg { margin-bottom: 10px; }
+        .order-cta {
+            position: sticky; bottom: 0;
+            background: transparent;
+            padding: 14px 0 max(28px, env(safe-area-inset-bottom));
+            margin-top: 16px;
+            z-index: 10;
         }
+        .order-cta button { margin-top: 0 !important; }
+        .order-cta #offlineMsg { margin-bottom: 10px; }
 
         /* === SKELETON === */
         @keyframes shimmer {
@@ -812,6 +824,67 @@
                     <div class="popular-grid" id="popularContainer"></div>
                 </div>
             </div>
+
+            <!-- Аккордеон: о мастерской, материале, технологии -->
+            <div class="home-accordion">
+
+                <div class="acc-item" id="acc-who">
+                    <div class="acc-header" onclick="toggleAcc('acc-who')">
+                        Кто мы
+                        <i class="fas fa-chevron-down acc-chevron"></i>
+                    </div>
+                    <div class="acc-body">
+                        <div class="acc-body-inner">
+                            <p>Мы — небольшая мастерская, где каждый предмет создаётся вручную. История White&nbsp;&amp;&nbsp;Oak началась с простого убеждения: хорошая вещь не обязана стоить дорого, но обязана служить долго.</p>
+                            <p>Мы сами придумываем, проектируем и изготавливаем мебель. Не перепродаём, не масштабируем в ущерб качеству. Каждый заказ — это диалог с конкретным человеком и конкретным пространством.</p>
+                            <p><strong>Философия:</strong> честность с материалом, уважение к работе и к покупателю. Мы не прячем крепёж за фальшивыми панелями и не используем ЛДСП там, где нужна фанера. То, что вы видите — то, из чего сделано.</p>
+                            <p><strong>Особенности:</strong> ремонтопригодность, возможность заказать нестандартный размер, покрытие на выбор. Мебель, которую не стыдно оставить в наследство.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="acc-item" id="acc-plywood">
+                    <div class="acc-header" onclick="toggleAcc('acc-plywood')">
+                        Почему фанера?
+                        <i class="fas fa-chevron-down acc-chevron"></i>
+                    </div>
+                    <div class="acc-body">
+                        <div class="acc-body-inner">
+                            <p>Берёзовая фанера — не дешёвый заменитель, а осознанный выбор. Слоистая структура даёт свойства, которых нет ни у массива, ни у ЛДСП.</p>
+                            <ul>
+                                <li><strong>Прочность:</strong> перпендикулярно уложенные слои шпона противодействуют нагрузкам в разных направлениях — фанера не раскалывается и не трескается по волокну.</li>
+                                <li><strong>Стабильность:</strong> не коробится и не рассыхается при перепадах влажности, в отличие от массива.</li>
+                                <li><strong>Вес:</strong> легче массива при сопоставимой прочности, тяжелее ЛДСП — но значительно надёжнее на изгиб.</li>
+                                <li><strong>Экологичность:</strong> натуральный шпон без синтетических наполнителей, минимум связующих смол по сравнению с ЛДСП.</li>
+                                <li><strong>Ремонтопригодность:</strong> царапины шлифуются, поверхность легко перекрашивается или покрывается маслом заново прямо дома.</li>
+                            </ul>
+                            <p><strong>Vs ЛДСП:</strong> нет вредных формальдегидных пропиток в объёме плиты, не крошится на срезах, держит саморезы в 2–3 раза надёжнее.</p>
+                            <p><strong>Vs массив:</strong> дешевле, геометрически стабильнее, не даёт продольных трещин при усыхании.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="acc-item" id="acc-tech">
+                    <div class="acc-header" onclick="toggleAcc('acc-tech')">
+                        Технология производства и сроки
+                        <i class="fas fa-chevron-down acc-chevron"></i>
+                    </div>
+                    <div class="acc-body">
+                        <div class="acc-body-inner">
+                            <p>Каждое изделие проходит раскрой, ручную шлифовку, склейку соединений и финишное покрытие. <strong>Срок изготовления — от 2 до 6 недель</strong> в зависимости от сложности и загрузки мастерской.</p>
+                            <p><strong>Способы покрытия:</strong></p>
+                            <ul>
+                                <li><strong>Масло</strong> — проникает в структуру дерева, не образует плёнки. Подчёркивает натуральную текстуру, приятно на ощупь, «дышит». Легко обновляется в домашних условиях без шлифовки.</li>
+                                <li><strong>Краска</strong> — матовая или полуматовая, широкая палитра цветов по RAL. Скрывает текстуру, даёт ровный цвет. Устойчива к истиранию, подходит для детской мебели.</li>
+                                <li><strong>Лак</strong> — прочное прозрачное покрытие поверх дерева или морилки. Бывает матовый, сатиновый и глянцевый. Хорошо защищает от влаги и механических повреждений.</li>
+                                <li><strong>Морилка</strong> — изменяет оттенок дерева, сохраняя текстуру видимой. Даёт эффект состаренного или тонированного дерева. Всегда используется в паре с лаком.</li>
+                            </ul>
+                            <p>Не можете определиться с покрытием? Напишите нам — пришлём образцы или поможем подобрать вариант под ваш интерьер.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </section>
 
         <section id="page-catalog" class="page">
@@ -1181,6 +1254,13 @@
         }
 
         // ── Инициализация ──────────────────────────────────────────────────
+        function toggleAcc(id) {
+            const item = document.getElementById(id);
+            if (!item) return;
+            const isOpen = item.classList.contains('open');
+            item.classList.toggle('open', !isOpen);
+        }
+
         async function init() {
             // Применяем тему ДО загрузки товаров — никакой задержки
             applyTheme(localStorage.getItem('theme') === 'dark');
