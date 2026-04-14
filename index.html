@@ -255,9 +255,18 @@
         }
 
         /* Форма заказа */
+        #page-order { padding-bottom: 0; }
         .order-wrapper { max-width: 600px; margin: 0 auto; background: var(--bg-secondary); padding: 50px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color var(--theme-speed) ease; }
-        .order-item-info { background: var(--bg-primary); padding: 15px; border-radius: 8px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; transition: background-color var(--theme-speed) ease; }
-        .order-item-info img { width: 80px; height: 80px; object-fit: cover; border-radius: 6px; }
+        /* Список миниатюр товаров в форме заказа */
+        .order-items-preview { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        .order-item-card { display: flex; align-items: center; gap: 12px; background: var(--bg-primary); border-radius: 8px; padding: 10px 12px; transition: background-color var(--theme-speed) ease; }
+        .order-item-card img { width: 56px; height: 56px; object-fit: cover; border-radius: 6px; flex-shrink: 0; }
+        .oic-info { flex: 1; min-width: 0; }
+        .oic-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .oic-color { font-size: 11px; color: var(--text-muted); margin-top: 2px; transition: color var(--theme-speed) ease; }
+        .oic-price-col { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
+        .oic-qty { font-size: 13px; color: var(--text-muted); margin-left: 6px; flex-shrink: 0; transition: color var(--theme-speed) ease; }
+        .order-summary-text { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; text-align: right; transition: color var(--theme-speed) ease; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; transition: color var(--theme-speed) ease; }
         .form-group input, .form-group select { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Inter'; font-size: 15px; outline: none; background: var(--input-bg); color: var(--text-main); transition: border-color 0.2s, background-color var(--theme-speed) ease, color var(--theme-speed) ease;}
@@ -326,6 +335,7 @@
 
         /* Плавные отступы для order-wrapper и cart-item через clamp */
         .order-wrapper { padding: clamp(20px, 5vw, 50px); }
+        .order-cta { padding-left: clamp(18px, 5vw, 50px); padding-right: clamp(18px, 5vw, 50px); }
         .cart-item { padding: clamp(14px, 3vw, 20px); }
 
         /* Уменьшение сайдбара пропорционально ширине экрана */
@@ -361,14 +371,8 @@
             /* Детали товара: характеристики в одну колонку */
             .specs-grid { grid-template-columns: 1fr; }
 
-            /* Форма заказа: уменьшить изображение товара, не обрезать */
-            .order-item-info img {
-                width: clamp(56px, 14vw, 80px);
-                height: clamp(56px, 14vw, 80px);
-                object-fit: contain;
-                background: var(--bg-primary);
-                flex-shrink: 0;
-            }
+            /* Форма заказа: мобильный safe-area */
+            .order-cta { padding-bottom: max(28px, env(safe-area-inset-bottom)); }
             .delivery-options { flex-direction: column; gap: 10px; }
 
             /* Корзина: миниатюра без обрезки */
@@ -398,13 +402,39 @@
         /* Sticky «Подтвердить заказ» (форма) */
         .order-cta {
             position: sticky; bottom: 0;
-            background: transparent;
-            padding: 14px 0 max(28px, env(safe-area-inset-bottom));
-            margin-top: 16px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 50px max(20px, env(safe-area-inset-bottom));
             z-index: 10;
+            transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
         }
+        .order-cta-inner { max-width: 600px; margin: 0 auto; }
         .order-cta button { margin-top: 0 !important; }
         .order-cta #offlineMsg { margin-bottom: 10px; }
+
+        /* === ИСТОРИЯ ЗАКАЗОВ === */
+        .order-history-card { background: var(--bg-secondary); border-radius: 12px; margin-bottom: 16px; box-shadow: var(--shadow); overflow: hidden; transition: background-color var(--theme-speed) ease; }
+        .order-history-header { padding: 16px 20px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px; user-select: none; }
+        .order-history-meta { flex: 1; min-width: 0; }
+        .order-history-id { font-size: 15px; font-weight: 600; }
+        .order-history-date { font-size: 12px; color: var(--text-muted); margin-top: 3px; transition: color var(--theme-speed) ease; }
+        .order-history-preview { font-size: 13px; color: var(--text-muted); margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color var(--theme-speed) ease; }
+        .order-history-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+        .order-history-total { font-size: 17px; font-weight: 600; color: var(--accent-green); transition: color var(--theme-speed) ease; }
+        .oh-status { font-size: 11px; color: var(--text-muted); transition: color var(--theme-speed) ease; }
+        .order-history-chevron { color: var(--text-muted); font-size: 13px; transition: transform 0.2s, color var(--theme-speed) ease; }
+        .order-history-card.oh-expanded .order-history-chevron { transform: rotate(180deg); }
+        .order-history-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border-color); transition: border-color var(--theme-speed) ease; }
+        .order-history-card.oh-expanded .order-history-body { display: block; }
+        .oh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px,100%), 1fr)); gap: 14px; padding-top: 14px; }
+        .oh-card { background: var(--bg-primary); border-radius: 10px; overflow: hidden; transition: background-color var(--theme-speed) ease; }
+        .oh-card img { width: 100%; height: 130px; object-fit: cover; }
+        .oh-card-body { padding: 10px 14px 12px; }
+        .oh-card-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+        .oh-card-color { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; transition: color var(--theme-speed) ease; }
+        .oh-card-footer { display: flex; align-items: center; gap: 8px; }
+        .oh-qty { font-size: 12px; color: var(--text-muted); flex: 1; transition: color var(--theme-speed) ease; }
+        .oh-price-col { display: flex; flex-direction: column; align-items: flex-end; }
 
         /* === SKELETON === */
         @keyframes shimmer {
@@ -612,6 +642,7 @@
                 <div class="nav-link" onclick="navigateTo('catalog', this)"><i class="fas fa-th-large"></i><span class="nav-text">Каталог</span></div>
                 <div class="nav-link" onclick="navigateTo('about', this)"><i class="fas fa-info-circle"></i><span class="nav-text">О нас</span></div>
                 <div class="nav-link" onclick="navigateTo('cart', this)"><i class="fas fa-shopping-cart"></i><span class="nav-text">Корзина</span><div class="cart-badge" id="cartBadge" style="display:none;">0</div></div>
+                <div class="nav-link" onclick="navigateTo('orders', this)"><i class="fas fa-receipt"></i><span class="nav-text">Заказы</span></div>
                 <div id="contactLinks"></div>
                 <div class="nav-link" onclick="navigateTo('help', this)" style="margin-top: auto;"><i class="fas fa-book-open"></i><span class="nav-text">Инструкция</span></div>
             </nav>
@@ -1011,14 +1042,8 @@
         <section id="page-order" class="page">
             <div class="order-wrapper">
                 <div id="orderFormWrapper">
-                    <h2 style="margin-bottom: 30px;">Оформление заказа</h2>
-                    <div class="order-item-info">
-                        <img id="oImg" src="" alt="">
-                        <div style="flex:1; display:flex; flex-direction:column;">
-                            <h3 id="oName" style="font-size: 18px;"></h3>
-                            <div style="color: var(--accent-green); font-weight: 600; margin-left: auto; padding-right: 4px;" id="oTotal"></div>
-                        </div>
-                    </div>
+                    <h2 style="margin-bottom: 24px;">Оформление заказа</h2>
+                    <div id="oItemsList" class="order-items-preview"></div>
                     <div class="form-group"><label>ФИО</label><input type="text" id="oCustomerName" placeholder="Иванов Иван Иванович"></div>
                     <div class="form-group"><label>Телефон</label><input type="tel" id="oCustomerPhone" placeholder="+7 (999) 123-45-67"></div>
                     <div class="form-group"><label>Email</label><input type="email" id="oCustomerEmail" placeholder="mail@example.com"></div>
@@ -1034,19 +1059,22 @@
                         <input type="text" id="oAddress" placeholder="Город, улица, дом, квартира">
                     </div>
                     <div class="form-group"><label>Пожелания к заказу</label><textarea id="oWishes" style="width:100%;padding:14px;border:1px solid var(--border-color);border-radius:6px;font-family:'Inter';font-size:15px;outline:none;background:var(--input-bg);color:var(--text-main);min-height:80px;resize:vertical;" placeholder="Особые пожелания, вопросы..."></textarea></div>
-                    <div class="order-cta">
-                        <div id="offlineMsg" style="display:none;background:#fff3cd;color:#7a5c00;border:1px solid #ffc107;border-radius:8px;padding:14px 16px;margin-bottom:10px;font-size:14px;line-height:1.5;">
-                            <i class="fas fa-wifi" style="margin-right:6px;opacity:0.6;"></i>
-                            Заказ не может быть создан пока вы не подключитесь к сети. Вернитесь в корзину позднее.
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%;" onclick="submitOrder()">Подтвердить заказ</button>
-                    </div>
                 </div>
                 <div class="success-box" id="successBox">
                     <i class="fas fa-check-circle"></i>
                     <h2>Заказ принят!</h2>
                     <p style="color: var(--text-muted);">Менеджер уже читает ваш заказ — или скоро прочитает. Свяжемся с вами в ближайшее время.</p>
                     <button class="btn btn-primary" style="margin-top: 30px;" onclick="navigateTo('home', document.querySelectorAll('.nav-link')[0])">На главную</button>
+                </div>
+            </div>
+            <div class="order-cta" id="orderCtaBar">
+                <div class="order-cta-inner">
+                    <div id="oSummaryLine" class="order-summary-text"></div>
+                    <div id="offlineMsg" style="display:none;background:#fff3cd;color:#7a5c00;border:1px solid #ffc107;border-radius:8px;padding:14px 16px;margin-bottom:10px;font-size:14px;line-height:1.5;">
+                        <i class="fas fa-wifi" style="margin-right:6px;opacity:0.6;"></i>
+                        Заказ не может быть создан пока вы не подключитесь к сети. Вернитесь в корзину позднее.
+                    </div>
+                    <button id="confirmOrderBtn" class="btn btn-primary" style="width:100%;" onclick="submitOrder()">Подтвердить заказ</button>
                 </div>
             </div>
         </section>
@@ -1105,6 +1133,11 @@
                 </div>
             </div>
         </section>
+
+        <section id="page-orders" class="page">
+            <h2 class="section-title">Мои заказы</h2>
+            <div id="ordersContainer"></div>
+        </section>
     </div>
 
     <script src="config.js"></script>
@@ -1121,10 +1154,24 @@
         let activeImgIndex   = 0;
 
         // ── Уведомления о статусе заказа ──────────────────────────────────
-        function saveOrderToHistory(phone, name) {
-            const orders = JSON.parse(localStorage.getItem('whiteoak_orders') || '[]');
-            orders.unshift({ phone, name, submittedAt: Date.now(), knownStatus: 'Новый' });
-            localStorage.setItem('whiteoak_orders', JSON.stringify(orders.slice(0, 5)));
+        function saveOrderToHistory(order) {
+            const saved = JSON.parse(localStorage.getItem('whiteoak_orders') || '[]');
+            // Снимок товаров с актуальными изображениями
+            const itemSnapshots = (order.items || []).map(item => {
+                const p = products.find(pr => String(pr.id) === String(item.productId));
+                return { ...item, image: p ? getProductImage(p) : '', oldPrice: p ? (p.oldPrice || null) : null };
+            });
+            saved.unshift({
+                orderId: order.orderId,
+                phone: order.customerPhone,
+                name: order.customerName,
+                submittedAt: new Date(order.createdAt).getTime(),
+                createdAt: order.createdAt,
+                knownStatus: 'Новый',
+                items: itemSnapshots,
+                grandTotal: order.price,
+            });
+            localStorage.setItem('whiteoak_orders', JSON.stringify(saved.slice(0, 20)));
         }
 
         function showOrderNotification(name, status) {
@@ -1140,6 +1187,58 @@
                     icon: '/White8Oak/icons/icon.svg'
                 });
             }
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            if (!container) return;
+            const orders = JSON.parse(localStorage.getItem('whiteoak_orders') || '[]');
+            if (!orders.length) {
+                container.innerHTML = '<div class="empty-cart"><i class="fas fa-receipt"></i>Заказов пока нет</div>';
+                return;
+            }
+            container.innerHTML = orders.map(o => {
+                const date = new Date(o.createdAt || o.submittedAt);
+                const dateStr = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+                const preview = (o.items || []).map(i => esc(i.productName) + (i.color ? ` (${esc(i.color)})` : '') + ' ×' + i.quantity).join(', ');
+                const totalStr = o.grandTotal ? formatPrice(o.grandTotal) : '';
+                const cardsHtml = (o.items || []).map(i => {
+                    const oldHtml = i.oldPrice ? `<span class="cat-price-old">${formatPrice(i.oldPrice)}</span>` : '';
+                    return `<div class="oh-card">
+                        <img src="${i.image || ''}" alt="${esc(i.productName)}" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'">
+                        <div class="oh-card-body">
+                            <div class="oh-card-name">${esc(i.productName)}</div>
+                            ${i.color ? `<div class="oh-card-color">${esc(i.color)}</div>` : ''}
+                            <div class="oh-card-footer">
+                                <span class="oh-qty">×${i.quantity}</span>
+                                <div class="oh-price-col">${oldHtml}<span class="cat-price-cur" style="font-size:16px;">${formatPrice(i.price)}</span></div>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                return `<div class="order-history-card" id="ohc-${o.orderId}">
+                    <div class="order-history-header" onclick="toggleOrderCard('${o.orderId}')">
+                        <div class="order-history-meta">
+                            <div class="order-history-id">${o.orderId}</div>
+                            <div class="order-history-date">${dateStr}</div>
+                            <div class="order-history-preview">${preview}</div>
+                        </div>
+                        <div class="order-history-right">
+                            ${totalStr ? `<div class="order-history-total">${totalStr}</div>` : ''}
+                            <span class="oh-status">${esc(o.knownStatus || 'Новый')}</span>
+                            <i class="fas fa-chevron-down order-history-chevron"></i>
+                        </div>
+                    </div>
+                    <div class="order-history-body">
+                        <div class="oh-grid">${cardsHtml}</div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleOrderCard(orderId) {
+            const card = document.getElementById('ohc-' + orderId);
+            if (card) card.classList.toggle('oh-expanded');
         }
 
         async function checkOrderUpdates() {
@@ -1446,6 +1545,9 @@
                 FILTER_BTNS.forEach(id => document.getElementById(id)?.classList.remove('active'));
             }
             if (pageId === 'cart') renderCart();
+            if (pageId === 'orders') renderOrders();
+            const ctaBar = document.getElementById('orderCtaBar');
+            if (ctaBar) ctaBar.style.display = pageId === 'order' ? '' : 'none';
 
             if (!_noHistory) {
                 // Обрезаем «будущее» и пишем новую запись
@@ -1899,10 +2001,24 @@
                 const p = products.find(pr => String(pr.id) === String(i.productId));
                 return s + (p ? p.price * i.qty : 0);
             }, 0);
-            const firstProduct = products.find(p => String(p.id) === String(cart[0].productId));
-            document.getElementById('oImg').src = firstProduct ? getProductImage(firstProduct) : '';
-            document.getElementById('oName').textContent = `Товаров: ${cart.reduce((s,i)=>s+i.qty,0)} шт. на сумму`;
-            document.getElementById('oTotal').textContent = formatPrice(grandTotal);
+            // Список миниатюр товаров
+            const itemsHtml = cart.map(item => {
+                const p = products.find(pr => String(pr.id) === String(item.productId));
+                if (!p) return '';
+                const oldPriceHtml = p.oldPrice ? `<span class="cat-price-old">${formatPrice(p.oldPrice)}</span>` : '';
+                return `<div class="order-item-card">
+                    <img src="${getProductImage(p)}" alt="${esc(getProductName(p))}" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200'">
+                    <div class="oic-info">
+                        <div class="oic-name">${esc(getProductName(p))}</div>
+                        ${p.colorName ? `<div class="oic-color">${esc(p.colorName)}</div>` : ''}
+                    </div>
+                    <div class="oic-price-col">${oldPriceHtml}<span class="cat-price-cur" style="font-size:16px;">${formatPrice(p.price)}</span></div>
+                    <div class="oic-qty">×${item.qty}</div>
+                </div>`;
+            }).join('');
+            document.getElementById('oItemsList').innerHTML = itemsHtml;
+            const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+            document.getElementById('oSummaryLine').textContent = `${totalQty} товар${totalQty === 1 ? '' : totalQty < 5 ? 'а' : 'ов'} на сумму ${formatPrice(grandTotal)}`;
             document.getElementById('orderFormWrapper').style.display = 'block';
             document.getElementById('successBox').style.display = 'none';
             document.getElementById('oCustomerName').value = '';
@@ -1963,7 +2079,7 @@
                 source:        'client'
             };
 
-            const submitBtn = document.querySelector('#orderFormWrapper .btn-primary');
+            const submitBtn = document.getElementById('confirmOrderBtn');
             submitBtn.disabled  = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
 
@@ -2000,11 +2116,12 @@
             }
 
             submitBtn.disabled  = false;
-            submitBtn.innerHTML = 'Оформить заказ';
+            submitBtn.innerHTML = 'Подтвердить заказ';
             document.getElementById('orderFormWrapper').style.display = 'none';
             document.getElementById('successBox').style.display = 'block';
-            // Сохраняем заказ для отслеживания статуса
-            saveOrderToHistory(phone, name);
+            document.getElementById('orderCtaBar').style.display = 'none';
+            // Сохраняем заказ для отслеживания статуса и истории
+            saveOrderToHistory(order);
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission();
             }
