@@ -19,27 +19,6 @@
       "model3d": "data/models/1776079324751-Стеллаж-модульный-для-glb.glb"
     },
     {
-      "id": "7_1",
-      "groupId": 7,
-      "colorName": "торшер с диваном",
-      "title": "Стеллаж модульный пример",
-      "price": 30000,
-      "oldPrice": 40000,
-      "category": "shelves",
-      "image": "торшер-Temp0000.png",
-      "images": [
-        "1776081138326-торшер-Temp0000.png",
-        "1776081138385-торшер-Temp0000.png"
-      ],
-      "description": "Стеллаж",
-      "material": "",
-      "size": "",
-      "weight": "",
-      "inStock": true,
-      "featured": false,
-      "model3d": ""
-    },
-    {
       "id": "7_2",
       "groupId": 7,
       "colorName": "Ольха",
