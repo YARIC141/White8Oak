@@ -67,6 +67,15 @@
         .nav-text { transition: opacity 0.2s, width 0.2s; }
         .nav-link:hover { background-color: var(--bg-primary); color: var(--text-main); }
         .nav-link.active { background-color: var(--accent-green); color: #fff; }
+        /* === ИКОНКИ СВЯЗИ === */
+        #contactLinks { display: contents; }
+        .contact-divider { height: 1px; background: var(--border-color); margin: 6px 15px; transition: background-color var(--theme-speed) ease; }
+        .sidebar.collapsed .contact-divider { margin: 6px 8px; }
+        .contact-link { display: flex; align-items: center; gap: 15px; padding: 11px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; position: relative; white-space: nowrap; overflow: hidden; background-color: transparent; text-decoration: none; }
+        .sidebar.collapsed .contact-link { justify-content: center; padding: 11px 0; gap: 0; }
+        .contact-link i, .contact-link .ci-max { width: 20px; text-align: center; font-size: 16px; flex-shrink: 0; }
+        .contact-link:hover { background-color: var(--bg-primary); color: var(--text-main); }
+        .ci-max { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; font-family: sans-serif; line-height: 1; }
         .cart-badge { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: var(--accent-terra); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
         .theme-toggle-wrapper { padding: 0 25px; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 20px; transition: padding 0.3s, border-color var(--theme-speed) ease; }
         .sidebar.collapsed .theme-toggle-wrapper { padding: 20px 10px 0; }
@@ -527,7 +536,7 @@
         /* Цвета слоёв: чёрно-белые тона */
         :root {
             --p1: rgba(255,255,255,0.92); --p2: rgba(185,185,185,0.82);
-            --p3: rgba(0,0,0,0.14);       --p4: rgba(0,0,0,0.40); --p5: rgba(0,0,0,0.62);
+            --p3: rgba(0,0,0,0.14);       --p4: rgba(0,0,0,0.27); --p5: rgba(0,0,0,0.44);
         }
         html[data-theme="dark"], body.dark-theme {
             --p1: rgba(220,220,228,0.84); --p2: rgba(155,160,175,0.70);
@@ -579,6 +588,7 @@
                 <div class="nav-link" onclick="navigateTo('catalog', this)"><i class="fas fa-th-large"></i><span class="nav-text">Каталог</span></div>
                 <div class="nav-link" onclick="navigateTo('about', this)"><i class="fas fa-info-circle"></i><span class="nav-text">О нас</span></div>
                 <div class="nav-link" onclick="navigateTo('cart', this)"><i class="fas fa-shopping-cart"></i><span class="nav-text">Корзина</span><div class="cart-badge" id="cartBadge" style="display:none;">0</div></div>
+                <div id="contactLinks"></div>
                 <div class="nav-link" onclick="navigateTo('help', this)" style="margin-top: auto;"><i class="fas fa-book-open"></i><span class="nav-text">Инструкция</span></div>
             </nav>
             <div class="theme-toggle-wrapper">
@@ -1115,6 +1125,42 @@
             return `<div class="price-block">${cur}${old}</div>`;
         }
 
+        // ── Загрузка и отображение контактов ─────────────────────────────
+        const CONTACT_DEFS = [
+            { key: 'telegram',  label: 'Telegram',        icon: '<i class="fab fa-telegram"></i>',        url: v => 'https://t.me/' + v.replace(/^@/,'') },
+            { key: 'whatsapp',  label: 'WhatsApp',        icon: '<i class="fab fa-whatsapp"></i>',        url: v => 'https://wa.me/' + v.replace(/\D/g,'') },
+            { key: 'max',       label: 'Max',             icon: '<span class="ci-max">M</span>',          url: v => /^\+?[\d\s\-()]{7,}$/.test(v) ? 'https://max.ru/phone/' + v.replace(/\D/g,'') : 'https://max.ru/' + v.replace(/^@/,'') },
+            { key: 'instagram', label: 'Instagram',       icon: '<i class="fab fa-instagram"></i>',       url: v => 'https://instagram.com/' + v.replace(/^@/,'') },
+            { key: 'email',     label: 'Email',           icon: '<i class="fas fa-envelope"></i>',        url: v => 'mailto:' + v },
+            { key: 'vk',        label: 'ВКонтакте',       icon: '<i class="fab fa-vk"></i>',              url: v => 'https://vk.com/' + v.replace(/^@/,'') },
+            { key: 'viber',     label: 'Viber',           icon: '<i class="fab fa-viber"></i>',           url: v => 'viber://chat?number=' + v.replace(/\D/g,'') },
+            { key: 'ok',        label: 'Одноклассники',   icon: '<i class="fab fa-odnoklassniki"></i>',   url: v => 'https://ok.ru/' + v.replace(/^@/,'') },
+            { key: 'phone',     label: 'Телефон',         icon: '<i class="fas fa-phone"></i>',           url: v => 'tel:' + v },
+        ];
+
+        async function loadContacts() {
+            try {
+                const r = await fetch('data/contacts.json?_=' + Date.now());
+                if (!r.ok) return;
+                const data = await r.json();
+                renderContactLinks(data.contacts || {});
+            } catch (e) { /* нет файла — ничего не показываем */ }
+        }
+
+        function renderContactLinks(contacts) {
+            const container = document.getElementById('contactLinks');
+            if (!container) return;
+            const active = CONTACT_DEFS.filter(d => contacts[d.key] && contacts[d.key].trim());
+            if (!active.length) { container.innerHTML = ''; return; }
+            container.innerHTML =
+                '<div class="contact-divider"></div>' +
+                active.map(d => {
+                    const val = contacts[d.key].trim();
+                    const href = d.url(val);
+                    return `<a class="contact-link" href="${href}" target="_blank" rel="noopener" title="${d.label}: ${val}">${d.icon}<span class="nav-text">${d.label}</span></a>`;
+                }).join('');
+        }
+
         // ── Загрузка товаров из data/products.json (GitHub Pages) ──────────
         async function loadProducts() {
             try {
@@ -1137,7 +1183,7 @@
             // Применяем тему ДО загрузки товаров — никакой задержки
             applyTheme(localStorage.getItem('theme') === 'dark');
             renderSkeletons();
-            await loadProducts();
+            await Promise.all([loadProducts(), loadContacts()]);
             renderHome();
             updateCartBadge();
             updateCategoryFilters();
