@@ -248,6 +248,11 @@
             padding: 14px 0 max(28px, env(safe-area-inset-bottom));
             z-index: 10;
         }
+        @media (max-width: 900px) {
+            .product-cta {
+                padding: 14px 0 max(48px, env(safe-area-inset-bottom));
+            }
+        }
 
         /* Форма заказа */
         .order-wrapper { max-width: 600px; margin: 0 auto; background: var(--bg-secondary); padding: 50px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color var(--theme-speed) ease; }
@@ -338,9 +343,9 @@
                 gap: clamp(16px, 3vw, 40px);
                 padding-top: 10px;
             }
-            /* Изображение товара: уменьшить, показывать целиком без обрезки */
+            /* Изображение товара: треть высоты экрана */
             .product-img {
-                height: clamp(160px, 42vw, 380px);
+                height: clamp(200px, 33vh, 50vh);
                 object-fit: contain;
                 background: var(--bg-secondary);
                 border-radius: 12px;
