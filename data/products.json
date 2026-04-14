@@ -58,24 +58,6 @@
       "model3d": "data/models/1776150260938-Стеллаж-модульный-для-glb.glb"
     },
     {
-      "id": "3_2",
-      "groupId": 3,
-      "colorName": "Изумрудный велюр",
-      "title": "Кресло Уют",
-      "price": 45000,
-      "oldPrice": null,
-      "category": "chairs",
-      "image": "",
-      "images": [],
-      "description": "Эргономичное кресло с мягкими подлокотниками. Идеально для отдыха.",
-      "inStock": true,
-      "featured": false,
-      "model3d": "",
-      "size": "85×70×80 см",
-      "weight": "18 кг",
-      "material": "Дерево, ткань"
-    },
-    {
       "id": 1,
       "groupId": 1,
       "colorName": "Природный дуб",
