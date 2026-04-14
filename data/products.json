@@ -40,24 +40,6 @@
       "model3d": ""
     },
     {
-      "id": "7_2",
-      "groupId": 7,
-      "colorName": "Модульный стеллаж",
-      "title": "Стеллаж модульный пример",
-      "price": 30000,
-      "oldPrice": 40000,
-      "category": "shelves",
-      "image": "1776080485322-photo_2026-04-09_13-49-50.jpg",
-      "images": [],
-      "description": "Стеллаж",
-      "material": "",
-      "size": "",
-      "weight": "",
-      "inStock": true,
-      "featured": false,
-      "model3d": ""
-    },
-    {
       "id": "7_3",
       "groupId": 7,
       "colorName": "Стол трансформер",
