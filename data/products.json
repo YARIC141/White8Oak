@@ -35,6 +35,24 @@
       "inStock": true,
       "featured": false,
       "model3d": "data/models/1776153881122-Стеллаж-модульный-для-glb.glb"
+    },
+    {
+      "id": "7_2",
+      "groupId": 7,
+      "colorName": "Серый",
+      "title": "Стеллаж модульный - Серый",
+      "price": 30000,
+      "oldPrice": 40000,
+      "category": "shelves",
+      "image": "серый.png",
+      "images": [],
+      "description": "Стеллаж",
+      "material": "Березовая фанера",
+      "size": "",
+      "weight": "",
+      "inStock": true,
+      "featured": false,
+      "model3d": ""
     }
   ],
   "categories": [
