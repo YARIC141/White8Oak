@@ -40,24 +40,6 @@
       "model3d": ""
     },
     {
-      "id": "7_3",
-      "groupId": 7,
-      "colorName": "Стол трансформер",
-      "title": "Стеллаж модульный пример",
-      "price": 30000,
-      "oldPrice": 40000,
-      "category": "shelves",
-      "image": "1776080485437-стол-.трансформер.png",
-      "images": [],
-      "description": "Стеллаж",
-      "material": "",
-      "size": "",
-      "weight": "",
-      "inStock": true,
-      "featured": false,
-      "model3d": ""
-    },
-    {
       "id": 3,
       "groupId": 3,
       "colorName": "Темный орех",
