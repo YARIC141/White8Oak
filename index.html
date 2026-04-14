@@ -410,11 +410,9 @@
         /* Sticky «Подтвердить заказ» (форма) */
         .order-cta {
             position: sticky; bottom: 0;
-            background: var(--bg-primary);
-            border-top: 1px solid var(--border-color);
-            padding: 12px 50px max(20px, env(safe-area-inset-bottom));
+            background: transparent;
+            padding: 14px 50px max(28px, env(safe-area-inset-bottom));
             z-index: 10;
-            transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
         }
         .order-cta-inner { max-width: 600px; margin: 0 auto; }
         .order-cta button { margin-top: 0 !important; }
@@ -1089,7 +1087,7 @@
                         <i class="fas fa-wifi" style="margin-right:6px;opacity:0.6;"></i>
                         Заказ не может быть создан пока вы не подключитесь к сети. Вернитесь в корзину позднее.
                     </div>
-                    <button id="confirmOrderBtn" class="btn btn-outline-primary" style="width:100%;" onclick="submitOrder()">Подтвердить заказ</button>
+                    <button id="confirmOrderBtn" class="btn btn-primary product-btn-cart" style="width:100%;" onclick="submitOrder()">Подтвердить заказ</button>
                 </div>
             </div>
         </section>
@@ -1388,7 +1386,7 @@
 
         async function loadQrSettings() {
             try {
-                const r = await fetch('/api/qr-settings?_=' + Date.now());
+                const r = await fetch('data/qr-settings.json?_=' + Date.now());
                 if (r.ok) qrSettings = await r.json();
             } catch (e) {
                 console.warn('QR настройки недоступны:', e.message);
@@ -2040,7 +2038,7 @@
             });
             let summaryHtml = `<div class="total-amount">Итого: ${formatPrice(grandTotal)}</div>`;
             if (grandOldTotal > 0) summaryHtml = `<div class="total-amount" style="display:flex;align-items:baseline;gap:15px;">Итого: ${formatPrice(grandTotal)} <span style="font-size:18px;color:var(--text-muted);text-decoration:line-through;font-weight:400;">${formatPrice(grandOldTotal)}</span></div>`;
-            html += `<div class="cart-summary">${summaryHtml}<button class="btn btn-primary" onclick="goToOrder()">Оформить заказ</button></div>`;
+            html += `<div class="cart-summary">${summaryHtml}<button class="btn btn-primary product-btn-cart" onclick="goToOrder()">Оформить заказ</button></div>`;
             container.innerHTML = html;
             // Синхронизируем кнопки в открытом каталоге
             document.querySelectorAll('.cat-cart-ctrl[data-pid]').forEach(el => {
