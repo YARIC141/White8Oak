@@ -58,25 +58,6 @@
       "model3d": "data/models/1776150260938-Стеллаж-модульный-для-glb.glb"
     },
     {
-      "id": 1,
-      "groupId": 1,
-      "colorName": "Природный дуб",
-      "title": "Софа Эко-Дуб",
-      "price": 68000,
-      "oldPrice": 85000,
-      "category": "beds",
-      "image": "",
-      "images": [],
-      "imageUrl": "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800",
-      "description": "Идеальная геометрия и живая текстура натурального дуба. Массив дерева, точность соединений.",
-      "inStock": true,
-      "featured": true,
-      "model3d": "",
-      "size": "75×180×90 см",
-      "weight": "45 кг",
-      "material": "Массив дуба"
-    },
-    {
       "id": "1_1",
       "groupId": 1,
       "colorName": "Белёный дуб",
