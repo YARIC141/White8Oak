@@ -1522,7 +1522,7 @@
                         <p class="desc">${getProductDesc(p)}</p>
                         <div class="cat-card-footer">
                             ${getPriceHtml(p.price, p.oldPrice)}
-                            <div style="display:flex;gap:8px;">${btn3d}<button class="btn btn-cart" onclick="event.stopPropagation();addToCart('${p.id}')">В корзину</button></div>
+                            <div style="display:flex;gap:8px;">${btn3d}<button class="btn btn-cart" onclick="event.stopPropagation();addToCart('${p.id}',true)">В корзину</button></div>
                         </div>
                     </div>
                 </div>`;
@@ -1689,12 +1689,12 @@
         }
 
         // ── Корзина ───────────────────────────────────────────────────────
-        function addToCart(id) {
+        function addToCart(id, stayOnPage) {
             const strId   = String(id);
             const existing = cart.find(item => String(item.productId) === strId);
             if (existing) { existing.qty++; } else { cart.push({ productId: id, qty: 1 }); }
             updateCartBadge();
-            navigateTo('cart', document.querySelectorAll('.nav-link')[3]);
+            if (!stayOnPage) navigateTo('cart', document.querySelectorAll('.nav-link')[3]);
         }
 
         function changeQty(id, delta) {
