@@ -1155,7 +1155,6 @@
 
     <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         (function(){ emailjs.init('tdquCtSwQN3Y_BhMR'); })();
 
@@ -1395,21 +1394,10 @@
 
         function showQrPayment(orderId) {
             const s = qrSettings || {};
-            const qrText = `ST00012|Name=${s.recipientName || ''}|PersonalAcc=${s.account || ''}|BankName=${s.bankName || ''}|BIC=${s.bic || ''}`;
             const canvas = document.getElementById('qrCodeCanvas');
-            canvas.innerHTML = '';
-            try {
-                new QRCode(canvas, {
-                    text: qrText,
-                    width: 240,
-                    height: 240,
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.M
-                });
-            } catch (e) {
-                canvas.textContent = 'Ошибка генерации QR';
-            }
+            canvas.innerHTML = s.qrImage
+                ? `<img src="${s.qrImage}" style="width:240px;height:240px;object-fit:contain;border-radius:8px;">`
+                : '<p style="color:var(--text-secondary)">QR-изображение не настроено</p>';
             document.getElementById('qrOrderId').textContent = 'Заказ ' + orderId;
             document.getElementById('qrBox').style.display = 'block';
         }
