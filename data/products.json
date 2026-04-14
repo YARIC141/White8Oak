@@ -3,20 +3,20 @@
     {
       "id": 7,
       "groupId": 7,
-      "colorName": "кровать",
+      "colorName": "Береза",
       "title": "Стеллаж модульный пример",
       "price": 30000,
       "oldPrice": 40000,
       "category": "shelves",
-      "image": "Кровать.png",
+      "image": "1776153693285-photo_2026-04-09_13-49-50.jpg",
       "images": [],
       "description": "Стеллаж",
-      "material": "",
+      "material": "Березовая фанера",
       "size": "",
       "weight": "",
       "inStock": true,
       "featured": true,
-      "model3d": "data/models/1776079324751-Стеллаж-модульный-для-glb.glb"
+      "model3d": "data/models/1776153693358-Стеллаж-модульный-для-glb.glb"
     }
   ],
   "categories": [
