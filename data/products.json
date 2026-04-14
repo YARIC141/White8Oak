@@ -53,6 +53,24 @@
       "inStock": true,
       "featured": false,
       "model3d": ""
+    },
+    {
+      "id": "7_3",
+      "groupId": 7,
+      "colorName": "Черный",
+      "title": "Стеллаж модульный - Черный",
+      "price": 30000,
+      "oldPrice": 40000,
+      "category": "shelves",
+      "image": "черный.png",
+      "images": [],
+      "description": "Стеллаж",
+      "material": "Березовая фанера",
+      "size": "",
+      "weight": "",
+      "inStock": true,
+      "featured": false,
+      "model3d": ""
     }
   ],
   "categories": [
