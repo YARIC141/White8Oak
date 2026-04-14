@@ -33,7 +33,7 @@
       "size": "",
       "weight": "",
       "inStock": true,
-      "featured": false,
+      "featured": true,
       "model3d": "data/models/1776153881122-Стеллаж-модульный-для-glb.glb"
     },
     {
