@@ -1532,8 +1532,8 @@
                         ${colorSubtitle}
                         <p class="desc">${getProductDesc(p)}</p>
                         <div class="cat-card-footer">
-                            ${getPriceHtml(p.price, p.oldPrice)}
-                            <div class="cat-card-actions">${btn3d}<div class="cat-cart-ctrl" data-pid="${p.id}" onclick="event.stopPropagation()">${getCatCartHtml(p.id)}</div></div>
+                            ${btn3d}${getPriceHtml(p.price, p.oldPrice)}
+                            <div class="cat-card-actions"><div class="cat-cart-ctrl" data-pid="${p.id}" onclick="event.stopPropagation()">${getCatCartHtml(p.id)}</div></div>
                         </div>
                     </div>
                 </div>`;
