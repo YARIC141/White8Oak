@@ -138,12 +138,12 @@
         /* Контрол корзины в карточке каталога */
         .cat-cart-ctrl { display: flex; align-items: center; gap: 6px; }
         .cat-qty-wrap { display: inline-flex; align-items: center; }
-        .cat-qty-btn { width: 32px; height: 32px; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s, border-color 0.15s; line-height: 1; }
+        .cat-qty-btn { width: 34px; height: 46px; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s, border-color 0.15s; line-height: 1; }
         .cat-qty-btn:first-child { border-radius: 6px 0 0 6px; }
         .cat-qty-btn:last-child  { border-radius: 0 6px 6px 0; }
         .cat-qty-btn:hover { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
-        .cat-qty-val { min-width: 30px; height: 32px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
-        .cat-goto-btn { height: 32px; padding: 0 10px; font-size: 11px; }
+        .cat-qty-val { min-width: 30px; height: 46px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+        .cat-goto-btn { height: 46px; padding: 0 14px; font-size: 12px; }
         .hero-home { display: flex; gap: 40px; align-items: flex-start; min-height: 70%; flex-wrap: wrap; padding-bottom: 40px; }
         .hero-text { flex: 1 1 300px; }
         .hero-text h1 { font-size: 48px; line-height: 1.1; margin-bottom: 20px; }
@@ -153,7 +153,7 @@
         .category-filters { display: flex; gap: 10px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); transition: border-color var(--theme-speed) ease; flex-wrap: wrap; }
         .cat-btn { padding: 8px 20px; border: 1px solid var(--border-color); background: var(--bg-secondary); font-family: 'Inter'; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 20px; transition: all 0.2s, background-color var(--theme-speed) ease, border-color var(--theme-speed) ease, color var(--theme-speed) ease; }
         .cat-btn.active { background-color: var(--text-main); color: var(--bg-primary); border-color: var(--text-main); }
-        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 25px; }
         .about-layout { display: flex; flex-direction: column; gap: 30px; max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
         .about-img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; box-shadow: var(--shadow); transition: box-shadow var(--theme-speed) ease; }
         .about-text p { color: var(--text-muted); line-height: 1.8; margin-bottom: 20px; font-size: 15px; transition: color var(--theme-speed) ease; }
@@ -409,10 +409,11 @@
             transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease;
         }
         @media (max-width: 900px) {
+            .page { padding: 24px 18px; }
             .catalog-filter-bar {
                 position: sticky; top: 0; z-index: 20;
                 border-radius: 0;
-                margin-left: -50px; margin-right: -50px; padding: 6px 50px;
+                margin-left: -18px; margin-right: -18px; padding: 6px 18px;
                 border-top: none; border-left: none; border-right: none;
                 border-bottom: 1px solid var(--border-color);
                 box-shadow: 0 2px 8px rgba(0,0,0,0.07);
