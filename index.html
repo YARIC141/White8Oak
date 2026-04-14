@@ -173,9 +173,19 @@
         .product-desc { color: var(--text-muted); line-height: 1.8; margin-bottom: 35px; font-size: 15px; border-left: 3px solid var(--border-color); padding-left: 20px; transition: color var(--theme-speed) ease, border-color var(--theme-speed) ease;}
         
         .color-selector { margin-bottom: 35px; }
-        .color-selector label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; transition: color var(--theme-speed) ease;}
-        .color-selector select { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; font-family: 'Inter'; font-size: 15px; outline: none; background: var(--input-bg); color: var(--text-main); cursor: pointer; transition: border-color 0.2s, background-color var(--theme-speed) ease, color var(--theme-speed) ease;}
-        .color-selector select:focus { border-color: var(--accent-green); }
+        .color-selector label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; transition: color var(--theme-speed) ease;}
+        .color-variants { display: flex; flex-wrap: wrap; gap: 14px; }
+        .cv-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; }
+        .cv-item img { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: border-color 0.2s, transform 0.15s; }
+        .cv-item img:hover { transform: scale(1.07); }
+        .cv-item img.active-cv { border-color: var(--accent-terra); }
+        .cv-name { font-size: 10px; color: var(--text-muted); text-align: center; max-width: 62px; line-height: 1.3; }
+        /* Миниатюры вариантов в карточках каталога */
+        .card-color-variants { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+        .card-cv-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; }
+        .card-cv-item img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: border-color 0.15s; }
+        .card-cv-item img.active-cv { border-color: var(--accent-terra); }
+        .card-cv-label { font-size: 9px; color: var(--text-muted); text-align: center; max-width: 40px; line-height: 1.2; }
 
         .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
         .spec-item label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; transition: color var(--theme-speed) ease;}
@@ -887,14 +897,14 @@
                     </div>
                     <p class="product-desc" id="pDesc"></p>
                     
-                    <div class="color-selector">
-                        <label>Цвет</label>
-                        <select id="pColorSelect"></select>
+                    <div class="color-selector" id="colorSelectorArea" style="display:none;">
+                        <label>Цвет — <span id="pColorText" style="text-transform:none;letter-spacing:0;color:var(--text-main);font-size:12px;">—</span></label>
+                        <div id="colorVariants" class="color-variants"></div>
                     </div>
 
                     <div class="specs-grid">
                         <div class="spec-item"><label>Размеры (ВхШхГ)</label><span id="pSize">-</span></div>
-                        <div class="spec-item"><label>Выбранный цвет</label><span id="pColorText">-</span></div>
+                        <div class="spec-item"><label>Цвет</label><span id="pColorSpec">-</span></div>
                         <div class="spec-item"><label>Вес</label><span id="pWeight">-</span></div>
                         <div class="spec-item"><label>Материал</label><span id="pMaterial">-</span></div>
                     </div>
@@ -1082,7 +1092,8 @@
         function getProductName(p)     { return p.title || p.name || 'Без названия'; }
         function getProductDesc(p)     { return p.description || p.desc || ''; }
         function getProductCategory(p) { return p.category || ''; }
-        function getProductColors(p)   { return (p.colors && p.colors.length) ? p.colors : ['Стандартный']; }
+        function getProductGroup(p)    { return products.filter(pr => pr.groupId === p.groupId); }
+        function esc(s)               { if (!s) return ''; return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]); }
         function getProductSize(p)     { return p.size || '—'; }
         function getProductWeight(p)   { return p.weight || '—'; }
         function getProductMaterial(p) { return p.material || '—'; }
@@ -1103,25 +1114,6 @@
         }
         function getProductImage(p) { return getProductImages(p)[0]; }
 
-        // URL фото для конкретного цвета (null если нет)
-        function getColorImageUrl(p, colorName) {
-            const fn = (p.colorImages || {})[colorName];
-            return fn ? 'images/products/' + fn : null;
-        }
-
-        // Переключить фото карточки каталога по цвету
-        function setCatCardColor(productId, colorName, swatchEl) {
-            const p = products.find(pr => pr.id === productId);
-            if (!p) return;
-            const url = getColorImageUrl(p, colorName);
-            if (!url) return;
-            const wrap = swatchEl.closest('[data-cid]');
-            if (wrap) {
-                wrap.querySelector('img.card-main-img').src = url;
-                wrap.querySelectorAll('.color-swatch').forEach(s => s.style.outline = '');
-                swatchEl.style.outline = '2px solid var(--accent-terra)';
-            }
-        }
 
         function getPriceHtml(price, oldPrice) {
             const cur = `<span class="price-current">${formatPrice(price)}</span>`;
@@ -1398,15 +1390,26 @@
             container.innerHTML = html;
         }
 
+        function groupedBaseProducts(list) {
+            const seen = new Set();
+            return list.reduce((acc, p) => {
+                const gid = String(p.groupId);
+                if (seen.has(gid)) return acc;
+                seen.add(gid);
+                acc.push(products.find(pr => String(pr.id) === gid) || p);
+                return acc;
+            }, []);
+        }
+
         function renderHome() {
             const c = document.getElementById('popularContainer');
             if (!c) return;
             c.innerHTML = '';
-            const featured = products.filter(p => p.featured && p.inStock !== false);
-            const toShow = featured.length ? featured.slice(0, 4) : products.slice(0, 4);
+            const featured = groupedBaseProducts(products.filter(p => p.featured && p.inStock !== false));
+            const toShow = featured.length ? featured.slice(0, 4) : groupedBaseProducts(products).slice(0, 4);
             toShow.forEach(p => {
-                const badge3d = p.model3d ? `<span style="position:absolute;top:10px;right:10px;background:var(--accent-terra);color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openModel3D(${p.id})"><i class="fas fa-cube"></i> 3D</span>` : '';
-                c.innerHTML += `<div class="pop-card" onclick="openProduct(${p.id})" style="position:relative;">
+                const badge3d = p.model3d ? `<span style="position:absolute;top:10px;right:10px;background:var(--accent-terra);color:#fff;font-size:10px;padding:4px 8px;border-radius:6px;font-weight:600;cursor:pointer;" onclick="event.stopPropagation();openModel3D('${p.id}')"><i class="fas fa-cube"></i> 3D</span>` : '';
+                c.innerHTML += `<div class="pop-card" onclick="openProduct('${p.id}')" style="position:relative;">
                     <img src="${getProductImage(p)}" alt="${getProductName(p)}" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'">
                     ${badge3d}
                     <div class="pop-card-body"><h3>${getProductName(p)}</h3>${getPriceHtml(p.price, p.oldPrice)}</div>
@@ -1482,6 +1485,9 @@
             if (sort === 'price-asc')  filtered.sort((a, b) => a.price - b.price);
             if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
 
+            // Показываем один базовый товар на группу (дедупликация по groupId)
+            filtered = groupedBaseProducts(filtered);
+
             updateFilterDots();
             c.innerHTML = '';
             if (!filtered.length) {
@@ -1489,21 +1495,26 @@
                 return;
             }
             filtered.forEach(p => {
-                const btn3d = p.model3d ? `<button class="btn btn-cart" style="background:var(--accent-terra);color:#fff;" onclick="event.stopPropagation();openModel3D(${p.id})" title="3D модель"><i class="fas fa-cube"></i></button>` : '';
-                const colorSwatches = Object.entries(p.colorImages || {}).map(([cn, fn]) =>
-                    `<img src="images/products/${fn}" alt="${cn}" title="${cn}" class="color-swatch"
-                          onclick="event.stopPropagation();setCatCardColor(${p.id},'${cn}',this)"
-                          style="width:22px;height:22px;border-radius:50%;object-fit:cover;cursor:pointer;border:2px solid transparent;flex-shrink:0;">`
-                ).join('');
-                c.innerHTML += `<div class="cat-card" onclick="openProduct(${p.id})" style="position:relative;" data-cid="${p.id}">
+                const btn3d  = p.model3d ? `<button class="btn btn-cart" style="background:var(--accent-terra);color:#fff;" onclick="event.stopPropagation();openModel3D('${p.id}')" title="3D модель"><i class="fas fa-cube"></i></button>` : '';
+                const group  = getProductGroup(p);
+                const colorThumbsHtml = group.length > 1
+                    ? `<div class="card-color-variants" onclick="event.stopPropagation()">` +
+                      group.map(v => `<div class="card-cv-item" onclick="openProduct('${v.id}')">
+                          <img src="${getProductImage(v)}" class="${String(v.id) === String(p.id) ? 'active-cv' : ''}" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=80'">
+                          <span class="card-cv-label">${esc(v.colorName || '')}</span>
+                      </div>`).join('') + `</div>`
+                    : '';
+                const colorSubtitle = p.colorName ? `<span style="font-size:11px;color:var(--text-muted);">${esc(p.colorName)}</span>` : '';
+                c.innerHTML += `<div class="cat-card" onclick="openProduct('${p.id}')" style="position:relative;" data-cid="${p.id}">
                     <img src="${getProductImage(p)}" alt="${getProductName(p)}" class="card-main-img" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'">
                     <div class="cat-card-body">
                         <h3>${getProductName(p)}</h3>
+                        ${colorSubtitle}
                         <p class="desc">${getProductDesc(p)}</p>
-                        ${colorSwatches ? `<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;" onclick="event.stopPropagation()">${colorSwatches}</div>` : ''}
+                        ${colorThumbsHtml}
                         <div class="cat-card-footer">
                             ${getPriceHtml(p.price, p.oldPrice)}
-                            <div style="display:flex;gap:8px;">${btn3d}<button class="btn btn-cart" onclick="event.stopPropagation();addToCart(${p.id})">В корзину</button></div>
+                            <div style="display:flex;gap:8px;">${btn3d}<button class="btn btn-cart" onclick="event.stopPropagation();addToCart('${p.id}')">В корзину</button></div>
                         </div>
                     </div>
                 </div>`;
@@ -1512,23 +1523,19 @@
 
         // ── Страница товара ───────────────────────────────────────────────
         function openProduct(id) {
-            const p = products.find(pr => pr.id === id);
+            const strId = String(id);
+            const p = products.find(pr => String(pr.id) === strId);
             if (!p) return;
-            currentProductId = id;
+            currentProductId = p.id;
             activeImgIndex   = 0;
 
-            // Галерея: основные фото + фото цветовых вариантов (без дублей)
-            const baseImgs = getProductImages(p);
-            const colorImgUrls = Object.values(p.colorImages || {}).map(fn => 'images/products/' + fn);
-            const imgs = [...new Set([...baseImgs, ...colorImgUrls])];
-
-            document.getElementById('pImg').src = imgs[0];
+            // Галерея: только фото этого товара
+            const imgs = getProductImages(p);
+            document.getElementById('pImg').src = imgs[0] || '';
             const thumbContainer = document.getElementById('pThumbnails');
-            thumbContainer.innerHTML = '';
-            imgs.forEach((img, index) => {
-                const isActive = index === 0 ? 'active' : '';
-                thumbContainer.innerHTML += `<img src="${img}" class="thumb ${isActive}" onclick="changeMainImg('${img}', this, ${index})">`;
-            });
+            thumbContainer.innerHTML = imgs.map((img, index) =>
+                `<img src="${img}" class="thumb ${index === 0 ? 'active' : ''}" onclick="changeMainImg('${img}', this, ${index})">`
+            ).join('');
 
             document.getElementById('pName').textContent = getProductName(p);
             document.getElementById('pPrice').textContent = formatPrice(p.price);
@@ -1540,21 +1547,29 @@
             document.getElementById('pWeight').textContent   = getProductWeight(p);
             document.getElementById('pMaterial').textContent = getProductMaterial(p);
 
-            const colorSelect = document.getElementById('pColorSelect');
-            colorSelect.innerHTML = '';
-            getProductColors(p).forEach(c => { colorSelect.innerHTML += `<option value="${c}">${c}</option>`; });
-            document.getElementById('pColorText').textContent = getProductColors(p)[0] || '—';
-            colorSelect.onchange = function () {
-                const colorName = this.value;
-                document.getElementById('pColorText').textContent = colorName;
-                const url = getColorImageUrl(p, colorName);
-                if (url) {
-                    document.getElementById('pImg').src = url;
-                    document.querySelectorAll('.thumb').forEach(t => {
-                        t.classList.toggle('active', t.getAttribute('src') === url || t.src.endsWith(url));
-                    });
-                }
-            };
+            const colorName = p.colorName || '—';
+            document.getElementById('pColorText').textContent = colorName;
+            if (document.getElementById('pColorSpec')) {
+                document.getElementById('pColorSpec').textContent = colorName;
+            }
+
+            // Варианты цветов в группе
+            const group = getProductGroup(p);
+            const colorSelectorArea = document.getElementById('colorSelectorArea');
+            const colorVariantsEl   = document.getElementById('colorVariants');
+            if (group.length > 1 && colorSelectorArea) {
+                colorSelectorArea.style.display = '';
+                colorVariantsEl.innerHTML = group.map(v => {
+                    const img = getProductImage(v);
+                    const isActive = String(v.id) === strId;
+                    return `<div class="cv-item" onclick="openProduct('${v.id}')">
+                        <img src="${img}" class="${isActive ? 'active-cv' : ''}" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200'">
+                        <span class="cv-name">${esc(v.colorName || '')}</span>
+                    </div>`;
+                }).join('');
+            } else {
+                if (colorSelectorArea) colorSelectorArea.style.display = 'none';
+            }
 
             document.getElementById('model3dBtnContainer').style.display = p.model3d ? 'block' : 'none';
             document.getElementById('gallery3dBtn').style.display    = p.model3d ? 'flex'  : 'none';
@@ -1571,7 +1586,7 @@
 
         // ── Модальное окно изображения ─────────────────────────────────────
         function openModal(index) {
-            const p = products.find(pr => pr.id === currentProductId);
+            const p = products.find(pr => String(pr.id) === String(currentProductId));
             if (!p) return;
             const imgs = getProductImages(p);
             activeImgIndex = index !== undefined ? index : activeImgIndex;
@@ -1580,7 +1595,7 @@
         }
         function closeModal() { document.getElementById('imageModal').classList.remove('active'); }
         function navModal(dir) {
-            const p = products.find(pr => pr.id === currentProductId);
+            const p = products.find(pr => String(pr.id) === String(currentProductId));
             if (!p) return;
             const imgs = getProductImages(p);
             activeImgIndex = (activeImgIndex + dir + imgs.length) % imgs.length;
@@ -1589,7 +1604,7 @@
 
         // ── 3D просмотр ───────────────────────────────────────────────────
         function openModel3D(id) {
-            const p = products.find(pr => pr.id === id);
+            const p = products.find(pr => String(pr.id) === String(id));
             if (!p || !p.model3d) return;
             if (!customElements.get('model-viewer')) {
                 const script = document.createElement('script');
@@ -1667,21 +1682,23 @@
 
         // ── Корзина ───────────────────────────────────────────────────────
         function addToCart(id) {
-            const selectedColor = document.getElementById('pColorSelect').value;
-            const existing = cart.find(item => item.productId === id && item.color === selectedColor);
-            if (existing) { existing.qty++; } else { cart.push({ productId: id, color: selectedColor, qty: 1 }); }
+            const strId   = String(id);
+            const existing = cart.find(item => String(item.productId) === strId);
+            if (existing) { existing.qty++; } else { cart.push({ productId: id, qty: 1 }); }
             updateCartBadge();
             navigateTo('cart', document.querySelectorAll('.nav-link')[3]);
         }
 
-        function changeQty(id, color, delta) {
-            const item = cart.find(i => i.productId === id && i.color === color);
-            if (item) { item.qty += delta; if (item.qty <= 0) { removeFromCart(id, color); return; } }
+        function changeQty(id, delta) {
+            const strId = String(id);
+            const item  = cart.find(i => String(i.productId) === strId);
+            if (item) { item.qty += delta; if (item.qty <= 0) { removeFromCart(id); return; } }
             renderCart(); updateCartBadge();
         }
 
-        function removeFromCart(id, color) {
-            cart = cart.filter(i => !(i.productId === id && i.color === color));
+        function removeFromCart(id) {
+            const strId = String(id);
+            cart = cart.filter(i => String(i.productId) !== strId);
             renderCart(); updateCartBadge();
         }
 
@@ -1697,27 +1714,27 @@
             if (cart.length === 0) { container.innerHTML = '<div class="empty-cart"><i class="fas fa-box-open"></i>Ваша корзина пуста</div>'; return; }
             let html = '', grandTotal = 0, grandOldTotal = 0;
             cart.forEach(cartItem => {
-                const p = products.find(pr => pr.id === cartItem.productId);
+                const p = products.find(pr => String(pr.id) === String(cartItem.productId));
                 if (!p) return;
                 const itemTotal = p.price * cartItem.qty;
                 grandTotal += itemTotal;
                 let totalHtml = `<span class="new-total">${formatPrice(itemTotal)}</span>`;
                 if (p.oldPrice) { grandOldTotal += p.oldPrice * cartItem.qty; totalHtml += `<span class="old-total">${formatPrice(p.oldPrice * cartItem.qty)}</span>`; }
-                const safeColor = cartItem.color.replace(/'/g, "\\'");
+                const colorLine = p.colorName ? `<span class="cart-item-color">Цвет: ${esc(p.colorName)}</span>` : '';
                 html += `<div class="cart-item">
-                    <img src="${getProductImage(p)}" alt="${getProductName(p)}" onclick="openProduct(${p.id})" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200'">
+                    <img src="${getProductImage(p)}" alt="${getProductName(p)}" onclick="openProduct('${p.id}')" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200'">
                     <div class="cart-item-info">
                         <h3>${getProductName(p)}</h3>
-                        <span class="cart-item-color">Цвет: ${cartItem.color}</span>
+                        ${colorLine}
                         <div class="item-price">${formatPrice(p.price)} / шт.</div>
                     </div>
                     <div class="qty-control">
-                        <button class="qty-btn" onclick="changeQty(${p.id}, '${safeColor}', -1)">-</button>
+                        <button class="qty-btn" onclick="changeQty('${p.id}', -1)">-</button>
                         <div class="qty-value">${cartItem.qty}</div>
-                        <button class="qty-btn" onclick="changeQty(${p.id}, '${safeColor}', 1)">+</button>
+                        <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
                     </div>
                     <div class="cart-item-total">${totalHtml}</div>
-                    <button class="remove-btn" onclick="removeFromCart(${p.id}, '${safeColor}')"><i class="fas fa-trash-alt"></i></button>
+                    <button class="remove-btn" onclick="removeFromCart('${p.id}')"><i class="fas fa-trash-alt"></i></button>
                 </div>`;
             });
             let summaryHtml = `<div class="total-amount">Итого: ${formatPrice(grandTotal)}</div>`;
@@ -1730,10 +1747,10 @@
         function goToOrder() {
             if (cart.length === 0) return;
             const grandTotal = cart.reduce((s, i) => {
-                const p = products.find(pr => pr.id === i.productId);
+                const p = products.find(pr => String(pr.id) === String(i.productId));
                 return s + (p ? p.price * i.qty : 0);
             }, 0);
-            const firstProduct = products.find(p => p.id === cart[0].productId);
+            const firstProduct = products.find(p => String(p.id) === String(cart[0].productId));
             document.getElementById('oImg').src = firstProduct ? getProductImage(firstProduct) : '';
             document.getElementById('oName').textContent = `Товаров: ${cart.reduce((s,i)=>s+i.qty,0)} шт. на сумму`;
             document.getElementById('oTotal').textContent = formatPrice(grandTotal);
@@ -1770,9 +1787,9 @@
             }
 
             const orderItems = cart.map(item => {
-                const p = products.find(pr => pr.id === item.productId);
+                const p = products.find(pr => String(pr.id) === String(item.productId));
                 if (!p) return null;
-                return { productId: p.id, productName: getProductName(p), price: p.price, quantity: item.qty, color: item.color, category: getProductCategory(p) };
+                return { productId: p.id, productName: getProductName(p), price: p.price, quantity: item.qty, color: p.colorName || '', category: getProductCategory(p) };
             }).filter(Boolean);
 
             const grandTotal = orderItems.reduce((s, i) => s + i.price * i.quantity, 0);
