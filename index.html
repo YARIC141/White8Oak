@@ -133,9 +133,14 @@
         .pop-card img, .cat-card img { width: 100%; height: 180px; object-fit: cover; }
         .pop-card-body, .cat-card-body { padding: 15px 20px; flex: 1; display: flex; flex-direction: column; background-color: var(--bg-secondary); transition: background-color var(--theme-speed) ease; }
         .pop-card h3, .cat-card h3 { font-size: 18px; margin-bottom: 10px; }
-        .cat-card .desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; flex: 1; transition: color var(--theme-speed) ease; }
-        .cat-card-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .cat-card-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+        .cat-card .desc { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; flex: 1; transition: color var(--theme-speed) ease; }
+        .cat-card-mid { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+        .cat-card-meta { display: flex; flex-direction: column; gap: 3px; }
+        .cat-price-stack { display: flex; flex-direction: column; align-items: flex-end; margin-left: auto; flex-shrink: 0; }
+        .cat-price-old { font-size: 11px; color: var(--text-muted); text-decoration: line-through; line-height: 1.4; transition: color var(--theme-speed) ease; }
+        .cat-price-cur { font-size: 17px; font-weight: 600; color: var(--accent-green); line-height: 1.2; transition: color var(--theme-speed) ease; }
+        .cat-card-footer { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+        .cat-card-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
         /* Контрол корзины в карточке каталога */
         .cat-cart-ctrl { display: flex; align-items: center; gap: 4px; }
         .cat-qty-wrap { display: inline-flex; align-items: center; }
@@ -1605,14 +1610,18 @@
             filtered.forEach(p => {
                 const btn3d = p.model3d ? `<button class="btn btn-cart" style="background:var(--accent-terra);color:#fff;" onclick="event.stopPropagation();openModel3D('${p.id}')" title="3D модель"><i class="fas fa-cube"></i></button>` : '';
                 const colorSubtitle = p.colorName ? `<span style="font-size:11px;color:var(--text-muted);">${esc(p.colorName)}</span>` : '';
+                const oldPriceHtml = p.oldPrice ? `<span class="cat-price-old">${formatPrice(p.oldPrice)}</span>` : '';
                 c.innerHTML += `<div class="cat-card" onclick="openProduct('${p.id}')" style="position:relative;" data-cid="${p.id}">
                     <img src="${getProductImage(p)}" alt="${getProductName(p)}" class="card-main-img" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400'">
                     <div class="cat-card-body">
                         <h3>${getProductName(p)}</h3>
-                        ${colorSubtitle}
+                        <div class="cat-card-mid">
+                            <div class="cat-card-meta">${colorSubtitle}</div>
+                            <div class="cat-price-stack">${oldPriceHtml}<span class="cat-price-cur">${formatPrice(p.price)}</span></div>
+                        </div>
                         <p class="desc">${getProductDesc(p)}</p>
                         <div class="cat-card-footer">
-                            ${btn3d}${getPriceHtml(p.price, p.oldPrice)}
+                            ${btn3d}
                             <div class="cat-card-actions"><div class="cat-cart-ctrl" data-pid="${p.id}" onclick="event.stopPropagation()">${getCatCartHtml(p.id)}</div></div>
                         </div>
                     </div>
