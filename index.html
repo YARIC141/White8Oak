@@ -124,9 +124,9 @@
         .product-btn-3d { width: 100%; height: 46px; padding: 0 20px; font-size: 13px; background-color: var(--accent-terra); }
         .cart-summary .btn-primary { height: 46px; padding: 0 28px; font-size: 13px; }
         .section-title { font-size: 32px; margin-bottom: 30px; }
-        .price-block { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-        .price-current { font-weight: 600; color: var(--accent-green); transition: color var(--theme-speed) ease; }
-        .price-old { text-decoration: line-through; color: var(--text-muted); font-weight: 400; transition: color var(--theme-speed) ease; }
+        .price-block { display: flex; flex-direction: column; align-items: flex-end; align-self: flex-end; flex-shrink: 0; }
+        .price-current { font-size: 20px; font-weight: 600; color: var(--accent-green); line-height: 1.2; transition: color var(--theme-speed) ease; }
+        .price-old { font-size: 13px; text-decoration: line-through; color: var(--text-muted); font-weight: 400; line-height: 1.4; transition: color var(--theme-speed) ease; }
 
         .pop-card, .cat-card { background-color: var(--bg-secondary); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); cursor: pointer; display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s, background-color var(--theme-speed) ease; }
         .pop-card:hover, .cat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
@@ -192,9 +192,9 @@
         .qty-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s, border-color var(--theme-speed) ease, color var(--theme-speed) ease; }
         .qty-btn:hover { background: var(--bg-primary); }
         .qty-value { font-size: 18px; font-weight: 600; min-width: 20px; text-align: center; }
-        .cart-item-total { flex: 1 1 150px; text-align: right; display: flex; align-items: baseline; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
-        .cart-item-total .new-total { font-size: 18px; font-weight: 600; color: var(--accent-green); transition: color var(--theme-speed) ease; }
-        .cart-item-total .old-total { font-size: 14px; color: var(--text-muted); text-decoration: line-through; transition: color var(--theme-speed) ease; }
+        .cart-item-total { flex: 1 1 150px; display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
+        .cart-item-total .new-total { font-size: 20px; font-weight: 600; color: var(--accent-green); line-height: 1.2; transition: color var(--theme-speed) ease; }
+        .cart-item-total .old-total { font-size: 13px; color: var(--text-muted); text-decoration: line-through; line-height: 1.4; transition: color var(--theme-speed) ease; }
         .remove-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; transition: color 0.2s; }
         .remove-btn:hover { color: #ff4d4f; }
         .cart-summary { position: sticky; bottom: 0; margin-top: 20px; padding: 16px 0 max(28px, env(safe-area-inset-bottom)); background: transparent; border-radius: 0; box-shadow: none; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; z-index: 10; }
@@ -210,7 +210,7 @@
         .thumb:hover { opacity: 1; }
         .thumb.active { border-color: var(--accent-green); opacity: 1; }
         .product-info h1 { font-size: 38px; margin-bottom: 20px; }
-        .product-price-wrapper { display: flex; align-items: baseline; justify-content: flex-end; margin-bottom: 25px; gap: 15px; flex-wrap: wrap; padding-right: 16px; }
+        .product-price-wrapper { display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 25px; padding-right: 16px; }
         .product-price-wrapper .price-tag { font-size: 20px; color: var(--accent-green); font-weight: 600; font-family: 'Inter', sans-serif; transition: color var(--theme-speed) ease;}
         .product-price-wrapper .old-price { text-decoration: line-through; color: var(--text-muted); font-size: 13px; font-family: 'Inter', sans-serif; transition: color var(--theme-speed) ease;}
         .product-desc { color: var(--text-muted); line-height: 1.8; margin-bottom: 35px; font-size: 15px; border-left: 3px solid var(--border-color); padding-left: 20px; transition: color var(--theme-speed) ease, border-color var(--theme-speed) ease;}
@@ -978,8 +978,8 @@
                 <div class="product-info">
                     <h1 id="pName"></h1>
                     <div class="product-price-wrapper">
-                        <span class="price-tag" id="pPrice"></span>
                         <span class="old-price" id="pOldPrice" style="display: none;"></span>
+                        <span class="price-tag" id="pPrice"></span>
                     </div>
                     <p class="product-desc" id="pDesc"></p>
                     
@@ -1204,7 +1204,7 @@
         function getPriceHtml(price, oldPrice) {
             const cur = `<span class="price-current">${formatPrice(price)}</span>`;
             const old = oldPrice ? `<span class="price-old">${formatPrice(oldPrice)}</span>` : '';
-            return `<div class="price-block">${cur}${old}</div>`;
+            return `<div class="price-block">${old}${cur}</div>`;
         }
 
         // ── Загрузка и отображение контактов ─────────────────────────────
@@ -1864,7 +1864,7 @@
                 const itemTotal = p.price * cartItem.qty;
                 grandTotal += itemTotal;
                 let totalHtml = `<span class="new-total">${formatPrice(itemTotal)}</span>`;
-                if (p.oldPrice) { grandOldTotal += p.oldPrice * cartItem.qty; totalHtml += `<span class="old-total">${formatPrice(p.oldPrice * cartItem.qty)}</span>`; }
+                if (p.oldPrice) { grandOldTotal += p.oldPrice * cartItem.qty; totalHtml = `<span class="old-total">${formatPrice(p.oldPrice * cartItem.qty)}</span>` + totalHtml; }
                 const colorLine = p.colorName ? `<span class="cart-item-color">Цвет: ${esc(p.colorName)}</span>` : '';
                 html += `<div class="cart-item">
                     <img src="${getProductImage(p)}" alt="${getProductName(p)}" onclick="openProduct('${p.id}')" onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200'">
