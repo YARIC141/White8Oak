@@ -76,24 +76,6 @@
       "material": "Массив дуба"
     },
     {
-      "id": "4_1",
-      "groupId": 4,
-      "colorName": "Береза",
-      "title": "Стул Скандинавия",
-      "price": 14400,
-      "oldPrice": 18000,
-      "category": "chairs",
-      "image": "",
-      "images": [],
-      "description": "Легкий, изящный и очень прочный стул из массива ясеня.",
-      "inStock": true,
-      "featured": false,
-      "model3d": "",
-      "size": "82×45×52 см",
-      "weight": "5 кг",
-      "material": "Массив ясеня"
-    },
-    {
       "id": 5,
       "groupId": 5,
       "colorName": "Дымчатый ясень",
