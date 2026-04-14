@@ -40,6 +40,24 @@
       "model3d": ""
     },
     {
+      "id": "7_2",
+      "groupId": 7,
+      "colorName": "Ольха",
+      "title": "Стеллаж модульный ольха",
+      "price": 30000,
+      "oldPrice": 40000,
+      "category": "shelves",
+      "image": "1776150260545-торшер-Temp0000.png",
+      "images": [],
+      "description": "Стеллаж",
+      "material": "",
+      "size": "",
+      "weight": "",
+      "inStock": true,
+      "featured": false,
+      "model3d": "data/models/1776150260938-Стеллаж-модульный-для-glb.glb"
+    },
+    {
       "id": 3,
       "groupId": 3,
       "colorName": "Темный орех",
