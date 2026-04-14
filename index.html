@@ -134,9 +134,10 @@
         .pop-card-body, .cat-card-body { padding: 15px 20px; flex: 1; display: flex; flex-direction: column; background-color: var(--bg-secondary); transition: background-color var(--theme-speed) ease; }
         .pop-card h3, .cat-card h3 { font-size: 18px; margin-bottom: 10px; }
         .cat-card .desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; flex: 1; transition: color var(--theme-speed) ease; }
-        .cat-card-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
+        .cat-card-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .cat-card-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
         /* Контрол корзины в карточке каталога */
-        .cat-cart-ctrl { display: flex; align-items: center; gap: 6px; }
+        .cat-cart-ctrl { display: flex; align-items: center; gap: 4px; }
         .cat-qty-wrap { display: inline-flex; align-items: center; }
         .cat-qty-btn { width: 34px; height: 46px; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s, border-color 0.15s; line-height: 1; }
         .cat-qty-btn:first-child { border-radius: 6px 0 0 6px; }
@@ -1532,7 +1533,7 @@
                         <p class="desc">${getProductDesc(p)}</p>
                         <div class="cat-card-footer">
                             ${getPriceHtml(p.price, p.oldPrice)}
-                            <div style="display:flex;gap:6px;align-items:center;">${btn3d}<div class="cat-cart-ctrl" data-pid="${p.id}" onclick="event.stopPropagation()">${getCatCartHtml(p.id)}</div></div>
+                            <div class="cat-card-actions">${btn3d}<div class="cat-cart-ctrl" data-pid="${p.id}" onclick="event.stopPropagation()">${getCatCartHtml(p.id)}</div></div>
                         </div>
                     </div>
                 </div>`;
