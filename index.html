@@ -135,6 +135,15 @@
         .pop-card h3, .cat-card h3 { font-size: 18px; margin-bottom: 10px; }
         .cat-card .desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; flex: 1; transition: color var(--theme-speed) ease; }
         .cat-card-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
+        /* Контрол корзины в карточке каталога */
+        .cat-cart-ctrl { display: flex; align-items: center; gap: 6px; }
+        .cat-qty-wrap { display: inline-flex; align-items: center; }
+        .cat-qty-btn { width: 32px; height: 32px; border: 1px solid var(--border-color); background: transparent; color: var(--text-main); cursor: pointer; font-size: 17px; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s, border-color 0.15s; line-height: 1; }
+        .cat-qty-btn:first-child { border-radius: 6px 0 0 6px; }
+        .cat-qty-btn:last-child  { border-radius: 0 6px 6px 0; }
+        .cat-qty-btn:hover { background: var(--accent-green); color: #fff; border-color: var(--accent-green); }
+        .cat-qty-val { min-width: 30px; height: 32px; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+        .cat-goto-btn { height: 32px; padding: 0 10px; font-size: 11px; }
         .hero-home { display: flex; gap: 40px; align-items: flex-start; min-height: 70%; flex-wrap: wrap; padding-bottom: 40px; }
         .hero-text { flex: 1 1 300px; }
         .hero-text h1 { font-size: 48px; line-height: 1.1; margin-bottom: 20px; }
@@ -1522,7 +1531,7 @@
                         <p class="desc">${getProductDesc(p)}</p>
                         <div class="cat-card-footer">
                             ${getPriceHtml(p.price, p.oldPrice)}
-                            <div style="display:flex;gap:8px;">${btn3d}<button class="btn btn-cart" onclick="event.stopPropagation();addToCart('${p.id}',true)">В корзину</button></div>
+                            <div style="display:flex;gap:6px;align-items:center;">${btn3d}<div class="cat-cart-ctrl" data-pid="${p.id}" onclick="event.stopPropagation()">${getCatCartHtml(p.id)}</div></div>
                         </div>
                     </div>
                 </div>`;
@@ -1689,12 +1698,47 @@
         }
 
         // ── Корзина ───────────────────────────────────────────────────────
+        function getCatCartHtml(pid) {
+            const strId = String(pid);
+            const item  = cart.find(i => String(i.productId) === strId);
+            if (!item) {
+                return `<button class="btn btn-cart" onclick="addToCart('${pid}',true)">В корзину <i class="fas fa-shopping-cart"></i></button>`;
+            }
+            return `<div class="cat-qty-wrap">` +
+                `<button class="cat-qty-btn" onclick="catChangeQty('${pid}',-1)">−</button>` +
+                `<span class="cat-qty-val">${item.qty}</span>` +
+                `<button class="cat-qty-btn" onclick="catChangeQty('${pid}',1)">+</button>` +
+                `</div>` +
+                `<button class="btn btn-cart cat-goto-btn" onclick="navigateTo('cart',document.querySelectorAll('.nav-link')[3])">Перейти <i class="fas fa-shopping-cart"></i></button>`;
+        }
+
+        function updateCatCartCtrl(pid) {
+            document.querySelectorAll(`.cat-cart-ctrl[data-pid="${pid}"]`).forEach(el => {
+                el.innerHTML = getCatCartHtml(pid);
+            });
+        }
+
+        function catChangeQty(pid, delta) {
+            const strId = String(pid);
+            const item  = cart.find(i => String(i.productId) === strId);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(i => String(i.productId) !== strId);
+            }
+            updateCartBadge();
+            updateCatCartCtrl(pid);
+        }
+
         function addToCart(id, stayOnPage) {
             const strId   = String(id);
             const existing = cart.find(item => String(item.productId) === strId);
             if (existing) { existing.qty++; } else { cart.push({ productId: id, qty: 1 }); }
             updateCartBadge();
-            if (!stayOnPage) navigateTo('cart', document.querySelectorAll('.nav-link')[3]);
+            if (!stayOnPage) {
+                navigateTo('cart', document.querySelectorAll('.nav-link')[3]);
+            } else {
+                updateCatCartCtrl(id);
+            }
         }
 
         function changeQty(id, delta) {
@@ -1749,6 +1793,10 @@
             if (grandOldTotal > 0) summaryHtml = `<div class="total-amount" style="display:flex;align-items:baseline;gap:15px;">Итого: ${formatPrice(grandTotal)} <span style="font-size:18px;color:var(--text-muted);text-decoration:line-through;font-weight:400;">${formatPrice(grandOldTotal)}</span></div>`;
             html += `<div class="cart-summary">${summaryHtml}<button class="btn btn-primary" onclick="goToOrder()">Оформить заказ</button></div>`;
             container.innerHTML = html;
+            // Синхронизируем кнопки в открытом каталоге
+            document.querySelectorAll('.cat-cart-ctrl[data-pid]').forEach(el => {
+                el.innerHTML = getCatCartHtml(el.dataset.pid);
+            });
         }
 
         // ── Оформление заказа ─────────────────────────────────────────────
