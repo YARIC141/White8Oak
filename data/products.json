@@ -76,24 +76,6 @@
       "material": "Массив дуба"
     },
     {
-      "id": "5_1",
-      "groupId": 5,
-      "colorName": "Дуб копченый",
-      "title": "Комод Лофт",
-      "price": 96000,
-      "oldPrice": 120000,
-      "category": "chests",
-      "image": "",
-      "images": [],
-      "description": "Просторный комод на металлическом каркасе. Ясень и сталь.",
-      "inStock": true,
-      "featured": false,
-      "model3d": "",
-      "size": "90×150×50 см",
-      "weight": "65 кг",
-      "material": "Ясень, сталь"
-    },
-    {
       "id": 6,
       "groupId": 6,
       "colorName": "Орех",
