@@ -278,6 +278,12 @@
         .radio-label input { width: auto; margin: 0; }
         .success-box { display: none; text-align: center; padding: 40px 0; }
         .success-box i { font-size: 60px; color: var(--accent-green); margin-bottom: 20px; transition: color var(--theme-speed) ease; }
+        .qr-box { display: none; text-align: center; padding: 40px 0; }
+        .qr-box h2 { margin-bottom: 8px; }
+        .qr-box p { color: var(--text-muted); margin-bottom: 24px; }
+        #qrCodeCanvas { display: inline-block; padding: 16px; background: #fff; border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 24px; }
+        .btn-outline-primary { background: transparent; border: 2px solid var(--accent-green); color: var(--accent-green); transition: all 0.2s ease; }
+        .btn-outline-primary:hover { background: var(--accent-green); color: #fff; transform: translateY(-2px); }
 
         /* === МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК === */
         .image-modal { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.92); z-index: 9999; display: none; align-items: center; justify-content: center; flex-direction: column; }
@@ -1068,6 +1074,13 @@
                     <p style="color: var(--text-muted);">Менеджер уже читает ваш заказ — или скоро прочитает. Свяжемся с вами в ближайшее время.</p>
                     <button class="btn btn-primary" style="margin-top: 30px;" onclick="navigateTo('home', document.querySelectorAll('.nav-link')[0])">На главную</button>
                 </div>
+                <div class="qr-box" id="qrBox">
+                    <h2>Оплата заказа</h2>
+                    <p>Отсканируйте QR-код в мобильном банке для оплаты заказа</p>
+                    <div id="qrCodeCanvas"></div>
+                    <p id="qrOrderId" style="font-size: 13px; color: var(--text-muted); margin-bottom: 28px;"></p>
+                    <button class="btn btn-primary" style="min-width: 180px;" onclick="finishQrPayment()">Завершить</button>
+                </div>
             </div>
             <div class="order-cta" id="orderCtaBar">
                 <div class="order-cta-inner">
@@ -1076,7 +1089,7 @@
                         <i class="fas fa-wifi" style="margin-right:6px;opacity:0.6;"></i>
                         Заказ не может быть создан пока вы не подключитесь к сети. Вернитесь в корзину позднее.
                     </div>
-                    <button id="confirmOrderBtn" class="btn btn-primary" style="width:100%;" onclick="submitOrder()">Подтвердить заказ</button>
+                    <button id="confirmOrderBtn" class="btn btn-outline-primary" style="width:100%;" onclick="submitOrder()">Подтвердить заказ</button>
                 </div>
             </div>
         </section>
@@ -1144,6 +1157,7 @@
 
     <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         (function(){ emailjs.init('tdquCtSwQN3Y_BhMR'); })();
 
@@ -1369,11 +1383,49 @@
             item.classList.toggle('open', !isOpen);
         }
 
+        // ── QR оплата ─────────────────────────────────────────────────────
+        let qrSettings = null;
+
+        async function loadQrSettings() {
+            try {
+                const r = await fetch('/api/qr-settings?_=' + Date.now());
+                if (r.ok) qrSettings = await r.json();
+            } catch (e) {
+                console.warn('QR настройки недоступны:', e.message);
+            }
+        }
+
+        function showQrPayment(orderId) {
+            const s = qrSettings || {};
+            const qrText = `ST00012|Name=${s.recipientName || ''}|PersonalAcc=${s.account || ''}|BankName=${s.bankName || ''}|BIC=${s.bic || ''}`;
+            const canvas = document.getElementById('qrCodeCanvas');
+            canvas.innerHTML = '';
+            try {
+                new QRCode(canvas, {
+                    text: qrText,
+                    width: 240,
+                    height: 240,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            } catch (e) {
+                canvas.textContent = 'Ошибка генерации QR';
+            }
+            document.getElementById('qrOrderId').textContent = 'Заказ ' + orderId;
+            document.getElementById('qrBox').style.display = 'block';
+        }
+
+        function finishQrPayment() {
+            document.getElementById('qrBox').style.display = 'none';
+            navigateTo('catalog', document.querySelectorAll('.nav-link')[1]);
+        }
+
         async function init() {
             // Применяем тему ДО загрузки товаров — никакой задержки
             applyTheme(localStorage.getItem('theme') === 'dark');
             renderSkeletons();
-            await Promise.all([loadProducts(), loadContacts()]);
+            await Promise.all([loadProducts(), loadContacts(), loadQrSettings()]);
             renderHome();
             updateCartBadge();
             updateCategoryFilters();
@@ -2023,6 +2075,8 @@
             document.getElementById('oSummaryLine').textContent = `${totalQty} товар${totalQty === 1 ? '' : totalQty < 5 ? 'а' : 'ов'} на сумму ${formatPrice(grandTotal)}`;
             document.getElementById('orderFormWrapper').style.display = 'block';
             document.getElementById('successBox').style.display = 'none';
+            document.getElementById('qrBox').style.display = 'none';
+            document.getElementById('qrCodeCanvas').innerHTML = '';
             document.getElementById('oCustomerName').value = '';
             document.getElementById('oCustomerPhone').value = '';
             document.getElementById('oCustomerEmail').value = '';
@@ -2157,10 +2211,14 @@
             submitBtn.disabled  = false;
             submitBtn.innerHTML = 'Подтвердить заказ';
             document.getElementById('orderFormWrapper').style.display = 'none';
-            document.getElementById('successBox').style.display = 'block';
             document.getElementById('orderCtaBar').style.display = 'none';
             // Сохраняем заказ для отслеживания статуса и истории
             saveOrderToHistory(order);
+            if (qrSettings && qrSettings.enabled) {
+                showQrPayment(order.orderId);
+            } else {
+                document.getElementById('successBox').style.display = 'block';
+            }
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission();
             }
