@@ -16,8 +16,17 @@
     <link rel="apple-touch-icon" href="icons/icon.svg">
 
     <!-- Применяем тему до рендера — без вспышки светлой темы при обновлении -->
-    <script>if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')</script>
+    <script>
+        if(localStorage.getItem('theme')==='dark') document.documentElement.setAttribute('data-theme','dark');
+        (function(){
+            var p = sessionStorage.getItem('wo_page');
+            if (p && p !== 'home') document.documentElement.setAttribute('data-init-page', p);
+        })();
+    </script>
     <style>
+        /* Скрываем page-home если восстанавливаем другую страницу — до первой отрисовки */
+        html[data-init-page] #page-home { display: none !important; }
+
         /* === ТЕМЫ === */
         :root {
             --bg-primary: #F5F1EB; --bg-secondary: #FFFFFF; --bg-sidebar: #fff;
@@ -1178,6 +1187,7 @@
             var target = document.getElementById('page-' + p);
             if (home && target) { home.classList.remove('active'); target.classList.add('active'); }
         }
+        document.documentElement.removeAttribute('data-init-page');
         // Сайдбар
         var sidebarState = localStorage.getItem('wo_sidebar');
         if (sidebarState === '0') {
