@@ -573,25 +573,22 @@
         .help-section ul { padding-left: 20px; }
         .help-section ul li { margin-bottom: 5px; }
 
-        /* === УВЕДОМЛЕНИЕ О СТАТУСЕ ЗАКАЗА === */
-        .order-status-banner {
-            position: fixed; bottom: 24px; right: 20px;
-            background: var(--accent-green); color: #fff;
-            padding: 14px 18px; border-radius: 12px;
-            display: flex; align-items: center; gap: 12px;
-            z-index: 9000; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            max-width: 320px; font-size: 14px; line-height: 1.4;
-            animation: slideInUp 0.35s ease;
-        }
-        .order-status-banner strong { display: block; margin-top: 2px; }
-        .order-status-banner .banner-close {
-            background: none; border: none; color: rgba(255,255,255,0.8);
-            font-size: 20px; cursor: pointer; padding: 0; margin-left: auto; flex-shrink: 0; line-height: 1;
-        }
         @keyframes slideInUp {
             from { transform: translateY(30px); opacity: 0; }
             to   { transform: translateY(0);    opacity: 1; }
         }
+        /* === QR В МОИ ЗАКАЗЫ === */
+        .orders-qr-block { display: flex; align-items: center; gap: 16px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; box-shadow: var(--shadow); transition: background-color var(--theme-speed) ease, border-color var(--theme-speed) ease; }
+        .orders-qr-thumb { width: 72px; height: 72px; object-fit: contain; border-radius: 8px; background: #fff; padding: 4px; cursor: pointer; flex-shrink: 0; transition: opacity 0.2s; }
+        .orders-qr-thumb:hover { opacity: 0.8; }
+        .orders-qr-label { flex: 1; font-size: 14px; color: var(--text-muted); transition: color var(--theme-speed) ease; }
+        .orders-qr-label strong { display: block; font-size: 15px; color: var(--text-main); margin-bottom: 3px; transition: color var(--theme-speed) ease; }
+        /* Модалка полноэкранного QR */
+        .qr-fullscreen-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
+        .qr-fullscreen-overlay.active { display: flex; }
+        .qr-fullscreen-overlay img { max-width: min(90vw, 400px); max-height: min(90vw, 400px); border-radius: 16px; background: #fff; padding: 20px; }
+        .qr-fullscreen-close { background: none; border: none; color: #fff; font-size: 32px; cursor: pointer; opacity: 0.7; transition: opacity 0.2s; }
+        .qr-fullscreen-close:hover { opacity: 1; }
         /* === ПАРАЛЛАКС-ФОН === */
         /* Цвета слоёв: чёрно-белые тона */
         :root {
@@ -1149,8 +1146,25 @@
 
         <section id="page-orders" class="page">
             <h2 class="section-title">Мои заказы</h2>
+            <div id="ordersQrBlock" style="display:none;">
+                <div class="orders-qr-block">
+                    <img id="ordersQrThumb" class="orders-qr-thumb" src="" alt="QR оплата" onclick="openQrFullscreen()">
+                    <div class="orders-qr-label">
+                        <strong>QR-код для оплаты</strong>
+                        Отсканируйте в мобильном банке
+                    </div>
+                    <button class="btn btn-primary" style="padding: 10px 16px; font-size: 12px; flex-shrink:0;" onclick="shareQr()">
+                        <i class="fas fa-share-alt"></i> Поделиться QR
+                    </button>
+                </div>
+            </div>
             <div id="ordersContainer"></div>
         </section>
+    </div>
+
+    <div class="qr-fullscreen-overlay" id="qrFullscreenOverlay" onclick="closeQrFullscreen()">
+        <button class="qr-fullscreen-close" onclick="closeQrFullscreen()"><i class="fas fa-times"></i></button>
+        <img id="qrFullscreenImg" src="" alt="QR оплата">
     </div>
 
     <script src="config.js"></script>
@@ -1187,20 +1201,6 @@
             localStorage.setItem('whiteoak_orders', JSON.stringify(saved.slice(0, 20)));
         }
 
-        function showOrderNotification(name, status) {
-            const banner = document.createElement('div');
-            banner.className = 'order-status-banner';
-            banner.innerHTML = `<i class="fas fa-bell"></i><div>Статус заказа обновлён<strong>${status}</strong></div><button class="banner-close" onclick="this.parentElement.remove()">×</button>`;
-            document.body.appendChild(banner);
-            setTimeout(() => banner.remove(), 7000);
-
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification('White & Oak', {
-                    body: 'Статус вашего заказа: ' + status,
-                    icon: '/White8Oak/icons/icon.svg'
-                });
-            }
-        }
 
         function renderOrders() {
             const container = document.getElementById('ordersContainer');
@@ -1238,7 +1238,6 @@
                         </div>
                         <div class="order-history-right">
                             ${totalStr ? `<div class="order-history-total">${totalStr}</div>` : ''}
-                            <span class="oh-status">${esc(o.knownStatus || 'Новый')}</span>
                             <i class="fas fa-chevron-down order-history-chevron"></i>
                         </div>
                     </div>
@@ -1254,34 +1253,6 @@
             if (card) card.classList.toggle('oh-expanded');
         }
 
-        async function checkOrderUpdates() {
-            const saved = JSON.parse(localStorage.getItem('whiteoak_orders') || '[]');
-            if (!saved.length || !CONFIG.GOOGLE_SHEET_URL) return;
-            try {
-                const r = await fetch(CONFIG.GOOGLE_SHEET_URL);
-                if (!r.ok) return;
-                const data = await r.json();
-                const sheetOrders = data.orders || data || [];
-                let changed = false;
-                const updated = saved.map(item => {
-                    const matches = sheetOrders.filter(o => String(o.phone || '').replace(/\D/g,'') === String(item.phone || '').replace(/\D/g,''));
-                    if (!matches.length) return item;
-                    // Берём самый близкий по времени заказ
-                    const closest = matches.sort((a, b) =>
-                        Math.abs(new Date(a.date) - item.submittedAt) - Math.abs(new Date(b.date) - item.submittedAt)
-                    )[0];
-                    if (closest.status && closest.status !== item.knownStatus) {
-                        showOrderNotification(item.name, closest.status);
-                        changed = true;
-                        return { ...item, knownStatus: closest.status };
-                    }
-                    return item;
-                });
-                if (changed) localStorage.setItem('whiteoak_orders', JSON.stringify(updated));
-            } catch (e) {
-                console.warn('[Orders] Не удалось проверить статус:', e.message);
-            }
-        }
 
         // ── Вспомогательные функции для работы со схемой products.json ─────
         function formatPrice(num) {
@@ -1407,15 +1378,48 @@
             navigateTo('catalog', document.querySelectorAll('.nav-link')[1]);
         }
 
+        function initOrdersQrBlock() {
+            if (!qrSettings || !qrSettings.qrImage) return;
+            document.getElementById('ordersQrThumb').src = qrSettings.qrImage;
+            document.getElementById('qrFullscreenImg').src = qrSettings.qrImage;
+            document.getElementById('ordersQrBlock').style.display = 'block';
+        }
+
+        function openQrFullscreen() {
+            document.getElementById('qrFullscreenOverlay').classList.add('active');
+        }
+
+        function closeQrFullscreen() {
+            document.getElementById('qrFullscreenOverlay').classList.remove('active');
+        }
+
+        async function shareQr() {
+            const src = qrSettings && qrSettings.qrImage;
+            if (!src) return;
+            if (navigator.share) {
+                try {
+                    const resp = await fetch(src);
+                    const blob = await resp.blob();
+                    const file = new File([blob], 'qr-payment.png', { type: blob.type });
+                    await navigator.share({ title: 'QR для оплаты White & Oak', files: [file] });
+                } catch (e) {
+                    if (e.name !== 'AbortError') {
+                        // Fallback: поделиться ссылкой на изображение
+                        navigator.share({ title: 'QR для оплаты White & Oak', url: src }).catch(() => {});
+                    }
+                }
+            }
+        }
+
         async function init() {
             // Применяем тему ДО загрузки товаров — никакой задержки
             applyTheme(localStorage.getItem('theme') === 'dark');
             renderSkeletons();
             await Promise.all([loadProducts(), loadContacts(), loadQrSettings()]);
+            initOrdersQrBlock();
             renderHome();
             updateCartBadge();
             updateCategoryFilters();
-            checkOrderUpdates();
             navHistory = [{ pageId: 'home', prodId: null }];
             navIndex   = 0;
         }
