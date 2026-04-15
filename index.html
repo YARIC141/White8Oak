@@ -1167,6 +1167,19 @@
         <img id="qrFullscreenImg" src="" alt="QR оплата">
     </div>
 
+    <script>
+    // Синхронное восстановление страницы до первой отрисовки — без мигания
+    (function() {
+        var p = sessionStorage.getItem('wo_page');
+        if (!p || p === 'home') return;
+        var home = document.getElementById('page-home');
+        var target = document.getElementById('page-' + p);
+        if (!target) return;
+        if (home) home.classList.remove('active');
+        target.classList.add('active');
+    })();
+    </script>
+
     <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
