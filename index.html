@@ -1420,7 +1420,19 @@
             renderHome();
             updateCartBadge();
             updateCategoryFilters();
-            navHistory = [{ pageId: 'home', prodId: null }];
+
+            // Восстанавливаем страницу после перезагрузки
+            const savedPage = sessionStorage.getItem('wo_page');
+            if (savedPage && savedPage !== 'home') {
+                if (savedPage === 'product') {
+                    const pid = sessionStorage.getItem('wo_product_id');
+                    if (pid) { openProduct(pid); }
+                    else { navigateTo('catalog', _navLinkEl('catalog')); }
+                } else {
+                    navigateTo(savedPage, _navLinkEl(savedPage));
+                }
+            }
+            navHistory = [{ pageId: savedPage || 'home', prodId: currentProductId }];
             navIndex   = 0;
         }
 
@@ -1598,6 +1610,12 @@
                 navHistory = navHistory.slice(0, navIndex + 1);
                 navHistory.push({ pageId, prodId: currentProductId });
                 navIndex = navHistory.length - 1;
+            }
+
+            // Сохраняем позицию для восстановления после перезагрузки
+            if (pageId !== 'order') {
+                sessionStorage.setItem('wo_page', pageId);
+                if (pageId === 'product') sessionStorage.setItem('wo_product_id', currentProductId);
             }
         }
 
