@@ -1627,9 +1627,12 @@
 
         function navigateTo(pageId, el) {
             if (pageId === 'order' && cart.length === 0) return;
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const alreadyActive = document.getElementById('page-' + pageId)?.classList.contains('active');
+            if (!alreadyActive) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page-' + pageId).classList.add('active');
+            }
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
             if (el) el.classList.add('active');
             if (pageId === 'catalog') {
                 currentCatalogCategory = 'all';
