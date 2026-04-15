@@ -1168,15 +1168,21 @@
     </div>
 
     <script>
-    // Синхронное восстановление страницы до первой отрисовки — без мигания
+    // Синхронное восстановление страницы и сайдбара до первой отрисовки — без мигания
     (function() {
+        // Страница
         var p = sessionStorage.getItem('wo_page');
-        if (!p || p === 'home') return;
-        var home = document.getElementById('page-home');
-        var target = document.getElementById('page-' + p);
-        if (!target) return;
-        if (home) home.classList.remove('active');
-        target.classList.add('active');
+        if (p && p !== 'home') {
+            var home = document.getElementById('page-home');
+            var target = document.getElementById('page-' + p);
+            if (home && target) { home.classList.remove('active'); target.classList.add('active'); }
+        }
+        // Сайдбар
+        var sidebarState = localStorage.getItem('wo_sidebar');
+        if (sidebarState === '0') {
+            var sidebar = document.getElementById('sidebar');
+            if (sidebar) sidebar.classList.add('collapsed');
+        }
     })();
     </script>
 
@@ -1482,6 +1488,7 @@
         function setSidebarOpen(open) {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
+            localStorage.setItem('wo_sidebar', open ? '1' : '0');
             if (open) {
                 sidebar.classList.remove('collapsed');
                 if (window.innerWidth < MOBILE_BREAKPOINT) overlay.classList.add('active');
