@@ -71,24 +71,6 @@
       "inStock": true,
       "featured": false,
       "model3d": ""
-    },
-    {
-      "id": 8,
-      "groupId": 8,
-      "colorName": "",
-      "title": "gege",
-      "price": 4650,
-      "oldPrice": 525,
-      "category": "chairs",
-      "image": "",
-      "images": [],
-      "description": "cgn",
-      "material": "",
-      "size": "",
-      "weight": "",
-      "inStock": true,
-      "featured": false,
-      "model3d": ""
     }
   ],
   "categories": [
